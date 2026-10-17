@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>제주도 2박 3일 스마트 여행 가이드 | 토비냥</title>
+  <style>
+    :root {
+      --color-bg: #f8fafc;
+      --color-surface: #ffffff;
+      --color-border: #e2e8f0;
+      --color-text: #0f172a;
+      --color-subtext: #475569;
+      --color-primary: #0284c7;
+      --color-primary-light: #e0f2fe;
+      --color-accent: #f59e0b;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    header {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .badge-pill {
+      display: inline-block;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .weather-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 14px;
+      color: #166534;
+    }
+    .weather-box strong { font-weight: 700; }
+    .day-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .day-badge {
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+    .day-title {
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .route-summary {
+      display: flex;
+      gap: 8px;
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--color-subtext);
+    }
+    .spot-item {
+      border-left: 3px solid var(--color-primary-light);
+      padding-left: 14px;
+      margin-bottom: 14px;
+    }
+    .spot-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .spot-category {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .spot-name {
+      font-size: 15px;
+      color: var(--color-text);
+    }
+    .spot-duration {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .spot-desc {
+      font-size: 14px;
+      color: var(--color-subtext);
+      margin-bottom: 4px;
+    }
+    .spot-tip {
+      font-size: 13px;
+      color: #b45309;
+      background: #fffbeb;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+    }
+    .section-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .section-card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pass-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .pass-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .pass-cost {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .pass-benefit {
+      font-size: 13px;
+      color: var(--color-subtext);
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+    .checklist-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-primary);
+    }
+    footer {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge-pill">✈️ 스마트 여행 리포트</span>
+      <h1>제주도 (2박 3일)</h1>
+      <p style="color: var(--color-subtext); font-size: 14px;">토비냥 AI가 분석한 최적 동선, 날씨, 교통패스 및 일정 가이드</p>
+      
+      <div class="weather-box">
+        <p><strong>🌤️ 날씨:</strong> 가을철(10~11월 기준) 평균 기온은 14~21도로 온화하지만, 바닷바람이 거세어 체감온도가 낮고 아침저녁 일교차가 큰 편이다냥.</p>
+        <p><strong>👕 추천 옷차림:</strong> 낮에는 편안한 긴소매 니트나 맨투맨이 좋고, 해안가와 숲길의 찬바람을 막아줄 윈드브레이커(바람막이)나 경량 패딩, 도톰한 아우터를 챙겨야 한다냥.</p>
+        <p><strong>⚠️ 주의사항:</strong> 곶자왈과 오름을 편안하게 걷기 위한 접지력 좋은 트레킹화나 편한 운동화, 자외선 차단을 위한 모자와 선글라스를 필수로 지참하라냥.</p>
+      </div>
+    </header>
+
+    
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 1</span>
+        <h3 class="day-title">제주 서쪽 해안 에메랄드빛 바다와 노을 힐링</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>제주국제공항 렌터카 픽업 → 애월 해안도로 & 한담해변 산책로 → 봄날 & 랜디스도넛 → 협재해수욕장 & 금능해변 → 신창풍차해안도로 일몰</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-transport">TRANSPORT</span>
+              <strong class="spot-name">제주국제공항 렌터카 하우스</strong>
+              <span class="spot-duration">⏱️ 45분</span>
+            </div>
+            <p class="spot-desc">공항 도착 후 셔틀버스를 타고 렌터카 본사로 이동해 차량을 인수하는 단계다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 키오스크 무인 배차와 완전자차(슈퍼자차) 보험을 미리 가입해 두면 인수 대기 시간을 크게 단축할 수 있다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">한담해변 산책로</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">검은 현무암 기암괴석과 옥빛 투명한 바다가 어우러진 제주 서쪽 대표 해안 산책길이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 공영주차장은 혼잡하므로 인근 유료 주차장이나 이용 예정인 카페 전용 주차장을 활용하는 편이 수월하다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-cafe">CAFE</span>
+              <strong class="spot-name">봄날 카페 & 랜디스도넛 애월점</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">바다를 바로 마주 보며 시원한 음료와 달콤한 도넛을 즐길 수 있는 힐링 카페 명소다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 인기 도넛 품목은 조기 품절될 수 있으니 도착하자마자 포장 주문을 먼저 마쳐두는 것이 안전하다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-food">FOOD</span>
+              <strong class="spot-name">협재·금능해수욕장 & 옹포바다횟집</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">비양도가 정면에 보이는 은빛 백사장과 신선한 딱새우회, 고등어회를 맛볼 수 있는 곳이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 식사 전 바닷가에서 비양도를 배경으로 사진을 남기고, 고등어회는 전용 양념장과 묵은지에 싸 먹으면 꿀맛이다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">신창풍차해안도로</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">거대한 해상 풍력발전기와 싱계물공원 다리가 바다 위에 펼쳐진 일몰 명소다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 일몰 시각 30분 전에 맞춰 도착해 해상 산책로 끝 다리 위에서 붉게 물드는 석양을 감상하라냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 2</span>
+        <h3 class="day-title">제주 남부 원시림 곶자왈 피톤치드와 중문 감성 미식</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>제주 곶자왈 도립공원 → 오설록 티뮤지엄 & 이니스프리 제주하우스 → 춘심이네 본점 → 정방폭포 or 외돌개 산책로 → 서귀포 올레시장</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">제주 곶자왈 도립공원</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">화산암 지대 위에 형성된 독특한 식생과 맑은 피톤치드를 온몸으로 느낄 수 있는 원시림 숲길이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 자갈과 바위가 많아 슬리퍼나 구두는 입장이 제한될 수 있으니 반드시 트레킹화나 편한 운동화를 착용하라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-cafe">CAFE</span>
+              <strong class="spot-name">오설록 티뮤지엄 & 이니스프리 제주하우스</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">초록빛 유기농 녹차밭 뷰를 바라보며 진한 녹차 아이스크림과 디저트를 즐기는 공간이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 이니스프리 제주하우스 쪽 테라스 좌석이 비교적 한적하며, 녹차 롤케이크와 제주 한라봉 에이드 조합이 훌륭하다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-food">FOOD</span>
+              <strong class="spot-name">춘심이네 본점</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">통째로 구워낸 압도적 비주얼의 제주산 통갈치구이와 뼈 없는 은갈치조림 전문점이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 직원이 통갈치 가시를 직접 손질해 주므로 편하게 먹을 수 있으며, 점심 피크 시간 전 테이블링 원격 줄서기가 필수다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">외돌개 & 황우지해변 해안 산책로</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">푸른 서귀포 바다 위에 솟아오른 기암괴석과 솔숲 그늘길을 걸으며 힐링할 수 있는 코스다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 올레 7코스 구간으로 완만한 데크길이 잘 정비되어 있어 부담 없이 맑은 공기를 마시며 걷기 좋다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-shopping">SHOPPING</span>
+              <strong class="spot-name">서귀포 매일올레시장</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">마농치킨, 모닥치기, 흑돼지 김치말이, 오메기떡 등 서귀포의 야간 먹거리가 모여 있는 전통시장이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 마농치킨은 주문 후 튀기는 데 시간이 걸리므로 시장 도착 즉시 번호표를 받아두고 구경을 시작하라냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 3</span>
+        <h3 class="day-title">제주 동쪽 금빛 억새 오름과 조천 오션뷰 마무리</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>사려니숲길 → 아끈다랑쉬오름 or 백약이오름 → 비자림 미식 탐방(보말칼국수) → 조천 함덕서우봉해변 & 카페 델문도 → 제주국제공항</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">사려니숲길 (붉은오름 입구 방면)</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">하늘 높이 뻗은 삼나무 숲길 사이로 부드러운 화산송이 길과 데크로드가 펼쳐진 숲속 쉼터다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 비자림로 쪽 본 입구보다 붉은오름 입구 쪽이 무장애 데크길이 잘 조성되어 있고 주차가 훨씬 편리하다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">백약이오름</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">가을철 은빛 억새 물결과 완만한 초원 계단길이 아름다운 힐링 오름이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 계단 입구 초입부터 억새가 군락을 이루어 포토존이 형성되니 정상까지 무리하지 않고 중턱까지만 올라도 충분하다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-food">FOOD</span>
+              <strong class="spot-name">해월정 세화점</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">진하고 구수한 보말칼국수와 보말죽, 바삭한 전복보말전이 일품인 제주 향토 맛집이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 보말칼국수 국물에 볶아 먹는 보말죽 볶음밥(보말보말죽)을 곁들이면 속이 든든하고 따뜻해진다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-cafe">CAFE</span>
+              <strong class="spot-name">함덕해수욕장 & 카페 델문도</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">에메랄드빛 바다 바로 위에 떠 있는 듯한 야외 테라스 좌석을 갖춘 베이커리 카페다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 공항 가기 전 마지막 바다를 눈에 담기 좋으며, 서우봉 산책로 초입에 살짝 오르면 함덕 바다 전체 뷰를 한눈에 볼 수 있다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-transport">TRANSPORT</span>
+              <strong class="spot-name">렌터카 반납 및 제주국제공항 출발</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">렌터카 본사에 차량을 반납하고 셔틀버스를 통해 공항으로 이동해 탑승 수속을 밟는다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 제주공항은 수하물 검사와 탑승 수속이 붐비므로 항공기 출발 1시간 30분 전까지 공항에 도착하라냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+
+    
+      <section class="section-card">
+        <h2>🚇 추천 교통패스 & 이동 꿀팁</h2>
+        
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>제주투어패스 (48시간 프리패스)</strong>
+        <span class="pass-cost">약 24,900원</span>
+      </div>
+      <p class="pass-benefit">제주 전역의 주요 테마파크, 족욕 체험, 제휴 카페 음료(아메리카노 무료 제공) 등을 바코드 하나로 무제한 혜택을 받아 3~4곳만 이용해도 본전을 뽑는다냥.</p>
+    </div>
+  
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>중소형 렌터카 (완전자차 포함 48~52시간 대여)</strong>
+        <span class="pass-cost">약 70,000~90,000원 (2인 기준 1인당 약 40,000원)</span>
+      </div>
+      <p class="pass-benefit">동서남북 이동이 많은 2박 3일 힐링 코스 특성상 버스 대기 시간 없이 자유롭고 쾌적하게 숨은 명소를 누빌 수 있다냥.</p>
+    </div>
+  
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>공항 급행버스 (800번/100번대)</strong>
+        <span class="pass-cost">회당 2,000~3,000원 (교통카드 환승 할인 적용)</span>
+      </div>
+      <p class="pass-benefit">렌터카를 이용하지 않는 뚜벅이 여행자의 경우 공항에서 서귀포 및 동/서부 핵심 거점으로 가장 빠르고 알뜰하게 이동하는 수단이다냥.</p>
+    </div>
+  
+      </section>
+    
+
+    <section class="section-card">
+      <h2>🎒 여행 준비물 체크리스트</h2>
+      <div class="checklist">
+        <label class="checklist-item"><input type="checkbox"> 여권 및 신분증 (유효기간 6개월 이상)</label>
+        <label class="checklist-item"><input type="checkbox"> e-티켓 항공권 및 숙소 바우처</label>
+        <label class="checklist-item"><input type="checkbox"> 해외 결제 카드 (트래블로그/트래블월렛 등) 및 현지 현금</label>
+        <label class="checklist-item"><input type="checkbox"> eSIM / 유심 / 포켓와이파이</label>
+        <label class="checklist-item"><input type="checkbox"> 보조배터리 및 국가별 돼지코 어댑터</label>
+        <label class="checklist-item"><input type="checkbox"> 날씨 맞춤 여벌옷, 상비약, 걷기 편한 운동화</label>
+      </div>
+    </section>
+
+    <footer>
+      <p>Report generated by Tobinyang AI Travel Planner 🐾</p>
+      <p>© 2026 Tobinyang Reports. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
