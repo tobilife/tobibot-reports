@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>괌 3박 4일 스마트 여행 가이드 | 토비냥</title>
+  <style>
+    :root {
+      --color-bg: #f8fafc;
+      --color-surface: #ffffff;
+      --color-border: #e2e8f0;
+      --color-text: #0f172a;
+      --color-subtext: #475569;
+      --color-primary: #0284c7;
+      --color-primary-light: #e0f2fe;
+      --color-accent: #f59e0b;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    header {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .badge-pill {
+      display: inline-block;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .weather-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 14px;
+      color: #166534;
+    }
+    .weather-box strong { font-weight: 700; }
+    .day-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .day-badge {
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+    .day-title {
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .route-summary {
+      display: flex;
+      gap: 8px;
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--color-subtext);
+    }
+    .spot-item {
+      border-left: 3px solid var(--color-primary-light);
+      padding-left: 14px;
+      margin-bottom: 14px;
+    }
+    .spot-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .spot-category {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .spot-name {
+      font-size: 15px;
+      color: var(--color-text);
+    }
+    .spot-duration {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .spot-desc {
+      font-size: 14px;
+      color: var(--color-subtext);
+      margin-bottom: 4px;
+    }
+    .spot-tip {
+      font-size: 13px;
+      color: #b45309;
+      background: #fffbeb;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+    }
+    .section-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .section-card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pass-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .pass-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .pass-cost {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .pass-benefit {
+      font-size: 13px;
+      color: var(--color-subtext);
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+    .checklist-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-primary);
+    }
+    footer {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge-pill">✈️ 스마트 여행 리포트</span>
+      <h1>괌 (3박 4일)</h1>
+      <p style="color: var(--color-subtext); font-size: 14px;">토비냥 AI가 분석한 최적 동선, 날씨, 교통패스 및 일정 가이드</p>
+      
+      <div class="weather-box">
+        <p><strong>🌤️ 날씨:</strong> 연중 27도에서 31도 안팎을 유지하는 전형적인 열대 해양성 기후다냥. 스콜성 소나기가 하루에도 서너 차례 짧고 강하게 지나간다냥.</p>
+        <p><strong>👕 추천 옷차림:</strong> 통풍이 잘되는 시원한 반팔과 린넨 반바지, 원피스가 기본이다냥. 실내 쇼핑몰과 레스토랑의 에어컨 바람이 꽤 쌀쌀하니 얇은 가디건이나 바람막이를 꼭 챙겨야 한다냥.</p>
+        <p><strong>⚠️ 주의사항:</strong> 자외선 지수가 한국보다 훨씬 강하니 SPF50 이상 산호초 보호용 무기자차 선크림과 챙 넓은 모자, 선글라스를 필수 지참하라냥. 갑작스러운 스콜에 대비해 가벼운 3단 우산도 가방에 넣어두면 든든하다냥.</p>
+      </div>
+    </header>
+
+    
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 1</span>
+        <h3 class="day-title">입국 및 투몬 중심가 가벼운 적응과 석양 감상</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>앤토니오 B. 원 팻 국제공항 → 투몬 호텔 체크인 → 메스클라 도스 → 투몬 비치 선셋 → 더 플라자 쇼핑몰</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-transport">TRANSPORT</span>
+              <strong class="spot-name">앤토니오 B. 원 팻 국제공항</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">괌의 관문 공항으로 시내인 투몬 베이와 차로 약 10분에서 15분 거리에 위치한다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 사전에 예약한 렌터카를 공항 카운터에서 수령하거나 한인 택시를 탑승하면 빠르고 편리하다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">투몬 호텔 존 체크인</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">에메랄드빛 바다가 펼쳐지는 투몬 중심가 리조트에 체크인하고 짐을 푼다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 오션뷰 룸은 일몰 뷰가 예술이니 체크인 시 고층 배정을 공손히 요청해보라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-food">FOOD</span>
+              <strong class="spot-name">메스클라 도스 2호점</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">육즙 가득한 수제 패티와 매콤한 쉬림프 버거가 일품인 괌 대표 수제버거 맛집이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 그릴드 란체루 버거와 우항 쉬림프 버거가 시그니처 메뉴다냥. 포장해서 해변에서 먹어도 꿀맛이다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">투몬 비치</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">새하얀 산호 모래사장과 붉게 물드는 환상적인 노을을 만끽할 수 있는 괌 대표 해변이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 일몰 30분 전에 자리 잡고 핑크빛과 보랏빛으로 번지는 매직아워를 배경으로 인생샷을 건져라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-shopping">SHOPPING</span>
+              <strong class="spot-name">더 플라자 및 T 갤러리아</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">투몬 중심가에 늘어선 대형 면세 쇼핑가로 명품 브랜드와 코스메틱 매장이 밀집해 있다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 괌은 섬 전체가 면세 구역이라 면세 혜택이 쏠쏠하며 밤 9시에서 10시까지 운영해 식후 산책 쇼핑으로 딱이다냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 2</span>
+        <h3 class="day-title">남부 드라이브 투어와 이국적인 자연 경관 탐방</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>아가냐 대성당 & 스페인 광장 → 에메랄드 밸리 → 세티만 전망대 → 솔레다드 요새 → 이나라한 천연 수영장 → 프로아</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">아가냐 대성당 & 스페인 광장</strong>
+              <span class="spot-duration">⏱️ 40분</span>
+            </div>
+            <p class="spot-desc">괌의 역사와 스페인 통치 시대의 정취를 느낄 수 있는 새하얀 성당과 유적 공원이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 광장 맞은편 괌 영문 조형물 포토존에서 인증샷을 먼저 찍으면 줄을 덜 선다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">에메랄드 밸리</strong>
+              <span class="spot-duration">⏱️ 40분</span>
+            </div>
+            <p class="spot-desc">바닷물이 육지로 흘러드는 수로로 신비로운 에메랄드빛 물빛과 물고기 떼를 관찰할 수 있다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 수로 주변 바위에 이끼가 끼어 미끄러우니 미끄럼 방지 샌들이나 운동화를 착용하라냥. 수영은 금지된 구역이다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">세티만 전망대</strong>
+              <span class="spot-duration">⏱️ 30분</span>
+            </div>
+            <p class="spot-desc">굽이치는 화산성 지형 능선과 드넓은 필리핀해를 파노라마로 조망하는 남부 대표 뷰포인트다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 계단을 2분 정도 올라가면 훨씬 탁 트인 시야를 볼 수 있으니 꼭 전망대 상단까지 올라가보라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">솔레다드 요새</strong>
+              <span class="spot-duration">⏱️ 30분</span>
+            </div>
+            <p class="spot-desc">우마탁 만을 내려다보며 과거 해적선 침략을 감시하던 대포 요새 유적지다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 오래된 대포 모형 뒤로 펼쳐지는 절벽 바다 뷰가 멋지니 광각 렌즈로 촬영하라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">이나라한 천연 자연 풀장</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">외해의 거친 파도를 자연 암초가 막아주어 잔잔하고 맑은 천연 바다 수영장이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 발 밑에 뾰족한 산호가 많으니 아쿠아슈즈를 필히 착용하고 간단한 타월을 차에 챙겨두라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-food">FOOD</span>
+              <strong class="spot-name">프로아 이파오 비치점</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">차모로 전통 바비큐 소스로 구워낸 립 플래터와 타로 치즈케이크가 유명한 최고 인기 맛집이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 트리오 바비큐 플래터가 대표 메뉴이며 웨이팅이 길 수 있으니 전날이나 방문 몇 주 전 오픈테이블로 예약하는 것이 좋다냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 3</span>
+        <h3 class="day-title">스노클링 해양 액티비티와 쇼핑몰 털기</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>이파오 비치 공원 스노클링 → 리틀 피카스 브런치 → 마이크로네시아 몰 & 메이시스 → 괌 프리미어 아울렛 → 사랑의 절벽 선셋</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">이파오 비치 공원</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">수심이 얕고 수중 산호 군락이 풍부해 열대어와 바다거북을 쉽게 만나는 스노클링 성지다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 오전 시간대가 바닷물이 가장 맑고 파도가 잔잔하니 일찍 방문하는 것을 추천한다냥. 자외선 차단 래시가드는 필수다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-food">FOOD</span>
+              <strong class="spot-name">리틀 피카스</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">크리미한 코코넛 화이트 소스가 듬뿍 올라간 차모로 퓨전 로코모코로 유명한 브런치 맛집이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 매콤한 소스가 더해진 크리미 로코모코를 시키면 느끼함 없이 든든하게 한 끼를 비울 수 있다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-shopping">SHOPPING</span>
+              <strong class="spot-name">마이크로네시아 몰 & 메이시스</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">괌 북부의 초대형 복합 쇼핑몰로 키즈 의류와 식료품, 화장품이 총망라되어 있다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 인포메이션 데스크에서 메이시스 백화점 10퍼센트 추가 할인 쿠폰을 먼저 수령한 뒤 쇼핑을 시작하라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-shopping">SHOPPING</span>
+              <strong class="spot-name">괌 프리미어 아울렛 및 로스</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">타미힐피거, 캘빈클라인 등의 의류 아울렛과 보물찾기형 창고 매장 로스가 모여 있는 쇼핑 명소다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 타미힐피거 공식 웹사이트 쿠폰과 당일 구매 영수증 하단 쿠폰을 중복 적용하면 파격적인 가격에 득템할 수 있다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">사랑의 절벽</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">슬픈 사랑의 전설이 깃든 112미터 높이의 해안 절벽으로 투몬 베이 전체가 한눈에 내려다보이는 명소다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 해 질 녘 황금빛 노을 풍경이 장관이다냥. 입장료는 3달러이며 하트 모양 사랑의 자물쇠를 걸어 기념할 수 있다냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 4</span>
+        <h3 class="day-title">여유로운 카페 타임과 기념품 쇼핑 후 출국</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>호텔 체크아웃 → 호놀룰루 커피 → K마트 → 앤토니오 B. 원 팻 국제공항 출국</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-cafe">CAFE</span>
+              <strong class="spot-name">호놀룰루 커피 컴퍼니</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">하와이안 코나 원두의 그윽한 향과 부드러운 아사이볼, 페이스트리를 즐길 수 있는 카페다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 시원하고 상큼한 아사이볼과 달콤한 하와이안 라떼 조합으로 상쾌하게 아침을 시작하라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-shopping">SHOPPING</span>
+              <strong class="spot-name">K마트</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">24시간 운영되는 대형 마트로 바나나보트 선크림, 마카다미아 초콜릿, 스팸 등 기념품 천국이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 귀국 직전 선물용 7D 망고와 이지치즈, 다채로운 맛의 스팸 캔을 카트에 쓸어 담기 가장 좋은 장소다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-transport">TRANSPORT</span>
+              <strong class="spot-name">앤토니오 B. 원 팻 국제공항</strong>
+              <span class="spot-duration">⏱️ 2시간 30분</span>
+            </div>
+            <p class="spot-desc">렌터카를 반납하고 수속을 거쳐 귀국길에 오르는 마지막 여정이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 미국령 특성상 출국 보안 검색이 꼼꼼하게 진행되므로 항공기 출발 최소 2시간 30분 전에는 도착해 수속을 밟아야 안전하다냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+
+    
+      <section class="section-card">
+        <h2>🚇 추천 교통패스 & 이동 꿀팁</h2>
+        
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>전 일정 렌터카 (한국 면허증 이용)</strong>
+        <span class="pass-cost">3일 기준 약 $150~$210 (한화 약 20만~28만 원)</span>
+      </div>
+      <p class="pass-benefit">괌은 한국 운전면허증만으로 간편 렌트가 가능하다냥. 남부 투어와 대형 쇼핑몰 이동 시 무더위와 스콜을 완벽히 피하고 택시비 대비 압도적인 가성비와 자율성을 선사한다냥.</p>
+    </div>
+  
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>투몬 셔틀버스 (레드 구아한 셔틀)</strong>
+        <span class="pass-cost">1회권 $4 / 1일 무제한 패스 $10 / 2일권 $15</span>
+      </div>
+      <p class="pass-benefit">렌터카를 운전하지 않는 뚜벅이 여행자에게 최고의 대안이다냥. 투몬 주요 호텔과 T갤러리아, GPO, 마이크로네시아 몰을 순환 연결해 핵심 쇼핑 동선을 알뜰하게 커버한다냥.</p>
+    </div>
+  
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>공항 픽업 한인 택시 / 미키 택시</strong>
+        <span class="pass-cost">편도 기준 캐리어 포함 약 $25~$30</span>
+      </div>
+      <p class="pass-benefit">입출국 첫날과 마지막 날 무거운 짐을 이끌고 대중교통을 기다릴 필요 없이 숙소 로비까지 정찰제로 쾌적하게 직행할 수 있다냥.</p>
+    </div>
+  
+      </section>
+    
+
+    <section class="section-card">
+      <h2>🎒 여행 준비물 체크리스트</h2>
+      <div class="checklist">
+        <label class="checklist-item"><input type="checkbox"> 여권 및 신분증 (유효기간 6개월 이상)</label>
+        <label class="checklist-item"><input type="checkbox"> e-티켓 항공권 및 숙소 바우처</label>
+        <label class="checklist-item"><input type="checkbox"> 해외 결제 카드 (트래블로그/트래블월렛 등) 및 현지 현금</label>
+        <label class="checklist-item"><input type="checkbox"> eSIM / 유심 / 포켓와이파이</label>
+        <label class="checklist-item"><input type="checkbox"> 보조배터리 및 국가별 돼지코 어댑터</label>
+        <label class="checklist-item"><input type="checkbox"> 날씨 맞춤 여벌옷, 상비약, 걷기 편한 운동화</label>
+      </div>
+    </section>
+
+    <footer>
+      <p>Report generated by Tobinyang AI Travel Planner 🐾</p>
+      <p>© 2026 Tobinyang Reports. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
