@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning | 토비냥 학술 리포트</title>
+  <style>
+    :root {
+      --color-bg: #f8fafc;
+      --color-surface: #ffffff;
+      --color-border: #e2e8f0;
+      --color-text: #0f172a;
+      --color-subtext: #475569;
+      --color-primary: #4338ca;
+      --color-primary-light: #e0e7ff;
+      --color-accent: #0284c7;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      padding: 20px 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    header {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 9999px;
+    }
+    .badge-primary { background: var(--color-primary-light); color: var(--color-primary); }
+    .badge-accent { background: #e0f2fe; color: #0369a1; }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .authors-meta {
+      font-size: 14px;
+      color: var(--color-subtext);
+      margin-bottom: 4px;
+    }
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-card {
+      background: #faf5ff;
+      border-color: #e9d5ff;
+    }
+    .summary-card .card-title { color: #6b21a8; }
+    .summary-list {
+      padding-left: 20px;
+      font-size: 15px;
+      color: #3b0764;
+    }
+    .summary-list li {
+      margin-bottom: 8px;
+    }
+    .content-p {
+      font-size: 14.5px;
+      color: var(--color-text);
+      white-space: pre-line;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: #92400e;
+    }
+    footer {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-row">
+        <span class="badge badge-primary">🎓 학술 논문 심층 리포트</span>
+        <span class="badge badge-accent">arXiv: 2501.12948</span>
+        <span class="badge" style="background:#f1f5f9; color:#475569;">Computer Science - Computation and Language</span>
+      </div>
+      <h1>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</h1>
+      <p class="authors-meta"><strong>저자:</strong> DeepSeek-AI, Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Ruoyu Zhang, Runxin Xu, Qihao Zhu, Shirong Ma, Peiyi Wang</p>
+      <p class="authors-meta"><strong>발행:</strong> 2025년</p>
+      <p class="authors-meta"><strong>원문 링크:</strong> <a href="https://arxiv.org/abs/2501.12948" target="_blank" style="color:var(--color-primary);">https://arxiv.org/abs/2501.12948</a></p>
+    </header>
+
+    <section class="card summary-card">
+      <h2 class="card-title">💡 핵심 3줄 요약 (Executive Summary)</h2>
+      <ul class="summary-list">
+        <li>인간의 지도학습 데이터(SFT) 없이 대규모 강화학습(RL)만으로 복잡한 다단계 추론과 자가 성찰 능력이 스스로 발현될 수 있음을 증명했다냥.</li><li>콜드스타트 데이터 구축과 다단계 강화학습 파이프라인(GRPO)을 설계하여 가독성과 범용 정렬까지 확보한 DeepSeek-R1을 완성했다냥.</li><li>추론 토큰으로 축적된 고품질 추론 데이터를 소형 오픈소스 모델(1.5B~70B)에 증류하여 경량 모델의 수학 및 코딩 추론 성능을 비약적으로 끌어올렸다냥.</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">🔍 연구 배경 및 동기 (Problem Statement)</h2>
+      <p class="content-p">기존 대규모 언어 모델들은 고성능 추론 능력을 획득하기 위해 방대한 양의 인간 검증 고품질 CoT(Chain-of-Thought) 지도학습 데이터에 과도하게 의존해야 했고, 이는 데이터 구축 비용의 한계와 인간의 사고 틀에 갇히는 문제를 야기했다냥. 또한 기존 PPO 계열 강화학습은 Critic 모델을 별도로 유지해야 해 막대한 메모리와 연산 오버헤드가 발생했던 터라, 순수 강화학습만으로 모델이 자발적으로 추론 경로를 탐색하고 검증할 수 있는지 규명하는 것이 본 연구의 핵심 출발점이었다냥.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">🔬 제안 방법론 및 핵심 아키텍처 (Methodology)</h2>
+      <p class="content-p">비평가(Critic) 모델 없이 그룹 단위 상대 보상을 계산하는 GRPO(Group Relative Policy Optimization) 알고리즘을 핵심 엔진으로 채택했다냥. 먼저 베이스 모델에 규칙 기반 정확도 보상과 포맷 보상만을 부여해 순수 자가 진화 능력을 검증한 DeepSeek-R1-Zero를 도출한 뒤, 가독성과 언어 혼용 문제를 개선하기 위해 수천 건의 콜드스타트 데이터를 주입하고 다단계 강화학습을 수행하는 정규 파이프라인을 구축했다냥. 특히 정답 검증이 가능한 추론 데이터와 비추론 일반 데이터를 결합한 거부 샘플링(Rejection Sampling) 기반의 2차 SFT 및 인간 선호도 정렬 RL 단계를 거쳐 최종 DeepSeek-R1을 완성하고, 80만 건의 추론 궤적 데이터를 Qwen 및 Llama 기반 소형 모델들에 지식 증류(Distillation)했다냥.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">📊 주요 실험 성과 및 벤치마크 (Evaluation)</h2>
+      <p class="content-p">DeepSeek-R1은 AIME 2024 벤치마크에서 Pass@1 기준 79.8%를 기록하고 MATH-500에서 97.3%를 달성하여 OpenAI의 o1-1217 모델과 동등 이상의 수학적 추론 성능을 입증했다냥. 코딩 영역인 Codeforces 대회 벤치마크에서도 상위 96.3% 백분위수를 기록하며 최상위 인간 경쟁자 수준에 도달했다냥. 또한 80만 건의 정제된 데이터를 증류받은 DeepSeek-R1-Distill-Qwen-32B는 AIME 2024에서 72.6%를 달성하며 직접 RL을 수행한 소형 모델보다 증류 모델이 훨씬 높은 효율과 정확도를 보임을 명확히 보여줬다냥.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">⚠️ 한계점 및 후속 연구 과제 (Discussion & Future Work)</h2>
+      <div class="warning-box">
+        <p>다국어 질의 시 생각 과정에서 언어가 뒤섞이는 언어 혼용(Language Mixing) 현상이 여전히 일부 관찰되고, 프롬프트 엔지니어링 및 퓨샷(Few-shot) 설정에 민감하여 제로샷(Zero-shot) 대비 성능 저하가 발생할 수 있다냥. 더불어 수학과 알고리즘 코딩처럼 결정론적 정답 규칙 검증이 명확한 영역 외의 일반 소프트웨어 엔지니어링이나 창의적 글쓰기, 복합 멀티턴 대화 태스크에서는 확장성에 제약이 있으며, 긴 생각 사슬 생성으로 인한 추론 지연 시간과 서빙 비용 부담도 해결해야 할 과제다냥.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Academic Report curated by Tobinyang Deep Research AI 🐾</p>
+      <p>© 2026 Tobinyang Reports. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
