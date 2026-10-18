@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning | 토비냥 학술 리포트</title>
+  <style>
+    :root {
+      --color-bg: #f8fafc;
+      --color-surface: #ffffff;
+      --color-border: #e2e8f0;
+      --color-text: #0f172a;
+      --color-subtext: #475569;
+      --color-primary: #4338ca;
+      --color-primary-light: #e0e7ff;
+      --color-accent: #0284c7;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      padding: 20px 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    header {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 9999px;
+    }
+    .badge-primary { background: var(--color-primary-light); color: var(--color-primary); }
+    .badge-accent { background: #e0f2fe; color: #0369a1; }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .authors-meta {
+      font-size: 14px;
+      color: var(--color-subtext);
+      margin-bottom: 4px;
+    }
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-card {
+      background: #faf5ff;
+      border-color: #e9d5ff;
+    }
+    .summary-card .card-title { color: #6b21a8; }
+    .summary-list {
+      padding-left: 20px;
+      font-size: 15px;
+      color: #3b0764;
+    }
+    .summary-list li {
+      margin-bottom: 8px;
+    }
+    .content-p {
+      font-size: 14.5px;
+      color: var(--color-text);
+      white-space: pre-line;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: #92400e;
+    }
+    footer {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-row">
+        <span class="badge badge-primary">🎓 논문 초록 기반 조사</span>
+        <span class="badge badge-accent">arXiv: 2501.12948v2</span>
+        <span class="badge" style="background:#f1f5f9; color:#475569;">cs.CL</span>
+      </div>
+      <h1>DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</h1>
+      <p class="authors-meta"><strong>저자:</strong> DeepSeek-AI, Daya Guo, Dejian Yang, Haowei Zhang, Junxiao Song, Peiyi Wang, Qihao Zhu, Runxin Xu, Ruoyu Zhang, Shirong Ma, Xiao Bi, Xiaokang Zhang, Xingkai Yu, Yu Wu, Z. F. Wu, Zhibin Gou, Zhihong Shao, Zhuoshu Li, Ziyi Gao, Aixin Liu, Bing Xue, Bingxuan Wang, Bochao Wu, Bei Feng, Chengda Lu, Chenggang Zhao, Chengqi Deng, Chenyu Zhang, Chong Ruan, Damai Dai, Deli Chen, Dongjie Ji, Erhang Li, Fangyun Lin, Fucong Dai, Fuli Luo, Guangbo Hao, Guanting Chen, Guowei Li, H. Zhang, Han Bao, Hanwei Xu, Haocheng Wang, Honghui Ding, Huajian Xin, Huazuo Gao, Hui Qu, Hui Li, Jianzhong Guo, Jiashi Li, Jiawei Wang, Jingchang Chen, Jingyang Yuan, Junjie Qiu, Junlong Li, J. L. Cai, Jiaqi Ni, Jian Liang, Jin Chen, Kai Dong, Kai Hu, Kaige Gao, Kang Guan, Kexin Huang, Kuai Yu, Lean Wang, Lecong Zhang, Liang Zhao, Litong Wang, Liyue Zhang, Lei Xu, Leyi Xia, Mingchuan Zhang, Minghua Zhang, Minghui Tang, Meng Li, Miaojun Wang, Mingming Li, Ning Tian, Panpan Huang, Peng Zhang, Qiancheng Wang, Qinyu Chen, Qiushi Du, Ruiqi Ge, Ruisong Zhang, Ruizhe Pan, Runji Wang, R. J. Chen, R. L. Jin, Ruyi Chen, Shanghao Lu, Shangyan Zhou, Shanhuang Chen, Shengfeng Ye, Shiyu Wang, Shuiping Yu, Shunfeng Zhou, Shuting Pan, S. S. Li, Shuang Zhou, Shaoqing Wu, Shengfeng Ye, Tao Yun, Tian Pei, Tianyu Sun, T. Wang, Wangding Zeng, Wanjia Zhao, Wen Liu, Wenfeng Liang, Wenjun Gao, Wenqin Yu, Wentao Zhang, W. L. Xiao, Wei An, Xiaodong Liu, Xiaohan Wang, Xiaokang Chen, Xiaotao Nie, Xin Cheng, Xin Liu, Xin Xie, Xingchao Liu, Xinyu Yang, Xinyuan Li, Xuecheng Su, Xuheng Lin, X. Q. Li, Xiangyue Jin, Xiaojin Shen, Xiaosha Chen, Xiaowen Sun, Xiaoxiang Wang, Xinnan Song, Xinyi Zhou, Xianzu Wang, Xinxia Shan, Y. K. Li, Y. Q. Wang, Y. X. Wei, Yang Zhang, Yanhong Xu, Yao Li, Yao Zhao, Yaofeng Sun, Yaohui Wang, Yi Yu, Yichao Zhang, Yifan Shi, Yiliang Xiong, Ying He, Yishi Piao, Yisong Wang, Yixuan Tan, Yiyang Ma, Yiyuan Liu, Yongqiang Guo, Yuan Ou, Yuduan Wang, Yue Gong, Yuheng Zou, Yujia He, Yunfan Xiong, Yuxiang Luo, Yuxiang You, Yuxuan Liu, Yuyang Zhou, Y. X. Zhu, Yanhong Xu, Yanping Huang, Yaohui Li, Yi Zheng, Yuchen Zhu, Yunxian Ma, Ying Tang, Yukun Zha, Yuting Yan, Z. Z. Ren, Zehui Ren, Zhangli Sha, Zhe Fu, Zhean Xu, Zhenda Xie, Zhengyan Zhang, Zhewen Hao, Zhicheng Ma, Zhigang Yan, Zhiyu Wu, Zihui Gu, Zijia Zhu, Zijun Liu, Zilin Li, Ziwei Xie, Ziyang Song, Zizheng Pan, Zhen Huang, Zhipeng Xu, Zhongyu Zhang, Zhen Zhang</p>
+      <p class="authors-meta"><strong>발행:</strong> 2025년</p>
+      <p class="authors-meta"><strong>원문 링크:</strong> <a href="https://arxiv.org/abs/2501.12948v2" target="_blank" rel="noopener noreferrer" style="color:var(--color-primary);">https://arxiv.org/abs/2501.12948v2</a></p>
+      <p class="authors-meta">확인 범위: arXiv 초록 · 조회일 2026-10-18 · 원문 전체/실험표 미검증</p>
+    </header>
+
+    <section class="card summary-card">
+      <h2 class="card-title">📜 초록 원문 발췌 (번역 전)</h2>
+      <ul class="summary-list">
+        <li>General reasoning represents a long-standing and formidable challenge in artificial intelligence.</li><li>Recent breakthroughs, exemplified by large language models (LLMs) and chain-of-thought prompting, have achieved considerable success on foundational reasoning tasks.</li><li>However, this success is heavily contingent upon extensive human-annotated demonstrations, and models&#39; capabilities are still insufficient for more complex problems.</li>
+      </ul>
+    </section>
+
+    <section class="card"><h2 class="card-title">🔎 주제 검색에서 확인한 초록</h2><p class="authors-meta">검색 결과 중 첫 1편만 분석했으며, 나머지 논문의 본문·실험표는 확인하지 않았습니다.</p><ul class="summary-list"><li><a href="https://arxiv.org/abs/2501.12948v2" rel="noopener noreferrer">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning</a> · 2025-01-22</li></ul></section>
+
+    <section class="card">
+      <h2 class="card-title">🔍 초록 원문 (Abstract)</h2>
+      <p class="content-p">General reasoning represents a long-standing and formidable challenge in artificial intelligence. Recent breakthroughs, exemplified by large language models (LLMs) and chain-of-thought prompting, have achieved considerable success on foundational reasoning tasks. However, this success is heavily contingent upon extensive human-annotated demonstrations, and models&#39; capabilities are still insufficient for more complex problems. Here we show that the reasoning abilities of LLMs can be incentivized through pure reinforcement learning (RL), obviating the need for human-labeled reasoning trajectories. The proposed RL framework facilitates the emergent development of advanced reasoning patterns, such as self-reflection, verification, and dynamic strategy adaptation. Consequently, the trained model achieves superior performance on verifiable tasks such as mathematics, coding competitions, and STEM fields, surpassing its counterparts trained via conventional supervised learning on human demonstrations. Moreover, the emergent reasoning patterns exhibited by these large-scale models can be systematically harnessed to guide and enhance the reasoning capabilities of smaller models.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">🔬 제안 방법론 및 핵심 아키텍처 (Methodology)</h2>
+      <p class="content-p">초록만 수집했어. 상세 방법론은 원문 전체에서 확인해야 해냥.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">📊 주요 실험 성과 및 벤치마크 (Evaluation)</h2>
+      <p class="content-p">벤치마크 수치·실험표는 원문 전체에서 검증하지 못했어냥.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">⚠️ 한계점 및 후속 연구 과제 (Discussion & Future Work)</h2>
+      <div class="warning-box">
+        <p>초록만으로 논문의 한계와 후속 과제를 확정하지 않았어냥.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Academic Report curated by Tobinyang Deep Research AI 🐾</p>
+      <p>© 2026 Tobinyang Reports. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
