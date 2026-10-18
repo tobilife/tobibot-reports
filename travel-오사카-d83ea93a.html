@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>오사카 2박 3일 스마트 여행 가이드 | 토비냥</title>
+  <style>
+    :root {
+      --color-bg: #f8fafc;
+      --color-surface: #ffffff;
+      --color-border: #e2e8f0;
+      --color-text: #0f172a;
+      --color-subtext: #475569;
+      --color-primary: #0284c7;
+      --color-primary-light: #e0f2fe;
+      --color-accent: #f59e0b;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      padding: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    header {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .badge-pill {
+      display: inline-block;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      margin-bottom: 12px;
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      margin-bottom: 8px;
+    }
+    .weather-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-top: 16px;
+      font-size: 14px;
+      color: #166534;
+    }
+    .weather-box strong { font-weight: 700; }
+    .day-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .day-badge {
+      background: var(--color-primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+    }
+    .day-title {
+      font-size: 17px;
+      font-weight: 700;
+    }
+    .route-summary {
+      display: flex;
+      gap: 8px;
+      background: var(--color-bg);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--color-subtext);
+    }
+    .spot-item {
+      border-left: 3px solid var(--color-primary-light);
+      padding-left: 14px;
+      margin-bottom: 14px;
+    }
+    .spot-title-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 4px;
+    }
+    .spot-category {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: #f1f5f9;
+      color: #475569;
+    }
+    .spot-name {
+      font-size: 15px;
+      color: var(--color-text);
+    }
+    .spot-duration {
+      font-size: 12px;
+      color: #94a3b8;
+    }
+    .spot-desc {
+      font-size: 14px;
+      color: var(--color-subtext);
+      margin-bottom: 4px;
+    }
+    .spot-tip {
+      font-size: 13px;
+      color: #b45309;
+      background: #fffbeb;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
+    }
+    .section-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .section-card h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .pass-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .pass-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+    .pass-cost {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-primary);
+    }
+    .pass-benefit {
+      font-size: 13px;
+      color: var(--color-subtext);
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+    .checklist-item input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--color-primary);
+    }
+    footer {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <span class="badge-pill">✈️ 스마트 여행 리포트</span>
+      <h1>오사카 (2박 3일)</h1>
+      <p style="color: var(--color-subtext); font-size: 14px;">토비냥 AI가 분석한 최적 동선, 날씨, 교통패스 및 일정 가이드</p>
+      
+      <div class="weather-box">
+        <p><strong>🌤️ 날씨:</strong> 여행하기 쾌적하고 맑은 날이 많지만 아침저녁으로 선선해서 일교차가 10도 이상 벌어질 수 있다냥.</p>
+        <p><strong>👕 추천 옷차림:</strong> 낮에는 가벼운 긴팔이나 반팔에 셔츠를 겹쳐 입고, 아침저녁 쌀쌀할 때 걸칠 수 있는 가디건이나 윈드브레이커를 챙기면 딱 좋다냥.</p>
+        <p><strong>⚠️ 주의사항:</strong> 하루 15,000보 이상 걸어야 하니 푹신한 운동화는 필수다냥! 갑작스러운 소나기에 대비해 초경량 3단 우산도 가방에 쏙 넣어두라냥.</p>
+      </div>
+    </header>
+
+    
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 1</span>
+        <h3 class="day-title">오사카 랜드마크 탐방과 도톤보리 불빛 야경</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>간사이 국제공항 → 난바 숙소 체크인 → 오사카성 공원 &amp; 천수각 → 우메다 스카이빌딩 공중정원 → 도톤보리 &amp; 신사이바시</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-transport">TRANSPORT</span>
+              <strong class="spot-name">간사이 국제공항 → 난바역 (난카이 라피트)</strong>
+              <span class="spot-duration">⏱️ 45분</span>
+            </div>
+            <p class="spot-desc">공항에서 난바 시내까지 38분 만에 쾌적하게 이동하는 특급 열차다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 국내에서 사전 예매하면 바우처 QR코드로 간편하게 교환해 특급 좌석을 바로 지정할 수 있다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">오사카성 &amp; 천수각</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">오사카의 유서 깊은 상징이자 드넓은 성곽 공원 풍경이 멋진 랜드마크다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 오사카 주유패스가 있으면 천수각 무료입장이 가능하고, 고자부네 놀잇배도 함께 예약하면 배를 타고 해자를 둘러볼 수 있다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">우메다 스카이빌딩 공중정원 전망대</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">360도 야외 루프탑에서 오사카 도심의 석양과 야경을 한눈에 내려다볼 수 있는 곳이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 일몰 30분 전에 올라가면 낮 풍경, 노을, 야경을 모두 감상할 수 있으니 시간을 맞춰가라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-food">FOOD</span>
+              <strong class="spot-name">도톤보리 &amp; 글리코상</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">화려한 네온사인과 글리코상이 반겨주는 오사카 최대 번화가다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 다코야키 원조집 타코하치나 앗치치혼포에서 다코야키를 포장해 도톤보리 강변 벤치에서 먹으면 낭만 가득하다냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 2</span>
+        <h3 class="day-title">교토 핵심 당일치기 감성 여행 or 오사카 완전 정복</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>후시미 이나리 신사 → 기요미즈데라(청수사) &amp; 산넨자카 → 아라시야마 치쿠린 &amp; 도게츠교 → 기타하마 카페거리</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">후시미 이나리 신사 (여우신사)</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">끝없이 이어진 붉은 센본 토리이가 장관을 이루는 유명 신사다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 인파가 몰리기 전 오전 8시 30분 이전에 방문해야 사람이 없는 인생샷을 건질 수 있다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">기요미즈데라 &amp; 산넨자카·니넨자카</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">교토 시내가 내려다보이는 절벽 위 사찰과 전통 가옥 거리가 아름다운 길목이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 산넨자카 주변에 말차 디저트와 야쓰하시 전통 과자 시식 코너가 많으니 천천히 둘러보며 당충전하라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">아라시야마 대나무숲(치쿠린) &amp; 도게츠교</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">시원한 대나무 숲길과 고즈넉한 강변 풍경 속에서 힐링할 수 있는 명소다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 사가노 토롯코 열차를 타거나 강변 아라비카(% ARABICA) 커피에서 교토 라떼 한잔 들고 산책하면 최고다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-cafe">CAFE</span>
+              <strong class="spot-name">모토커피 (기타하마)</strong>
+              <span class="spot-duration">⏱️ 1시간</span>
+            </div>
+            <p class="spot-desc">오사카로 돌아와 나카노시마 강변 테라스에서 야경과 강바람을 즐기기 좋은 감성 카페다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 야외 테라스석은 웨이팅이 있을 수 있으니 번호표를 먼저 뽑고 주변 강변을 구경하다 오라냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+    <section class="day-card">
+      <div class="day-header">
+        <span class="day-badge">Day 3</span>
+        <h3 class="day-title">레트로 감성과 쇼핑 &amp; 미식 먹부림 후 귀국</h3>
+      </div>
+      <div class="route-summary">
+        <span class="route-icon">🗺️</span>
+        <p>구로몬 시장 → 신세카이 &amp; 쓰텐카쿠 → 난바 파크스 쇼핑 → 간사이 국제공항</p>
+      </div>
+      <div class="spots-list">
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-food">FOOD</span>
+              <strong class="spot-name">구로몬 시장</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">오사카의 부엌이라 불리는 전통 시장으로 신선한 해산물과 와규 꼬치를 맛볼 수 있다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 참치 초밥과 가리비 버터구이 등 현금 결제 위주인 노점이 많으니 소액 엔화 현금을 미리 챙겨가라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-attraction">ATTRACTION</span>
+              <strong class="spot-name">신세카이 &amp; 쓰텐카쿠</strong>
+              <span class="spot-duration">⏱️ 1시간 30분</span>
+            </div>
+            <p class="spot-desc">쇼와 시대의 레트로 감성이 살아 숨쉬는 거리이자 오사카의 상징적인 타워다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 오사카 명물 쿠시카쓰(꼬치튀김) 골목의 다루마 본점에서 바삭한 튀김에 맥주 한잔 곁들이면 천국이다냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-shopping">SHOPPING</span>
+              <strong class="spot-name">난바 파크스 &amp; 돈키호테 난바센니치마에점</strong>
+              <span class="spot-duration">⏱️ 2시간</span>
+            </div>
+            <p class="spot-desc">공항 출발 전 기념품, 의약품, 면세 쇼핑을 한 번에 끝낼 수 있는 복합 쇼핑 구역이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 면세 카운터에 여권을 지참하고 5,000엔 이상 구입해 10% 소비세 면세 혜택과 모바일 할인쿠폰을 꼭 챙기라냥.</p>
+          </div>
+        
+          <div class="spot-item">
+            <div class="spot-title-row">
+              <span class="spot-category cat-transport">TRANSPORT</span>
+              <strong class="spot-name">난바역 → 간사이 국제공항 (난카이 라피트)</strong>
+              <span class="spot-duration">⏱️ 45분</span>
+            </div>
+            <p class="spot-desc">쇼핑 짐을 싣고 공항까지 정시 도착을 보장하는 특급 귀국 편이다냥.</p>
+            <p class="spot-tip">💡 <strong>꿀팁:</strong> 국제선 항공편 출발 최소 2시간 30분 전에는 공항에 도착할 수 있도록 열차 시각을 미리 예매해두라냥.</p>
+          </div>
+        
+      </div>
+    </section>
+  
+
+    
+      <section class="section-card">
+        <h2>🚇 추천 교통패스 & 이동 꿀팁</h2>
+        
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>오사카 주유패스 (1일권)</strong>
+        <span class="pass-cost">약 3,300엔 (약 30,000원)</span>
+      </div>
+      <p class="pass-benefit">오사카 시내 지하철 무제한 탑승과 오사카성 천수각, 우메다 공중정원, 햅파이브 관람차 등 주요 명소 무료입장 혜택으로 동선상 최소 2,000엔 이상 절약된다냥.</p>
+    </div>
+  
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>난카이 라피트 왕복권 (e-티켓)</strong>
+        <span class="pass-cost">약 2,580엔 (약 23,000원)</span>
+      </div>
+      <p class="pass-benefit">간사이 공항과 난바 도심을 38분 만에 연결하며 현장 구매보다 저렴하고 지정 좌석으로 편안하게 이동할 수 있다냥.</p>
+    </div>
+  
+    <div class="pass-card">
+      <div class="pass-title-row">
+        <strong>게이한 교토-오사카 관광패스 (1일권)</strong>
+        <span class="pass-cost">약 1,100엔 (약 10,000원)</span>
+      </div>
+      <p class="pass-benefit">2일차 오사카-교토 이동 시 후시미이나리, 기요미즈데라 방면 노선을 무제한 승하차할 수 있어 일반 편도 티켓보다 훨씬 저렴하다냥.</p>
+    </div>
+  
+      </section>
+    
+
+    <section class="section-card">
+      <h2>🎒 여행 준비물 체크리스트</h2>
+      <div class="checklist">
+        <label class="checklist-item"><input type="checkbox"> 여권 및 신분증 (유효기간 6개월 이상)</label>
+        <label class="checklist-item"><input type="checkbox"> e-티켓 항공권 및 숙소 바우처</label>
+        <label class="checklist-item"><input type="checkbox"> 해외 결제 카드 (트래블로그/트래블월렛 등) 및 현지 현금</label>
+        <label class="checklist-item"><input type="checkbox"> eSIM / 유심 / 포켓와이파이</label>
+        <label class="checklist-item"><input type="checkbox"> 보조배터리 및 국가별 돼지코 어댑터</label>
+        <label class="checklist-item"><input type="checkbox"> 날씨 맞춤 여벌옷, 상비약, 걷기 편한 운동화</label>
+      </div>
+    </section>
+
+    <footer>
+      <p>Report generated by Tobinyang AI Travel Planner 🐾</p>
+      <p>© 2026 Tobinyang Reports. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
