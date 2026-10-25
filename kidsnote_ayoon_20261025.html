@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>키즈노트 모바일 리포트 - 토비</title>
+  <style>
+    :root {
+      --primary: #FF9500;
+      --primary-hover: #E08500;
+      --primary-light: #FFF8EE;
+      --primary-badge: #FFEFD6;
+      --bg: #F5F6F8;
+      --surface: #FFFFFF;
+      --text-main: #191F28;
+      --text-sub: #4E5968;
+      --text-muted: #8B95A1;
+      --border: #E5E8EB;
+      --divider: #F2F4F6;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      letter-spacing: -0.3px;
+      padding-bottom: 40px;
+    }
+
+    /* Mobile Container App Shell */
+    .app-container {
+      max-width: 480px;
+      margin: 0 auto;
+      background: var(--surface);
+      min-height: 100vh;
+      box-shadow: 0 0 24px rgba(0,0,0,0.05);
+      position: relative;
+    }
+
+    /* Sticky Top Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .brand-title span.logo-icon {
+      font-size: 20px;
+    }
+
+    .timestamp {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* Child Selector Tabs */
+    .child-tabs {
+      display: flex;
+      padding: 12px 16px;
+      background: var(--primary-light);
+      border-bottom: 1px solid var(--primary-badge);
+      gap: 10px;
+    }
+
+    .child-tab-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--surface);
+      border: 1.5px solid transparent;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+
+    .child-tab-btn.active {
+      border-color: var(--primary);
+      background: #FFFFFF;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .child-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--primary-badge);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .child-tab-btn.active .child-avatar {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .child-info-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .child-info-school {
+      font-size: 11px;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+    }
+
+    /* Category Filter Pills */
+    .category-bar {
+      display: flex;
+      gap: 8px;
+      padding: 14px 16px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--divider);
+    }
+    .category-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .cat-btn {
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-sub);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.15s ease;
+    }
+
+    .cat-btn.active {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+    }
+
+    /* Record List Feed */
+    .record-feed {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Card Item */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .card-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      background: var(--primary-badge);
+      color: var(--primary-hover);
+    }
+
+    .card-date {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .card-author {
+      font-size: 12px;
+      color: var(--text-sub);
+      margin-bottom: 12px;
+    }
+
+    .card-body {
+      font-size: 14px;
+      color: var(--text-main);
+      line-height: 1.6;
+      word-break: keep-all;
+      white-space: pre-line;
+      background: #FAFAFA;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* Comments Section */
+    .comments-box {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .comments-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary-hover);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .comment-item {
+      background: #FFFDF9;
+      border-left: 3px solid var(--primary);
+      padding: 10px 12px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .comment-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .comment-text {
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    /* OCR Analysis Box */
+    .ocr-box {
+      margin-top: 14px;
+      background: #F0F7FF;
+      border: 1px solid #D0E4FF;
+      border-radius: var(--radius-sm);
+      padding: 14px;
+    }
+
+    .ocr-header {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0051C6;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .ocr-content {
+      font-size: 13px;
+      color: #2D3748;
+      line-height: 1.55;
+      white-space: pre-line;
+    }
+
+    /* Photo Gallery */
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .photo-thumb {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .photo-thumb:hover {
+      transform: scale(1.02);
+    }
+
+    .empty-state {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--text-muted);
+    }
+    .empty-state-icon {
+      font-size: 32px;
+      margin-bottom: 12px;
+    }
+
+    /* Bottom notice footer */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- Top Header -->
+    <header class="header">
+      <div class="brand-title">
+        <span class="logo-icon">💛</span>
+        <span>키즈노트 리포트</span>
+      </div>
+      <div class="timestamp">업데이트: 2026. 10. 26. AM 4:21:41</div>
+    </header>
+
+    <!-- Child Selector Tabs -->
+    <div class="child-tabs">
+      <button class="child-tab-btn active" onclick="selectChild('ayoon')">
+        <div class="child-avatar">👧</div>
+        <div>
+          <div class="child-info-name">정아윤</div>
+          <div class="child-info-school">원흥유치원 가온 1반</div>
+        </div>
+      </button>
+      <button class="child-tab-btn " onclick="selectChild('yoona')">
+        <div class="child-avatar">👶</div>
+        <div>
+          <div class="child-info-name">정윤아</div>
+          <div class="child-info-school">고양시립푸른솔어린이집</div>
+        </div>
+      </button>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="category-bar">
+      <button class="cat-btn active" onclick="filterCategory('all', this)">전체</button>
+      <button class="cat-btn" onclick="filterCategory('report', this)">알림장</button>
+      <button class="cat-btn" onclick="filterCategory('notice', this)">공지사항·가정통신문</button>
+      <button class="cat-btn" onclick="filterCategory('meal', this)">식단표</button>
+    </div>
+
+    <!-- Record Feed Container -->
+    <main class="record-feed" id="recordFeed">
+      <!-- Injected by JavaScript -->
+    </main>
+
+    <footer class="footer">
+      토비 챗봇 키즈노트 연동 시스템 · 상기형님 전용 브리핑
+    </footer>
+  </div>
+
+  <script>
+    const allResults = [{"child":"ayoon","childName":"정아윤","schoolName":"원흥유치원 가온 1반","records":[{"id":"ayoon-1792956101944-0","category":"report","title":"알림장 (선생님의 글)","date":"10월 21일 수요일","author":"원흥유치원 교사","content":"선생님 안녕하세요^^ 목요일에 아윤이 할아버지도 함께 참석해도 될까요? 앞서 제출했을 때는 엄마 아빠만 신청했어서 여쭤봅니다~^^ 오늘도 화이팅 하세요!!","imageUrls":["https://up-kids-kage.kakao.com/dn/eiwBC/dJMcahsoTqa/cTOJwBjIGYukTxycAwyHmK/img_240x240.jpg","https://up-kids-kage.kakao.com/dn/LVK4x/dJMcacRTYPe/KyG5IZ33N0KBCsfhkk3wXK/img_240x240.jpg"]},{"id":"ayoon-1792956101944-1","category":"report","title":"원에서 가정으로","date":"10월 8일 목요일","author":"원흥유치원 교사","content":"아윤이 어머니~ 안녕하세요? 아윤이는 너무너무 신나는 하루일테지만 저는 사랑스런 아윤이와 같이 숲놀이를 하지 못해 아쉬운 하루였답니다ㅠㅠ 다름이 아니오라 어제 오후에 갑자기 디지털 유보이음 성과공유회 참석 출장이 생겨버렸어요ㅠㅠ 제가 날짜를 정할 수 있는 것이 아니라 교육청에서 지정한 날짜라 변경이 어려워 부득이 13일에 출장을 나가게 되었습니다ㅠㅠ 상담 시간 땡 하자마자 제일 먼저 1번으로 신청해 주셨는데 변경 요청을 드리게 되어 정말 죄송합니다ㅠㅠ 상담일정이 14일(수) 14시 이후로 시간이 비어 있어 어머님께서 가능하신 시간이 있으시면 말씀 주세요. 불편을 드려 진심으로 죄송합니다.","imageUrls":[]},{"id":"ayoon-1792956101944-2","category":"report","title":"가정에서 원으로","date":"10월 6일 화요일","author":"원흥유치원 교사","content":"선생님 안녕하세요^^ 연휴 잘 보내셨나요~? 아윤이 잘 쉬고 등원합니다-! 아윤이 화, 수 등원하고 목-월 우진이네와 함께 이시가키 여행일정이 있어 말씀드립니다^^ 잘 다녀와서 다음 주 화요일 등원하겠습니다! 감사합니다~!!!","imageUrls":[]},{"id":"ayoon-1792956101944-3","category":"report","title":"가정에서 원으로","date":"9월 14일 월요일","author":"원흥유치원 교사","content":"선생님 안녕하세요-! ^^ 오늘 사진 찍는 날인데 원복 입고 가는지(노란 티+긴바지) 자유롭게 입어도 되는지 궁금합니다! (아윤이 무릎은 괜찮아요^^ 주말이라 선생님 쉬시라고 예약댓글로 남겨서 아직 전송이 안되었어요 ㅎㅎㅎ)","imageUrls":[]},{"id":"ayoon-1792956101944-4","category":"report","title":"원에서 가정으로","date":"9월 11일 금요일","author":"원흥유치원 교사","content":"아윤이 어머니, 안녕하세요? 오늘 숲놀이를 하며 산책로에 있는 다리를 건넜어요. 다리가 살짝 아치형이라 내리막길에서 아윤이가 넘어졌어요ㅠㅠ 넘어지며 땅에 닿은 부분을 살펴보니 크게 까지거나 긁힌 곳은 없었는데, 제가 무릎까지는 확인하지 못한 것 같아요. 혹시 무릎을 다치지는 않았을까 걱정되어 연락드립니다. 가정에서도 한 번 살펴봐 주세요. 그럼 귀염둥이 아윤이와 함께 즐거운 주말 보내세요😍","imageUrls":[]}]}];
+    let currentChild = "ayoon";
+    let currentCat = "all";
+
+    function selectChild(childKey) {
+      currentChild = childKey;
+      document.querySelectorAll('.child-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('onclick').includes(childKey));
+      });
+      renderFeed();
+    }
+
+    function filterCategory(catKey, btnEl) {
+      currentCat = catKey;
+      document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+      btnEl.classList.add('active');
+      renderFeed();
+    }
+
+    function renderFeed() {
+      const feedEl = document.getElementById('recordFeed');
+      const childData = allResults.find(r => r.child === currentChild);
+
+      if (!childData || !childData.records || childData.records.length === 0) {
+        feedEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">📝</div>
+            <p>등록된 알림장이나 공지사항이 없습니다.</p>
+          </div>`;
+        return;
+      }
+
+      let filtered = childData.records;
+      if (currentCat !== 'all') {
+        filtered = filtered.filter(r => r.category === currentCat);
+      }
+
+      if (filtered.length === 0) {
+        feedEl.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon">🔍</div>
+            <p>해당 카테고리에 등록된 항목이 없습니다.</p>
+          </div>`;
+        return;
+      }
+
+      let html = '';
+      for (const rec of filtered) {
+        const badgeLabel = rec.category === 'notice' ? '공지사항' : (rec.category === 'meal' ? '식단표' : '알림장');
+        
+        let commentsHtml = '';
+        if (rec.comments && rec.comments.length > 0) {
+          commentsHtml = `
+            <div class="comments-box">
+              <div class="comments-header">💬 댓글 / 답글 (${rec.comments.length})</div>
+              ${rec.comments.map(c => `
+                <div class="comment-item">
+                  <div class="comment-meta">
+                    <span>${c.author || '선생님'}</span>
+                    <span>${c.date || ''}</span>
+                  </div>
+                  <div class="comment-text">${c.content}</div>
+                </div>
+              `).join('')}
+            </div>`;
+        }
+
+        let ocrHtml = '';
+        if (rec.ocrSummary) {
+          ocrHtml = `
+            <div class="ocr-box">
+              <div class="ocr-header">🖼️ 가정통신문 및 이미지 핵심 분석</div>
+              <div class="ocr-content">${rec.ocrSummary}</div>
+            </div>`;
+        }
+
+        let photosHtml = '';
+        if (rec.imageUrls && rec.imageUrls.length > 0) {
+          photosHtml = `
+            <div class="photo-grid">
+              ${rec.imageUrls.map(url => `<img class="photo-thumb" src="${url}" alt="사진" loading="lazy" onclick="window.open('${url}', '_blank')">`).join('')}
+            </div>`;
+        }
+
+        html += `
+          <article class="card">
+            <div class="card-meta">
+              <span class="card-badge">${badgeLabel}</span>
+              <span class="card-date">${rec.date || ''}</span>
+            </div>
+            <h3 class="card-title">${rec.title || badgeLabel}</h3>
+            <div class="card-author">${rec.author ? '작성: ' + rec.author : ''}</div>
+            <div class="card-body">${rec.content || ''}</div>
+            ${commentsHtml}
+            ${ocrHtml}
+            ${photosHtml}
+          </article>
+        `;
+      }
+
+      feedEl.innerHTML = html;
+    }
+
+    // Initial render
+    renderFeed();
+  </script>
+</body>
+</html>
