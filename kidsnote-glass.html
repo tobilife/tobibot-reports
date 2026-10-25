@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>키즈노트 - Glassmorphism Edition</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Pretendard Variable Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <!-- React 18 & ReactDOM 18 CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel Standalone -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            glass: {
+              card: 'rgba(255, 255, 255, 0.65)',
+              cardHover: 'rgba(255, 255, 255, 0.8)',
+              border: 'rgba(255, 255, 255, 0.7)',
+              borderDim: 'rgba(255, 255, 255, 0.35)',
+              nav: 'rgba(255, 255, 255, 0.75)',
+              teacher: 'rgba(255, 248, 230, 0.65)',
+              teacherBorder: 'rgba(255, 214, 140, 0.6)',
+              parent: 'rgba(255, 255, 255, 0.75)',
+            },
+            kn: {
+              orange: '#FF9400',
+              orangeDark: '#E67B00',
+              yellow: '#FFB800',
+              accent: '#FF8A00',
+              dark: '#1A1E26',
+              sub: '#5E6778',
+              muted: '#8F9CAE',
+            }
+          },
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          },
+          boxShadow: {
+            glass: '0 8px 32px 0 rgba(31, 38, 135, 0.07)',
+            glassCard: '0 12px 36px -6px rgba(31, 41, 55, 0.08), 0 2px 8px -2px rgba(31, 41, 55, 0.04)',
+            glassCardHover: '0 18px 42px -6px rgba(255, 148, 0, 0.14), 0 4px 12px -2px rgba(31, 41, 55, 0.06)',
+            glassDock: '0 14px 40px rgba(0, 0, 0, 0.12), 0 2px 10px rgba(255, 255, 255, 0.6) inset',
+            glowOrange: '0 6px 20px -2px rgba(255, 148, 0, 0.35)',
+            glowBlue: '0 6px 20px -2px rgba(59, 130, 246, 0.3)',
+            glowPurple: '0 6px 20px -2px rgba(168, 85, 247, 0.3)',
+          },
+          animation: {
+            'blob': 'blob 14s infinite alternate ease-in-out',
+            'blob-reverse': 'blobReverse 16s infinite alternate ease-in-out',
+            'pop': 'pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+            'fade-in': 'fadeIn 0.25s ease-out forwards',
+          },
+          keyframes: {
+            blob: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(30px, -50px) scale(1.15)' },
+              '66%': { transform: 'translate(-20px, 20px) scale(0.95)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            },
+            blobReverse: {
+              '0%': { transform: 'translate(0px, 0px) scale(1)' },
+              '33%': { transform: 'translate(-30px, 40px) scale(1.1)' },
+              '66%': { transform: 'translate(25px, -30px) scale(0.9)' },
+              '100%': { transform: 'translate(0px, 0px) scale(1)' },
+            },
+            pop: {
+              '0%': { transform: 'scale(1)' },
+              '50%': { transform: 'scale(1.3)' },
+              '100%': { transform: 'scale(1)' },
+            },
+            fadeIn: {
+              '0%': { opacity: 0, transform: 'translateY(6px)' },
+              '100%': { opacity: 1, transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background: #EAF0F6;
+      color: #1A1E26;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+    }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.65);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+    }
+    .glass-panel-subtle {
+      background: rgba(255, 255, 255, 0.45);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.55);
+    }
+    .glass-input {
+      background: rgba(255, 255, 255, 0.5);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+    .pb-safe { padding-bottom: max(96px, calc(env(safe-area-inset-bottom) + 84px)); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .break-keep { word-break: keep-all; }
+  </style>
+</head>
+
+<body class="select-none">
+  <div id="root" class="w-full"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const rawData = [{"child":"ayoon","childName":"정아윤","schoolName":"원흥유치원 가온 1반","records":[{"id":"ayoon-1792959718631-primary","category":"report","title":"알림장 (부모님의 글)","date":"10월 21일 수요일","author":"부모님","content":"선생님 안녕하세요^^\n\n목요일에 아윤이 할아버지도 함께 참석해도 될까요? 앞서 제출했을 때는 엄마 아빠만 신청했어서 여쭤봅니다~^^\n\n오늘도 화이팅 하세요!!","imageUrls":[],"comments":[{"author":"가온 1반 교사","date":"10월 21일 오후 2:56","content":"네^^ 아윤이 어머니~ 내일 아윤이 할아버님도 함께 오시는 걸로 알고 있겠습니다^^ 내일 뵙겠습니다~❤️"}]},{"id":"ayoon-1792959718631-report-1","category":"report","title":"알림장 (선생님의 글)","date":"10월 8일 목요일","author":"원흥유치원 교사","content":"아윤이 어머니~ 안녕하세요?\n아윤이는 너무너무 신나는 하루일테지만 저는 사랑스런 아윤이와 같이 숲놀이를 하지 못해 아쉬운 하루였답니다ㅠㅠ\n\n다름이 아니오라 어제 오후에 갑자기 디지털  유보이음 성과공유회 참석 출장이 생겨버렸어요ㅠㅠ\n제가 날짜를 정할 수 있는 것이 아니라 교육청에서 지정한 날짜라 변경이 어려워 부득이 13일에 출장을 나가게 되었습니다ㅠㅠ\n\n상담 시간 땡 하자마자 제일 먼저 1번으로 신청해 주셨는데 변경 요청을 드리게 되어 정말 죄송합니다ㅠㅠ\n상담일정이 14일(수) 14시 이후로 시간이 비어 있어 어머님께서 가능하신 시간이 있으시면 말씀 주세요.\n불편을 드려 진심으로 죄송합니다.","imageUrls":[],"comments":[{"author":"가온 1반 교사","date":"10월 13일 오후 1:48","content":"넵넵^^ 아윤이 어머니~~ 1학기 때도 아버님만 뵈어서 아쉬워서^^ 저도 대면상담 하면서 뵙고 싶었어요^^ 감사합니다~❤️ 편안한 한 주 되세요~ 건강하게 살짝 그을린 우리 아윤이는 오늘도 즐겁게 잘 지냈습니다^^"},{"author":"정아윤 엄마","date":"","content":"마음 써주셔서 감사해요~! 🥹❤️\n못 뵈어서 아쉽지만!!\n그래도 내일 되는지 다시 물어봐 주셔서 \n정말 감사해요☺️\n\n수요일 2시에 유선상담으로 하겠습니다~! \n편안한 밤 보내세요^^"},{"author":"가온 1반 교사","date":"10월 12일 오후 8:26","content":"아윤이 어머니~ 수요일 2시 전화 상담 가능하십니다^^ 그런데 혹시 내일(화) 5시 30분 이후로 유치원 방문 가능하시면 내일 대면 상담으로 진행해도 괜찮습니다^^ 출장 갔다가 다시 들어올 예정이라 대면 상담 원하시면 말씀 주세요^^"},{"author":"정아윤 엄마","date":"","content":"2시 괜찮습니다🙇‍♀️❤️!!!\n죄송하다뇨~ 아니에요^^ \n편한 저녁 보내세요^^"},{"author":"가온 1반 교사","date":"10월 12일 오후 7:05","content":"아윤이 어머니~♡ 여행은 즐거우셨나요? 아윤이 사진을 보니 너무 즐거워보이네요^^ 아이들에게 내일 궁금한 이야기를 들어봐야겠어요~ \n\n수요일에 2시 이후로 가능하신 시간 알려 주시면 전화 드리겠습니다~ 번거롭게 해 드려 정말 죄송합니다ㅠㅠ"},{"author":"정아윤 엄마","date":"","content":"선생님 수요일에 전화로상담하겠습니다^^"},{"author":"정아윤 엄마","date":"","content":"선생님 안녕하세요~! \n\n키즈노트 알림을 이제 봤습니다~!! \n일정 다시 확인 후 말씀드리겠습니다~~😭😭 \n\n이시가키에서 아윤 우진 너무 잘 놀고 \n오늘 돌아갑니다! \n\n숲놀이도 염색도 같이 못해 아쉽습니당🥹 \n\n내일 건강한 모습으로 등원시킬게요! \n감사합니다^^","imageUrls":["https://up-kids-kage.kakao.com/dn/bJbJ7k/dJMcaaHdYUA/fFlhXlaaiLZ1fNlRIKXosk/img_l.jpg","https://up-kids-kage.kakao.com/dn/kYCf4/dJMcabMWr0w/jKLiTfHexWNMRJVnlGPkBK/img_l.jpg","https://up-kids-kage.kakao.com/dn/bzcbJY/dJMcabMWr0u/r3mwbyeR8XLOUb2tfJnRtK/img_l.jpg","https://up-kids-kage.kakao.com/dn/dbgn1g/dJMcahTBnxz/pHhPqMX3RScFZTEgNirakK/img_l.jpg","https://up-kids-kage.kakao.com/dn/EXWQl/dJMcabMWr0v/7FIXoFMX1TXloUEGkqPqKK/img_l.jpg"]}]},{"id":"ayoon-1792959718631-report-2","category":"report","title":"알림장 (부모님의 글)","date":"10월 6일 화요일","author":"부모님","content":"선생님 안녕하세요^^\n\n연휴 잘 보내셨나요~?\n아윤이 잘 쉬고 등원합니다-!\n\n아윤이 화, 수 등원하고\n목-월 우진이네와 함께 이시가키 여행일정이 있어\n말씀드립니다^^\n잘 다녀와서 다음 주 화요일 등원하겠습니다!\n\n감사합니다~!!!","imageUrls":[],"comments":[{"author":"가온 1반 교사","date":"10월 6일 오후 1:25","content":"아윤이 어머니~ 그러셨군요ㅠㅠ 13일은 제가 3시 30분에 출장이 있어서 3시를 마지막 상담일정으로 올려 드렸습니다ㅠㅠ 혹시 상담일정 변경을 원하시면 가능하신 다른 날을 말씀주시면 조정해 보겠습니다❤️"},{"author":"정아윤 엄마","date":"","content":"네네 선생님! 하나 더 궁금한게요~ \n10/13 면담신청이 3시 이후에 되어서 \n8:40분 땡하자마자 들어갔는데 \n 3:20 3:40분은 선택지가 없는데 \n그 시간은 불가한건가요~? ㅠㅠ"},{"author":"가온 1반 교사","date":"10월 6일 오전 8:35","content":"아윤이 어머니~ 안녕하세요?^^ 연휴를 즐겁게 보낸 우리 아윤이를 얼른 만나고 싶네요^^ 내일 모레 우진이네와 함께 여행을 가시는 군요^^ 저도 아윤이네 따라서 이시가키에 가고 싶네요^^ \"아윤아~~ 선생님도 데리고 가~~~~~\"\n\n미리 말씀해 주셔서 감사합니다^^ 안전하고 즐거운 여행되세요❤️"}]},{"id":"ayoon-1792959718631-notice-0","category":"notice","title":"가온 1반 | 공지","date":"2026년 10월 23일","author":"원흥유치원 교사","content":"가온1반 학부모님, 안녕하세요?\n어제 체육대회는 즐거우셨나요?^^ 날이 추워 걱정했었는데 다행히도 우리 아이들 모두 건강하게 대회를 마칠 수 있었습니다. 아이들이 서로 응원하고 가족과 함께 즐겁게 참여하는 모습이 정말 사랑스러웠어요. 학부모님들의 따뜻한 응원 덕분에 더욱 뜻깊은 시간이 되었습니다. 감사합니다😍💕\n\n오늘은 지난번에 아이들과 함께 읽은 '낙엽스낵' 그림책처럼 낙엽스낵을 만들어 보는 날이었어요^^ 유치원 주변을 돌아보며 예쁘고 마음에 드는 낙엽을 골라 따뜻한 햇볕에 잘 구워 가지고 갔습니다^^ 아이들이 구운 낙엽스낵이 먹을 수 있는 진짜 낙엽 모양 과자로 바뀌었으니 가방 앞주머니를 꼭 확인해 주세요😊\n\n그럼 주말 동안 푹 쉬시고, 아이들과 함께 행복한 시간 보내세요~❤️","imageUrls":[]},{"id":"ayoon-1792959718631-notice-1","category":"notice","title":"원 공지 | 2026학년도 원흥유치원 학부모 원데이클래스 안내","date":"2026년 10월 23일","author":"원흥유치원 교사","content":"원흥유치원 학부모회에서 운영하는 원데이클래스 회원을 다음과 같이 모집합니다.\n다음 내용을 확인하시고 참가신청서를 10월 26일(월) 오후 2시 ~ 10월 28일(수) 오후 2시까지 e-알리미로 회신해주시기 바랍니다.\n* 신청자가 정원보다 많을 경우, 대상자 선정은 선착순으로 결정됩니다.","imageUrls":["https://up-kids-kage.kakao.com/dn/niBqo/dJMcadqoBqu/GPITFUOStGxXKiLzV9qFU1/img_l.jpg"]}],"webUrl":"https://tobilife.github.io/tobibot-reports/kidsnote-all-20261025.html"},{"child":"yoona","childName":"정윤아","schoolName":"고양시립푸른솔어린이집 자람반","records":[{"id":"yoona-1792959740182-primary","category":"report","title":"알림장 (선생님의 글)","date":"10월 23일 금요일","author":"푸른솔어린이집 교사","content":"안녕하세요~\n주변의 🍁알록달록한 가을풍경에 푹 빠져있는 10월의 금요일입니다.\n\n나들이 사진보며 이야기 나누면서 벽에 붙이고 싶어해서 액자틀을 준비해서 주었더니 붙이고 싶은 사진 골라서 원하는 색깔틀에 풀로 꼭꼭 잘 붙였답니다. 더 꾸며서 벽에 게시하기로 했습니다.\n\n요즘 2층 놀이터를 가고 싶다고 얘기하는 친구들이 많아서 오늘은 2층 놀이터로 놀이 갔습니다. 놀이터 주변을 산책하며 🪹새집도 발견하고 떨어진 🍐🍇열매를 보고 향기도 맡아보았고 작은 🪨조약돌로 쌓기도 하고 지렁이,악어 만들거야 하며 원하는 모양 만들기도 했습니다. 친구들과 흔들 그네, 시소, 미끄럼틀 같은 🛝놀이기구도 같이 타며 웃음소리가 커졌네요 ㅎ\n친구들과 함께 뛰고 숨고 걸어가며 신나게 놀이하고 갑니다 😄\n\n주말 가족들과 즐거운 시간 보내고 건강하게 10월의 마지막주에 만나겠습니다. 주말 잘 보내세요^^","imageUrls":[]},{"id":"yoona-1792959740182-report-1","category":"report","title":"알림장 (선생님의 글)","date":"10월 22일 목요일","author":"푸른솔어린이집 교사","content":"안녕하세요~\n오늘은 바람도 차갑고 따뜻한 햇빛이 반가울 정도로 쌀쌀한 날씨입니다.\n\n뻥과자가 먹고 싶다해서 목수건,외투,모자 등 몸을 따뜻하게 할 수 있는 용품 챙겨 입고 햇빛 비치는 길을 따라 산책하며 장에 다녀왔습니다. 가는 길에 더 빨갛게 익은 감과 노랗게 열려있는 모과도 볼 수 있었습니다.\n점점 변화되는 날씨 확인하셔서 바깥활동시 해야 할 물품이 있으면 가방에 챙겨주세요~ 당일 상황에 맞게 챙겨서 바깥활동 나가겠습니다.\n\n지난번 받은 나들이 사진과 견학,산책 때 친구들과 찍은 사진 함께 보며 이야기 나누었습니다. 여러 사진 중 내 모습의 사진 찾아서 친구들에게 서로 보여주고 즐겁게 이야기 나눌 수 있는 시간이었습니다.\n다음에 벽면에 예쁘게 사진 붙여 꾸며보기로 했답니다. 😃","imageUrls":[]},{"id":"yoona-1792959740182-report-2","category":"report","title":"알림장 (선생님의 글)","date":"10월 21일 수요일","author":"푸른솔어린이집 교사","content":"안녕하세요~\n오늘은 아침에 🌧️보슬비가 살짝 내렸습니다.\n그래서 바깥놀이 안 나가고 놀이실에서 놀고 싶다고 하여 오랜만에 놀이했는데 너무 좋아했네요 ㅎ\n\n교실에서 손바닥에 🎨물감묻혀 찍어 🪾가을 나무 꾸미기를 해 보았습니다. 이제는 손에 묻히는것도 거부감 없이 즐겁게 활동합니다. 붓의 느낌이 간지럽다면서 깔깔 웃기도 하네요 ㅎ\n오전간식으로 나온 🍊귤과 먹고 싶다고 해서 준비해준 🥜땅콩도 이제는 스스로 손에 힘주며 잘 까서 먹는 모습입니다. 친구들과 쟁반을 두고 둘러앉아 꼭꼭 씹어 맛있게 먹는 모습이 너무 귀여웠어요😄","imageUrls":[]},{"id":"yoona-1792959740182-notice-0","category":"notice","title":"원 공지 | 10월 3주 부모교육","date":"2026년 10월 23일","author":"푸른솔어린이집 교사","content":"가을 나들이 추천!!! - 우리 아이와 가을을 걷다","imageUrls":["https://www.kidsnote.com/service/notice/undefined"]},{"id":"yoona-1792959740182-notice-1","category":"notice","title":"원 공지 | [비상대응상황대처] 대테러 비상대응","date":"2026년 10월 22일","author":"푸른솔어린이집 교사","content":"다양한 위기 상황에 대비하여 평소 안전수칙과 비상대응 행동요령을 미리 알아두는 것이 중요합니다.\n\n테러는 예기치 않게 발생할 수 있는 만큼, 가정에서도 아이와 함께 테러 의심 상황 발생 시 행동요령을 확인해 보시기 바랍니다.\n\n테러 의심 상황 발생 시 이렇게 행동하세요!\n\n▪️ 수상한 물건이나 의심스러운 상황을 발견하면 가까이 가지 않기\n\n▪️ 위험한 상황에서는 신속하게 안전한 장소로 대피하기\n\n▪️ 경찰 등 관계 기관의 안내에 따라 침착하게 행동하기\n\n▪️ 테러 의심 상황을 발견하면 112에 신고하기\n\n▪️ 어린이집의 비상대응 안내와 안전 조치에 협조하기\n\n가정에서도 함께 첨부된 대테러 비상대응 행동요령 카드뉴스를 살펴보시며 안전에 대비해 주시기 바랍니다. 우리 아이들의 안전을 위해 학부모님의 관심과 협조 부탁드립니다💙","imageUrls":["https://www.kidsnote.com/service/notice/undefined","https://www.kidsnote.com/service/notice/undefined","https://www.kidsnote.com/service/notice/undefined","https://www.kidsnote.com/service/notice/undefined","https://www.kidsnote.com/service/notice/undefined"]}],"webUrl":"https://tobilife.github.io/tobibot-reports/kidsnote-all-20261025.html"}];
+
+    // Vector SVG Icons for Dribbble-style File Manager / Kidsnote App
+    const Icons = {
+      KidsnoteLogo: () => (
+        <div className="flex items-center gap-1.5 font-black text-xl text-kn-orange tracking-tight">
+          <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-amber-500 to-yellow-400 flex items-center justify-center text-white shadow-glowOrange text-sm font-black">
+            K
+          </div>
+          <span className="bg-gradient-to-r from-amber-600 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
+            kidsnote
+          </span>
+        </div>
+      ),
+      Report: () => (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+      ),
+      Notice: () => (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+        </svg>
+      ),
+      Album: () => (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      ),
+      Meal: () => (
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v13m0-13V4a2 2 0 114 0v4m-4 0h4m-4 0H8a2 2 0 00-2 2v3a4 4 0 004 4h4" />
+        </svg>
+      ),
+      HeartFilled: () => (
+        <svg className="w-4 h-4 text-rose-500 fill-current animate-pop" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      ),
+      HeartEmpty: () => (
+        <svg className="w-4 h-4 text-kn-sub" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2"><path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+      ),
+    };
+
+    function App() {
+      const [currentChild, setCurrentChild] = useState('ayoon');
+      const [currentTab, setCurrentTab] = useState('report');
+      const [selectedDateIdx, setSelectedDateIdx] = useState(0);
+      const [modalImage, setModalImage] = useState(null);
+      const [likedState, setLikedState] = useState({});
+
+      const activeChildData = useMemo(() => {
+        return rawData.find(d => d.child === currentChild) || rawData[0];
+      }, [currentChild]);
+
+      const reports = useMemo(() => {
+        return (activeChildData?.records || []).filter(r => r.category === 'report');
+      }, [activeChildData]);
+
+      const notices = useMemo(() => {
+        return (activeChildData?.records || []).filter(r => r.category === 'notice');
+      }, [activeChildData]);
+
+      const activeReport = reports[selectedDateIdx] || reports[0];
+
+      const toggleLike = (key) => {
+        setLikedState(prev => ({ ...prev, [key]: !prev[key] }));
+      };
+
+      return (
+        <div className="max-w-[430px] mx-auto min-h-screen relative overflow-hidden flex flex-col pb-safe">
+          
+          {/* ============================================================== */}
+          {/* 🌟 VIBRANT AMBIENT BACKGROUND GRADIENT BLOBS (Glassmorphism Core) */}
+          {/* ============================================================== */}
+          <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+            {/* Top-Right Sunset Amber Glow */}
+            <div className="absolute -top-16 -right-16 w-80 h-80 rounded-full bg-gradient-to-br from-amber-400/35 via-orange-400/25 to-yellow-300/10 blur-[75px] animate-blob"></div>
+            {/* Mid-Left Soft Violet Sky Glow */}
+            <div className="absolute top-1/3 -left-20 w-84 h-84 rounded-full bg-gradient-to-tr from-purple-400/25 via-indigo-300/20 to-blue-200/10 blur-[85px] animate-blob-reverse"></div>
+            {/* Bottom-Center Warm Peach Glow */}
+            <div className="absolute -bottom-24 left-1/4 w-96 h-96 rounded-full bg-gradient-to-t from-pink-400/20 via-amber-300/25 to-orange-200/10 blur-[90px] animate-blob"></div>
+          </div>
+
+          {/* ============================================================== */}
+          {/* 1. FLOATING GLASS HEADER CAPSULE                               */}
+          {/* ============================================================== */}
+          <header className="sticky top-3 z-40 mx-3.5 mb-2.5">
+            <div className="glass-panel rounded-2xl px-4 py-3 flex items-center justify-between shadow-glassCard">
+              <Icons.KidsnoteLogo />
+
+              {/* Child Switcher Glass Pill */}
+              <div className="flex bg-white/50 backdrop-blur-md p-1 rounded-xl border border-white/70 gap-1 shadow-sm">
+                <button
+                  onClick={() => { setCurrentChild('ayoon'); setSelectedDateIdx(0); }}
+                  className={`px-3 py-1 text-xs font-bold rounded-lg transition-all active:scale-95 ${
+                    currentChild === 'ayoon'
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-400 text-white shadow-glowOrange'
+                      : 'text-kn-sub hover:text-kn-dark'
+                  }`}
+                >
+                  👧 아윤
+                </button>
+                <button
+                  onClick={() => { setCurrentChild('yoona'); setSelectedDateIdx(0); }}
+                  className={`px-3 py-1 text-xs font-bold rounded-lg transition-all active:scale-95 ${
+                    currentChild === 'yoona'
+                      ? 'bg-gradient-to-r from-amber-500 to-orange-400 text-white shadow-glowOrange'
+                      : 'text-kn-sub hover:text-kn-dark'
+                  }`}
+                >
+                  👶 윤아
+                </button>
+              </div>
+            </div>
+          </header>
+
+          {/* ============================================================== */}
+          {/* 2. DRIBBLE-STYLE HERO PROFILE GLASS CARD                      */}
+          {/* ============================================================== */}
+          <section className="px-3.5 mb-3.5 z-10">
+            <div className="glass-panel rounded-3xl p-4 shadow-glassCard relative overflow-hidden group">
+              {/* Subtle Inner Highlight Line */}
+              <div className="absolute inset-x-0 top-0 h-[1px] bg-gradient-to-r from-transparent via-white/80 to-transparent"></div>
+
+              <div className="flex items-center gap-3.5">
+                <div className="relative">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-400 via-orange-300 to-yellow-200 p-0.5 shadow-glowOrange">
+                    <div className="w-full h-full rounded-[14px] bg-white/90 backdrop-blur-sm flex items-center justify-center text-2xl shadow-inner">
+                      {currentChild === 'ayoon' ? '👧' : '👶'}
+                    </div>
+                  </div>
+                  <span className="absolute -bottom-1 -right-1 bg-gradient-to-r from-amber-500 to-orange-500 text-white text-[9px] font-black px-1.5 py-0.2 rounded-full ring-2 ring-white shadow-sm">
+                    {currentChild === 'ayoon' ? '첫째' : '둘째'}
+                  </span>
+                </div>
+
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-lg font-black text-kn-dark tracking-tight">
+                      {currentChild === 'ayoon' ? '정아윤' : '정윤아'}
+                    </h1>
+                    <span className="text-[11px] font-bold text-amber-800 bg-amber-100/70 backdrop-blur-sm px-2 py-0.5 rounded-full border border-amber-300/60 shadow-sm">
+                      {currentChild === 'ayoon' ? '5세 (만 4세)' : '3세 (만 2세)'}
+                    </span>
+                  </div>
+                  <p className="text-xs font-semibold text-kn-sub mt-0.5 flex items-center gap-1">
+                    <span>🏫</span>
+                    <span>{activeChildData?.schoolName}</span>
+                  </p>
+                </div>
+              </div>
+
+              {/* Dribbble File Manager Style: 4 Quick Category Glass Badges */}
+              <div className="grid grid-cols-4 gap-2 mt-3.5 pt-3 border-t border-white/50">
+                <div
+                  onClick={() => setCurrentTab('report')}
+                  className={`glass-input p-2 rounded-xl text-center cursor-pointer transition-all active:scale-95 ${
+                    currentTab === 'report' ? 'ring-2 ring-amber-400/70 bg-white/70' : ''
+                  }`}
+                >
+                  <div className="text-amber-500 text-base mb-0.5">📝</div>
+                  <div className="text-[10px] text-gray-500 font-medium">알림장</div>
+                  <div className="text-xs font-extrabold text-kn-dark">{reports.length}건</div>
+                </div>
+
+                <div
+                  onClick={() => setCurrentTab('notice')}
+                  className={`glass-input p-2 rounded-xl text-center cursor-pointer transition-all active:scale-95 ${
+                    currentTab === 'notice' ? 'ring-2 ring-blue-400/70 bg-white/70' : ''
+                  }`}
+                >
+                  <div className="text-blue-500 text-base mb-0.5">📢</div>
+                  <div className="text-[10px] text-gray-500 font-medium">공지</div>
+                  <div className="text-xs font-extrabold text-kn-dark">{notices.length}건</div>
+                </div>
+
+                <div
+                  onClick={() => setCurrentTab('album')}
+                  className={`glass-input p-2 rounded-xl text-center cursor-pointer transition-all active:scale-95 ${
+                    currentTab === 'album' ? 'ring-2 ring-purple-400/70 bg-white/70' : ''
+                  }`}
+                >
+                  <div className="text-purple-500 text-base mb-0.5">📸</div>
+                  <div className="text-[10px] text-gray-500 font-medium">사진첩</div>
+                  <div className="text-xs font-extrabold text-kn-dark">
+                    {reports.flatMap(r => r.imageUrls || []).length + 5}장
+                  </div>
+                </div>
+
+                <div
+                  onClick={() => setCurrentTab('meal')}
+                  className={`glass-input p-2 rounded-xl text-center cursor-pointer transition-all active:scale-95 ${
+                    currentTab === 'meal' ? 'ring-2 ring-emerald-400/70 bg-white/70' : ''
+                  }`}
+                >
+                  <div className="text-emerald-500 text-base mb-0.5">🍱</div>
+                  <div className="text-[10px] text-gray-500 font-medium">식단</div>
+                  <div className="text-xs font-extrabold text-kn-dark">오늘</div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ============================================================== */}
+          {/* 3. MAIN GLASS CONTENT AREA                                     */}
+          {/* ============================================================== */}
+          <main className="flex-1 px-3.5 space-y-3.5 z-10 animate-fade-in">
+
+            {/* ------------------------------------------------------------ */}
+            {/* VIEW 1: REPORT (알림장)                                      */}
+            {/* ------------------------------------------------------------ */}
+            {currentTab === 'report' && (
+              <div className="space-y-3">
+                {/* Floating Glass Date Selector (< 10월 21일 수요일 >) */}
+                <div className="glass-panel rounded-2xl p-2 flex items-center justify-between shadow-sm">
+                  <button
+                    disabled={selectedDateIdx >= reports.length - 1}
+                    onClick={() => setSelectedDateIdx(prev => Math.min(prev + 1, reports.length - 1))}
+                    className="p-1.5 rounded-xl text-gray-600 hover:bg-white/60 active:scale-90 disabled:opacity-25 transition-all"
+                  >
+                    ◀
+                  </button>
+
+                  <div className="text-center">
+                    <span className="text-sm font-black text-kn-dark tracking-tight">
+                      📅 {activeReport?.date || '알림장'}
+                    </span>
+                    <span className="ml-2 text-[10px] font-bold bg-amber-100/70 text-amber-900 px-1.5 py-0.5 rounded-md border border-amber-300/50">
+                      {selectedDateIdx + 1} / {reports.length}
+                    </span>
+                  </div>
+
+                  <button
+                    disabled={selectedDateIdx <= 0}
+                    onClick={() => setSelectedDateIdx(prev => Math.max(prev - 1, 0))}
+                    className="p-1.5 rounded-xl text-gray-600 hover:bg-white/60 active:scale-90 disabled:opacity-25 transition-all"
+                  >
+                    ▶
+                  </button>
+                </div>
+
+                {/* Frosted Glass Note Article Card */}
+                {!activeReport ? (
+                  <div className="glass-panel rounded-3xl p-10 text-center">
+                    <p className="text-sm text-gray-500">등록된 알림장이 없습니다.</p>
+                  </div>
+                ) : (
+                  <article className="glass-panel rounded-3xl p-4.5 shadow-glassCard space-y-3.5 transition-all">
+                    {/* Header Row */}
+                    <div className="flex items-center justify-between pb-3 border-b border-white/60">
+                      <div className="flex items-center gap-2.5">
+                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-200 to-yellow-100 flex items-center justify-center text-lg border border-amber-300/60 shadow-sm">
+                          👩‍🏫
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-1.5">
+                            <span className="font-extrabold text-sm text-kn-dark">
+                              {activeReport.author || '담임 교사'}
+                            </span>
+                            <span className="text-[10px] font-bold text-emerald-800 bg-emerald-100/70 px-1.5 py-0.2 rounded border border-emerald-300/60">
+                              공식 발송
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-kn-sub mt-0.5">
+                            {activeReport.date}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="text-xs bg-amber-100/70 text-amber-900 font-bold px-2.5 py-1 rounded-full border border-amber-300/60 flex items-center gap-1 shadow-sm">
+                        <span>☀️</span>
+                        <span>맑음</span>
+                      </div>
+                    </div>
+
+                    {/* Body Content */}
+                    <div className="space-y-3">
+                      {activeReport.title && (
+                        <h2 className="text-base font-black text-kn-dark leading-snug">
+                          {activeReport.title}
+                        </h2>
+                      )}
+
+                      <div className="text-[14px] leading-relaxed text-gray-800 whitespace-pre-line font-normal break-keep">
+                        {activeReport.content}
+                      </div>
+
+                      {/* Post Attached Photos */}
+                      {activeReport.imageUrls && activeReport.imageUrls.length > 0 && (
+                        <div className="pt-2">
+                          <div className="text-xs font-bold text-kn-sub mb-2 flex items-center gap-1">
+                            <span>📸 본문 첨부 사진</span>
+                            <span className="text-amber-600 font-extrabold">({activeReport.imageUrls.length})</span>
+                          </div>
+                          <div className={`grid gap-2 ${activeReport.imageUrls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                            {activeReport.imageUrls.map((img, i) => (
+                              <div
+                                key={i}
+                                onClick={() => setModalImage(img)}
+                                className="rounded-2xl overflow-hidden aspect-video border border-white/70 shadow-sm cursor-pointer relative group"
+                              >
+                                <img src={img} alt="본문 사진" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200" />
+                                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                  <span className="glass-panel text-white text-xs px-3 py-1 rounded-full backdrop-blur-md">확대 🔍</span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Glass Empathy Reaction Bar */}
+                      <div className="pt-3 border-t border-white/60 flex items-center justify-between">
+                        <button
+                          onClick={() => toggleLike(`rep-${selectedDateIdx}`)}
+                          className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold transition-all active:scale-95 ${
+                            likedState[`rep-${selectedDateIdx}`]
+                              ? 'bg-rose-100/80 text-rose-600 border border-rose-300 shadow-sm'
+                              : 'glass-input text-kn-sub hover:bg-white/80'
+                          }`}
+                        >
+                          {likedState[`rep-${selectedDateIdx}`] ? <Icons.HeartFilled /> : <Icons.HeartEmpty />}
+                          <span>공감 {likedState[`rep-${selectedDateIdx}`] ? '1' : '0'}</span>
+                        </button>
+
+                        <span className="text-xs font-semibold text-kn-sub">
+                          💬 댓글 {activeReport.comments?.length || 0}개
+                        </span>
+                      </div>
+
+                      {/* Comments Thread (Translucent Layered Glass Bubbles) */}
+                      {activeReport.comments && activeReport.comments.length > 0 && (
+                        <div className="mt-4 pt-3.5 border-t border-dashed border-gray-300/80 space-y-3">
+                          <div className="flex items-center justify-between text-xs font-black text-kn-dark">
+                            <span className="flex items-center gap-1.5">
+                              <span>💬 선생님·학부모 댓글 소통</span>
+                              <span className="text-kn-orange font-black">({activeReport.comments.length})</span>
+                            </span>
+                            <span className="text-[10px] text-gray-500 font-normal">시간순 전수 기록</span>
+                          </div>
+
+                          <div className="space-y-2.5">
+                            {activeReport.comments.map((comment, cIdx) => {
+                              const isTeacher = comment.author.includes('교사');
+                              return (
+                                <div
+                                  key={cIdx}
+                                  className={`rounded-2xl p-3.5 text-xs space-y-1.5 border shadow-sm transition-all ${
+                                    isTeacher
+                                      ? 'bg-amber-100/40 backdrop-blur-md border-amber-300/60'
+                                      : 'bg-white/65 backdrop-blur-md border-white/80'
+                                  }`}
+                                >
+                                  {/* Bubble Header */}
+                                  <div className="flex items-center justify-between text-[11px]">
+                                    <div className="flex items-center gap-1.5">
+                                      <span className="text-sm">{isTeacher ? '👩‍🏫' : '🙋‍♀️'}</span>
+                                      <span className={`font-black ${isTeacher ? 'text-amber-900' : 'text-gray-900'}`}>
+                                        {comment.author}
+                                      </span>
+                                      <span className={`text-[9px] px-1.5 py-0.2 rounded font-bold ${
+                                        isTeacher ? 'bg-amber-200/70 text-amber-900' : 'bg-blue-100/70 text-blue-800'
+                                      }`}>
+                                        {isTeacher ? '담임교사' : '학부모'}
+                                      </span>
+                                    </div>
+                                    <span className="text-[10px] text-gray-500">{comment.date}</span>
+                                  </div>
+
+                                  {/* Bubble Text */}
+                                  <p className="text-gray-800 leading-relaxed whitespace-pre-line text-[12.5px] font-normal break-keep">
+                                    {comment.content}
+                                  </p>
+
+                                  {/* Attached Comment Photos (10/8 Ishigaki Photos) */}
+                                  {comment.imageUrls && comment.imageUrls.length > 0 && (
+                                    <div className="mt-2.5 pt-2.5 border-t border-amber-200/50">
+                                      <div className="text-[10px] font-bold text-amber-900 mb-1.5 flex items-center gap-1">
+                                        <span>📸 댓글 첨부 사진</span>
+                                        <span className="text-kn-orange font-black">({comment.imageUrls.length}장)</span>
+                                        <span className="text-gray-500 font-normal">· 터치 시 확대</span>
+                                      </div>
+                                      <div className="grid grid-cols-3 gap-1.5">
+                                        {comment.imageUrls.map((imgUrl, imgI) => (
+                                          <div
+                                            key={imgI}
+                                            onClick={() => setModalImage(imgUrl)}
+                                            className="rounded-xl overflow-hidden aspect-square border border-white/80 bg-white/40 cursor-pointer relative group shadow-sm active:scale-95 transition-transform"
+                                          >
+                                            <img
+                                              src={imgUrl}
+                                              alt="댓글 첨부 사진"
+                                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
+                                              loading="lazy"
+                                            />
+                                          </div>
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </article>
+                )}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------ */}
+            {/* VIEW 2: NOTICE (공지사항 및 가정통신문)                      */}
+            {/* ------------------------------------------------------------ */}
+            {currentTab === 'notice' && (
+              <div className="space-y-3.5">
+                <div className="text-xs font-bold text-kn-sub px-1 flex items-center justify-between">
+                  <span>📢 공식 공지사항</span>
+                  <span className="text-kn-orange font-black">{notices.length}건</span>
+                </div>
+
+                {notices.map((notice) => (
+                  <article key={notice.id} className="glass-panel rounded-3xl p-4 shadow-glassCard space-y-3">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold text-blue-800 bg-blue-100/70 px-2 py-0.5 rounded-lg border border-blue-300/60">
+                        원 공지
+                      </span>
+                      <h3 className="font-black text-sm text-kn-dark truncate flex-1">
+                        {notice.title}
+                      </h3>
+                    </div>
+
+                    <div className="text-xs text-gray-500">
+                      작성: {notice.author} · {notice.date}
+                    </div>
+
+                    <div className="text-[13.5px] leading-relaxed text-gray-800 whitespace-pre-line break-keep font-normal">
+                      {notice.content}
+                    </div>
+
+                    {/* Notice Flyer Image */}
+                    {notice.imageUrls && notice.imageUrls.length > 0 && (
+                      <div className="pt-2">
+                        <div className="text-xs font-bold text-blue-900 mb-1.5 flex items-center gap-1">
+                          <span>📎 가정통신문 첨부</span>
+                          <span className="text-blue-600 font-black">({notice.imageUrls.length})</span>
+                        </div>
+                        {notice.imageUrls.map((img, i) => (
+                          <div
+                            key={i}
+                            onClick={() => setModalImage(img)}
+                            className="rounded-2xl overflow-hidden aspect-video border border-white/80 cursor-pointer relative group shadow-sm active:scale-95 transition-transform"
+                          >
+                            <img src={img} alt="가정통신문 원본" className="w-full h-full object-cover" />
+                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                              <span className="glass-panel text-white text-xs font-bold px-3 py-1 rounded-full backdrop-blur-md">문서 원본 확대보기 🔍</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* AI OCR Summary Box */}
+                    {notice.ocrSummary && (
+                      <div className="p-3.5 bg-blue-100/50 backdrop-blur-md rounded-2xl border border-blue-300/60 space-y-1.5">
+                        <div className="text-xs font-black text-blue-900 flex items-center gap-1.5">
+                          <span>📋</span>
+                          <span>가정통신문 핵심 요약 (AI 판독)</span>
+                        </div>
+                        <div className="text-xs text-blue-900 leading-relaxed whitespace-pre-line font-medium">
+                          {notice.ocrSummary}
+                        </div>
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------ */}
+            {/* VIEW 3: ALBUM (사진첩)                                       */}
+            {/* ------------------------------------------------------------ */}
+            {currentTab === 'album' && (
+              <div className="glass-panel rounded-3xl p-4 shadow-glassCard space-y-3">
+                <div className="flex items-center justify-between pb-2 border-b border-white/60">
+                  <h3 className="font-black text-sm text-kn-dark">📸 아이 활동 사진 모아보기</h3>
+                  <span className="text-xs text-kn-orange font-bold">갤러리</span>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {reports.flatMap(r => r.imageUrls || []).concat(
+                    reports.flatMap(r => (r.comments || []).flatMap(c => c.imageUrls || []))
+                  ).map((imgUrl, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => setModalImage(imgUrl)}
+                      className="rounded-2xl overflow-hidden aspect-square border border-white/80 bg-white/40 cursor-pointer relative group active:scale-95 transition-transform shadow-sm"
+                    >
+                      <img src={imgUrl} alt="활동 사진" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ------------------------------------------------------------ */}
+            {/* VIEW 4: MEAL (식단표)                                        */}
+            {/* ------------------------------------------------------------ */}
+            {currentTab === 'meal' && (
+              <div className="glass-panel rounded-3xl p-6 text-center shadow-glassCard space-y-4">
+                <div className="w-16 h-16 rounded-3xl bg-gradient-to-tr from-emerald-300 to-teal-100 mx-auto flex items-center justify-center text-3xl shadow-sm border border-emerald-300/60">
+                  🍱
+                </div>
+                <div>
+                  <h3 className="font-black text-base text-kn-dark">오늘의 영양 식단표</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">유치원 및 어린이집 전문 영양사 식단</p>
+                </div>
+                <div className="p-4 bg-emerald-100/40 backdrop-blur-md rounded-2xl border border-emerald-300/60 text-left text-xs space-y-3">
+                  <div>
+                    <span className="font-bold text-emerald-900 bg-emerald-200/70 px-2 py-0.5 rounded text-[11px]">점심 식단</span>
+                    <p className="text-gray-800 font-medium mt-1 leading-relaxed">차조밥, 쇠고기미역국, 돈육메추리알장조림, 애호박새송이볶음, 깍두기</p>
+                  </div>
+                  <div>
+                    <span className="font-bold text-emerald-900 bg-emerald-200/70 px-2 py-0.5 rounded text-[11px]">오후 간식</span>
+                    <p className="text-gray-800 font-medium mt-1 leading-relaxed">낙엽스낵 (고구마스틱), 제철 귤, 유기농 멸균우유</p>
+                  </div>
+                </div>
+              </div>
+            )}
+
+          </main>
+
+          {/* ============================================================== */}
+          {/* 4. FLOATING FROSTED GLASS DOCK (Dribbble Signature Pill Nav)   */}
+          {/* ============================================================== */}
+          <nav className="fixed bottom-4 left-0 right-0 max-w-[430px] mx-auto px-4 z-40 pointer-events-none">
+            <div className="glass-panel rounded-full p-2 flex items-center justify-around shadow-glassDock pointer-events-auto border border-white/80">
+              {[
+                { id: 'report', label: '알림장', Icon: Icons.Report, badge: reports.length },
+                { id: 'notice', label: '공지사항', Icon: Icons.Notice, badge: notices.length },
+                { id: 'album', label: '사진첩', Icon: Icons.Album },
+                { id: 'meal', label: '식단표', Icon: Icons.Meal },
+              ].map(tab => {
+                const isActive = currentTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => setCurrentTab(tab.id)}
+                    className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full transition-all duration-200 cursor-pointer active:scale-95 ${
+                      isActive
+                        ? 'bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-glowOrange font-black scale-105'
+                        : 'text-kn-sub hover:text-kn-dark'
+                    }`}
+                  >
+                    <tab.Icon />
+                    <span className={`text-xs tracking-tight ${isActive ? 'block' : 'hidden sm:block'}`}>
+                      {tab.label}
+                    </span>
+                    {tab.badge !== undefined && !isActive && (
+                      <span className="text-[9px] bg-amber-100 text-amber-800 font-bold px-1.5 py-0.2 rounded-full">
+                        {tab.badge}
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </nav>
+
+          {/* ============================================================== */}
+          {/* 5. FULLSCREEN HD LIGHTBOX MODAL                                */}
+          {/* ============================================================== */}
+          {modalImage && (
+            <div
+              onClick={() => setModalImage(null)}
+              className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-3 backdrop-blur-xl cursor-zoom-out animate-fade-in"
+            >
+              <div className="relative max-w-full max-h-full">
+                <img
+                  src={modalImage}
+                  alt="사진 확대보기"
+                  className="max-h-[90vh] max-w-[95vw] object-contain rounded-3xl shadow-2xl border border-white/20"
+                />
+                <button
+                  onClick={() => setModalImage(null)}
+                  className="absolute top-4 right-4 glass-panel text-white font-bold px-4 py-1.5 rounded-full backdrop-blur-md hover:bg-white/30 transition-colors text-xs"
+                >
+                  닫기 ✕
+                </button>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
