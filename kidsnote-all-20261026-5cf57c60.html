@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>키즈노트 (Kidsnote) - 클레이모피즘 모바일</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Pretendard Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  
+  <!-- React 18 & ReactDOM 18 CDN -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <!-- Babel Standalone -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            clay: {
+              bg: '#FAF7F2',
+              cream: '#FFFDF9',
+              dark: '#2D3436',
+              gray: '#636E72',
+              muted: '#B2BEC3',
+              orange: '#FF8A00',
+              orangeDark: '#E67600',
+              orangeLight: '#FFF4E6',
+              yellow: '#FFC048',
+              yellowLight: '#FFFBE6',
+              blue: '#0984E3',
+              blueLight: '#E8F4FD',
+              purple: '#6C5CE7',
+              purpleLight: '#F1EFFF',
+              green: '#00B894',
+              greenLight: '#E6F9F5',
+            }
+          },
+          fontFamily: {
+            sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #F5F1EB;
+      color: #2D3436;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    /* -------------------------------------------------------------- */
+    /* CLAYMORPHISM 3D SHADOW SYSTEM (Hype4 & Three.js Volumetric)    */
+    /* -------------------------------------------------------------- */
+
+    /* 1. Main Fluffy 3D White Clay Card */
+    .clay-card {
+      background: #FFFFFF;
+      border-radius: 30px;
+      box-shadow: 
+        inset 3px 3px 6px rgba(255, 255, 255, 0.95),
+        inset -3px -3px 8px rgba(0, 0, 0, 0.04),
+        0 14px 28px -4px rgba(45, 52, 54, 0.07),
+        0 4px 10px -2px rgba(45, 52, 54, 0.03);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+    }
+
+    /* 2. Puffy Clay Buttons with Tactile Squish */
+    .clay-btn {
+      background: #FFFFFF;
+      border-radius: 20px;
+      box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.95),
+        inset -2px -2px 6px rgba(0, 0, 0, 0.05),
+        0 6px 14px -2px rgba(45, 52, 54, 0.06);
+      border: 1.5px solid rgba(255, 255, 255, 0.9);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .clay-btn:active {
+      transform: scale(0.94) translateY(2px);
+      box-shadow: 
+        inset 2px 2px 4px rgba(0, 0, 0, 0.08),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.7),
+        0 2px 6px rgba(45, 52, 54, 0.04);
+    }
+
+    /* 3. Puffy Orange 3D Clay Active Button */
+    .clay-btn-orange {
+      background: linear-gradient(135deg, #FFA938 0%, #FF8A00 100%);
+      color: #FFFFFF;
+      border-radius: 18px;
+      box-shadow: 
+        inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+        inset -2px -2px 6px rgba(180, 60, 0, 0.35),
+        0 8px 18px -2px rgba(255, 138, 0, 0.38);
+      border: 1.5px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .clay-btn-orange:active {
+      transform: scale(0.94) translateY(2px);
+      box-shadow: 
+        inset 2px 2px 4px rgba(180, 60, 0, 0.4),
+        inset -2px -2px 4px rgba(255, 255, 255, 0.3),
+        0 3px 8px rgba(255, 138, 0, 0.25);
+    }
+
+    /* 4. Pastel 3D Clay Category Tiles */
+    .clay-tile-peach {
+      background: linear-gradient(145deg, #FFF9F2 0%, #FFEEDD 100%);
+      border-radius: 26px;
+      box-shadow: 
+        inset 3px 3px 5px rgba(255, 255, 255, 0.95),
+        inset -3px -3px 6px rgba(255, 138, 0, 0.14),
+        0 10px 20px -4px rgba(255, 138, 0, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .clay-tile-peach:active {
+      transform: scale(0.95) translateY(2px);
+    }
+
+    .clay-tile-blue {
+      background: linear-gradient(145deg, #F3F9FF 0%, #E2F0FD 100%);
+      border-radius: 26px;
+      box-shadow: 
+        inset 3px 3px 5px rgba(255, 255, 255, 0.95),
+        inset -3px -3px 6px rgba(9, 132, 227, 0.14),
+        0 10px 20px -4px rgba(9, 132, 227, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .clay-tile-blue:active {
+      transform: scale(0.95) translateY(2px);
+    }
+
+    .clay-tile-purple {
+      background: linear-gradient(145deg, #F9F7FF 0%, #EFEAFF 100%);
+      border-radius: 26px;
+      box-shadow: 
+        inset 3px 3px 5px rgba(255, 255, 255, 0.95),
+        inset -3px -3px 6px rgba(108, 92, 231, 0.14),
+        0 10px 20px -4px rgba(108, 92, 231, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .clay-tile-purple:active {
+      transform: scale(0.95) translateY(2px);
+    }
+
+    .clay-tile-mint {
+      background: linear-gradient(145deg, #F2FCF9 0%, #DEF7EF 100%);
+      border-radius: 26px;
+      box-shadow: 
+        inset 3px 3px 5px rgba(255, 255, 255, 0.95),
+        inset -3px -3px 6px rgba(0, 184, 148, 0.14),
+        0 10px 20px -4px rgba(0, 184, 148, 0.1);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .clay-tile-mint:active {
+      transform: scale(0.95) translateY(2px);
+    }
+
+    /* 5. Inset Tactile Display Well */
+    .clay-inset-well {
+      background: #FAF8F5;
+      border-radius: 22px;
+      box-shadow: 
+        inset 2px 2px 5px rgba(0, 0, 0, 0.05),
+        inset -2px -2px 5px rgba(255, 255, 255, 0.9);
+      border: 1px solid #EFECE6;
+    }
+
+    /* 6. Teacher & Parent 3D Speech Bubbles */
+    .clay-teacher-bubble {
+      background: linear-gradient(145deg, #FFFDF6 0%, #FFF8E7 100%);
+      border-radius: 22px;
+      box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.95),
+        inset -2px -2px 6px rgba(255, 170, 0, 0.12),
+        0 6px 16px -2px rgba(255, 170, 0, 0.08);
+      border: 2px solid #FFEBB8;
+    }
+    .clay-parent-bubble {
+      background: #FFFFFF;
+      border-radius: 22px;
+      box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.95),
+        inset -2px -2px 6px rgba(0, 0, 0, 0.04),
+        0 6px 14px -2px rgba(0, 0, 0, 0.04);
+      border: 2px solid #F0EFEA;
+    }
+
+    /* 7. Floating 3D Clay Bottom Navigation Dock */
+    .clay-bottom-dock {
+      background: rgba(255, 255, 255, 0.96);
+      backdrop-filter: blur(16px);
+      border-radius: 28px;
+      box-shadow: 
+        inset 2px 2px 4px rgba(255, 255, 255, 0.95),
+        inset -2px -2px 6px rgba(0, 0, 0, 0.05),
+        0 16px 36px -4px rgba(45, 52, 54, 0.14);
+      border: 2px solid rgba(255, 255, 255, 0.85);
+    }
+
+    .pb-safe { padding-bottom: max(100px, calc(env(safe-area-inset-bottom) + 88px)); }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    .break-keep { word-break: keep-all; }
+  </style>
+</head>
+<body class="select-none">
+  <div id="root" class="w-full"></div>
+
+  <script type="text/babel">
+    const { useState, useMemo } = React;
+
+    const rawData = [{"child":"ayoon","childName":"정아윤","schoolName":"원흥유치원 가온 1반","records":[{"id":"ayoon-1792996367110-primary","category":"report","title":"알림장 (부모님의 글)","date":"10월 21일 수요일","author":"부모님","content":"선생님 안녕하세요^^\n\n목요일에 아윤이 할아버지도 함께 참석해도 될까요? 앞서 제출했을 때는 엄마 아빠만 신청했어서 여쭤봅니다~^^\n\n오늘도 화이팅 하세요!!","imageUrls":[],"comments":[{"author":"가온 1반 교사","date":"10월 21일 오후 2:56","content":"네^^ 아윤이 어머니~ 내일 아윤이 할아버님도 함께 오시는 걸로 알고 있겠습니다^^ 내일 뵙겠습니다~❤️"}]},{"id":"ayoon-1792996367110-report-1","category":"report","title":"알림장 (선생님의 글)","date":"10월 8일 목요일","author":"원흥유치원 교사","content":"아윤이 어머니~ 안녕하세요?\n아윤이는 너무너무 신나는 하루일테지만 저는 사랑스런 아윤이와 같이 숲놀이를 하지 못해 아쉬운 하루였답니다ㅠㅠ\n\n다름이 아니오라 어제 오후에 갑자기 디지털  유보이음 성과공유회 참석 출장이 생겨버렸어요ㅠㅠ\n제가 날짜를 정할 수 있는 것이 아니라 교육청에서 지정한 날짜라 변경이 어려워 부득이 13일에 출장을 나가게 되었습니다ㅠㅠ\n\n상담 시간 땡 하자마자 제일 먼저 1번으로 신청해 주셨는데 변경 요청을 드리게 되어 정말 죄송합니다ㅠㅠ\n상담일정이 14일(수) 14시 이후로 시간이 비어 있어 어머님께서 가능하신 시간이 있으시면 말씀 주세요.\n불편을 드려 진심으로 죄송합니다.","imageUrls":[],"comments":[{"author":"가온 1반 교사","date":"10월 13일 오후 1:48","content":"넵넵^^ 아윤이 어머니~~ 1학기 때도 아버님만 뵈어서 아쉬워서^^ 저도 대면상담 하면서 뵙고 싶었어요^^ 감사합니다~❤️ 편안한 한 주 되세요~ 건강하게 살짝 그을린 우리 아윤이는 오늘도 즐겁게 잘 지냈습니다^^"},{"author":"정아윤 엄마","date":"","content":"마음 써주셔서 감사해요~! 🥹❤️\n못 뵈어서 아쉽지만!!\n그래도 내일 되는지 다시 물어봐 주셔서 \n정말 감사해요☺️\n\n수요일 2시에 유선상담으로 하겠습니다~! \n편안한 밤 보내세요^^"},{"author":"가온 1반 교사","date":"10월 12일 오후 8:26","content":"아윤이 어머니~ 수요일 2시 전화 상담 가능하십니다^^ 그런데 혹시 내일(화) 5시 30분 이후로 유치원 방문 가능하시면 내일 대면 상담으로 진행해도 괜찮습니다^^ 출장 갔다가 다시 들어올 예정이라 대면 상담 원하시면 말씀 주세요^^"},{"author":"정아윤 엄마","date":"","content":"2시 괜찮습니다🙇‍♀️❤️!!!\n죄송하다뇨~ 아니에요^^ \n편한 저녁 보내세요^^"},{"author":"가온 1반 교사","date":"10월 12일 오후 7:05","content":"아윤이 어머니~♡ 여행은 즐거우셨나요? 아윤이 사진을 보니 너무 즐거워보이네요^^ 아이들에게 내일 궁금한 이야기를 들어봐야겠어요~ \n\n수요일에 2시 이후로 가능하신 시간 알려 주시면 전화 드리겠습니다~ 번거롭게 해 드려 정말 죄송합니다ㅠㅠ"},{"author":"정아윤 엄마","date":"","content":"선생님 수요일에 전화로상담하겠습니다^^"},{"author":"정아윤 엄마","date":"","content":"선생님 안녕하세요~! \n\n키즈노트 알림을 이제 봤습니다~!! \n일정 다시 확인 후 말씀드리겠습니다~~😭😭 \n\n이시가키에서 아윤 우진 너무 잘 놀고 \n오늘 돌아갑니다! \n\n숲놀이도 염색도 같이 못해 아쉽습니당🥹 \n\n내일 건강한 모습으로 등원시킬게요! \n감사합니다^^","imageUrls":["https://up-kids-kage.kakao.com/dn/bJbJ7k/dJMcaaHdYUA/fFlhXlaaiLZ1fNlRIKXosk/img_l.jpg","https://up-kids-kage.kakao.com/dn/kYCf4/dJMcabMWr0w/jKLiTfHexWNMRJVnlGPkBK/img_l.jpg","https://up-kids-kage.kakao.com/dn/bzcbJY/dJMcabMWr0u/r3mwbyeR8XLOUb2tfJnRtK/img_l.jpg","https://up-kids-kage.kakao.com/dn/dbgn1g/dJMcahTBnxz/pHhPqMX3RScFZTEgNirakK/img_l.jpg","https://up-kids-kage.kakao.com/dn/EXWQl/dJMcabMWr0v/7FIXoFMX1TXloUEGkqPqKK/img_l.jpg"]}]},{"id":"ayoon-1792996367110-report-2","category":"report","title":"알림장 (부모님의 글)","date":"10월 6일 화요일","author":"부모님","content":"선생님 안녕하세요^^\n\n연휴 잘 보내셨나요~?\n아윤이 잘 쉬고 등원합니다-!\n\n아윤이 화, 수 등원하고\n목-월 우진이네와 함께 이시가키 여행일정이 있어\n말씀드립니다^^\n잘 다녀와서 다음 주 화요일 등원하겠습니다!\n\n감사합니다~!!!","imageUrls":[],"comments":[{"author":"가온 1반 교사","date":"10월 6일 오후 1:25","content":"아윤이 어머니~ 그러셨군요ㅠㅠ 13일은 제가 3시 30분에 출장이 있어서 3시를 마지막 상담일정으로 올려 드렸습니다ㅠㅠ 혹시 상담일정 변경을 원하시면 가능하신 다른 날을 말씀주시면 조정해 보겠습니다❤️"},{"author":"정아윤 엄마","date":"","content":"네네 선생님! 하나 더 궁금한게요~ \n10/13 면담신청이 3시 이후에 되어서 \n8:40분 땡하자마자 들어갔는데 \n 3:20 3:40분은 선택지가 없는데 \n그 시간은 불가한건가요~? ㅠㅠ"},{"author":"가온 1반 교사","date":"10월 6일 오전 8:35","content":"아윤이 어머니~ 안녕하세요?^^ 연휴를 즐겁게 보낸 우리 아윤이를 얼른 만나고 싶네요^^ 내일 모레 우진이네와 함께 여행을 가시는 군요^^ 저도 아윤이네 따라서 이시가키에 가고 싶네요^^ \"아윤아~~ 선생님도 데리고 가~~~~~\"\n\n미리 말씀해 주셔서 감사합니다^^ 안전하고 즐거운 여행되세요❤️"}]},{"id":"ayoon-1792996367110-notice-0","category":"notice","title":"가온 1반 | 공지","date":"2026년 10월 26일","author":"원흥유치원 교사","content":"다슬3반 형님들이 마음보석 도서관을 열었대요~가온1반 동생들이 한글과 책에 관심이 많다는 소문을 듣고 다슬3반 형님들이 도서관에 놀러 오라고 초대장을 보내주었답니다^^\n\n오늘은 형님반 도서관에 놀러 가는 날^^\n형님과 짝을 이루어 도서관 체험활동을 해 보았어요^^\n우리가 고른 책을 대출하여 형님들이 책을 읽어주고, 엽서도 함께 만들고, 도토리 팽이도 만들어 보았답니다^^\n가방 앞주머니에 형님과 함께 만든 엽서와 가을 도토리 팽이가 들어있어요^^\n가방 확인허시면서 아이들과 이야기 나누어 보세요~❤️","imageUrls":[]},{"id":"ayoon-1792996367110-notice-1","category":"notice","title":"원 공지 | 방과후과정 특성화 체육 결강 연장 안내","date":"2026년 10월 26일","author":"원흥유치원 교사","content":"학부모님, 안녕하세요?\n체육 강사님의 개인사정(건강상의 사유)로 인하여 특성화 수업이 10.30(금)까지 결강이 연장 될 예정입니다.\n특성화 수업이 있는 날은 각 반 교사의 대체 수업으로 진행됩니다.\n매일 특성화 수업이 진행되므로 보결 수업은 없으며, 해당 수업의 강사료(1회당 2,300원)는 11월 중 환불 될 예정입니다.\n양해 부탁드립니다. 감사합니다.","imageUrls":[]},{"id":"ayoon-1792996367110-album","category":"album","title":"활동 사진첩","date":"최신","author":"원흥유치원 교사","content":"정아윤의 원생활 및 활동 사진 모음입니다.","imageUrls":["https://up-kids-kage.kakao.com/dn/4qeWP/dJMcafPuPv7/k6KnkkHRCz26nqBatYPkCk/img_l.jpg","https://up-kids-kage.kakao.com/dn/3tCI4/dJMcaaggUQA/8q3Qq53j9SclX3qInPOuC0/img_l.jpg","https://up-kids-kage.kakao.com/dn/bpM0xa/dJMcafhxeUH/e1McqfDFPdSmulvLbKskkK/img_l.jpg","https://up-kids-kage.kakao.com/dn/h0fhb/dJMcaagborN/iLJ9aq5tctZc4O4qPIPKI0/img_l.jpg","https://up-kids-kage.kakao.com/dn/bEIfSc/dJMcafBITYX/o9oGlJfzAm72JfQ0GcwvS0/img_l.jpg","https://up-kids-kage.kakao.com/dn/d9WlI0/dJMcajjTiJr/EUKaie0dkuQ9Wwk0VHizR1/img_l.jpg","https://up-kids-kage.kakao.com/dn/ejCtVW/dJMcah7uyKk/UbAGcHeRLMzFdDAmnPQVIK/img_l.jpg","https://up-kids-kage.kakao.com/dn/cRZVeR/dJMcackDLHL/1FEipLdxTZ9Qas6vzHKPUk/img_l.jpg","https://up-kids-kage.kakao.com/dn/wy49W/dJMcahfk9Mk/Qes7HgS4IPrU9XucQGDNpk/img_l.jpg","https://up-kids-kage.kakao.com/dn/pFe5H/dJMcajxivOD/ESCIotlLpn9CGiKvv9qAH1/img_l.jpg","https://up-kids-kage.kakao.com/dn/7edDh/dJMcaiSGUqY/QMWu5CDKD89l5erI2jGKok/img_l.jpg","https://up-kids-kage.kakao.com/dn/jkWbk/dJMcacSdpcY/tuBSKDld7jES6R7LhCH2Vk/img_l.jpg"]}]},{"child":"yoona","childName":"정윤아","schoolName":"고양시립푸른솔어린이집 자람반","records":[{"id":"yoona-1792996390983-primary","category":"report","title":"알림장 (선생님의 글)","date":"10월 23일 금요일","author":"푸른솔어린이집 교사","content":"안녕하세요~\n주변의 🍁알록달록한 가을풍경에 푹 빠져있는 10월의 금요일입니다.\n\n나들이 사진보며 이야기 나누면서 벽에 붙이고 싶어해서 액자틀을 준비해서 주었더니 붙이고 싶은 사진 골라서 원하는 색깔틀에 풀로 꼭꼭 잘 붙였답니다. 더 꾸며서 벽에 게시하기로 했습니다.\n\n요즘 2층 놀이터를 가고 싶다고 얘기하는 친구들이 많아서 오늘은 2층 놀이터로 놀이 갔습니다. 놀이터 주변을 산책하며 🪹새집도 발견하고 떨어진 🍐🍇열매를 보고 향기도 맡아보았고 작은 🪨조약돌로 쌓기도 하고 지렁이,악어 만들거야 하며 원하는 모양 만들기도 했습니다. 친구들과 흔들 그네, 시소, 미끄럼틀 같은 🛝놀이기구도 같이 타며 웃음소리가 커졌네요 ㅎ\n친구들과 함께 뛰고 숨고 걸어가며 신나게 놀이하고 갑니다 😄\n\n주말 가족들과 즐거운 시간 보내고 건강하게 10월의 마지막주에 만나겠습니다. 주말 잘 보내세요^^","imageUrls":[]},{"id":"yoona-1792996390983-report-1","category":"report","title":"알림장 (선생님의 글)","date":"10월 22일 목요일","author":"푸른솔어린이집 교사","content":"안녕하세요~\n오늘은 바람도 차갑고 따뜻한 햇빛이 반가울 정도로 쌀쌀한 날씨입니다.\n\n뻥과자가 먹고 싶다해서 목수건,외투,모자 등 몸을 따뜻하게 할 수 있는 용품 챙겨 입고 햇빛 비치는 길을 따라 산책하며 장에 다녀왔습니다. 가는 길에 더 빨갛게 익은 감과 노랗게 열려있는 모과도 볼 수 있었습니다.\n점점 변화되는 날씨 확인하셔서 바깥활동시 해야 할 물품이 있으면 가방에 챙겨주세요~ 당일 상황에 맞게 챙겨서 바깥활동 나가겠습니다.\n\n지난번 받은 나들이 사진과 견학,산책 때 친구들과 찍은 사진 함께 보며 이야기 나누었습니다. 여러 사진 중 내 모습의 사진 찾아서 친구들에게 서로 보여주고 즐겁게 이야기 나눌 수 있는 시간이었습니다.\n다음에 벽면에 예쁘게 사진 붙여 꾸며보기로 했답니다. 😃","imageUrls":[]},{"id":"yoona-1792996390983-report-2","category":"report","title":"알림장 (선생님의 글)","date":"10월 21일 수요일","author":"푸른솔어린이집 교사","content":"안녕하세요~\n오늘은 아침에 🌧️보슬비가 살짝 내렸습니다.\n그래서 바깥놀이 안 나가고 놀이실에서 놀고 싶다고 하여 오랜만에 놀이했는데 너무 좋아했네요 ㅎ\n\n교실에서 손바닥에 🎨물감묻혀 찍어 🪾가을 나무 꾸미기를 해 보았습니다. 이제는 손에 묻히는것도 거부감 없이 즐겁게 활동합니다. 붓의 느낌이 간지럽다면서 깔깔 웃기도 하네요 ㅎ\n오전간식으로 나온 🍊귤과 먹고 싶다고 해서 준비해준 🥜땅콩도 이제는 스스로 손에 힘주며 잘 까서 먹는 모습입니다. 친구들과 쟁반을 두고 둘러앉아 꼭꼭 씹어 맛있게 먹는 모습이 너무 귀여웠어요😄","imageUrls":[]},{"id":"yoona-1792996390983-notice-0","category":"notice","title":"원 공지 | 10월 3주 부모교육","date":"2026년 10월 23일","author":"푸른솔어린이집 교사","content":"가을 나들이 추천!!! - 우리 아이와 가을을 걷다","imageUrls":["https://up-kids-kage.kakao.com/dn/bERgRT/dJMcagglq33/M6HNW5JI25iTgBRXJ3jck0/img_l.jpg"]},{"id":"yoona-1792996390983-notice-1","category":"notice","title":"원 공지 | [비상대응상황대처] 대테러 비상대응","date":"2026년 10월 22일","author":"푸른솔어린이집 교사","content":"다양한 위기 상황에 대비하여 평소 안전수칙과 비상대응 행동요령을 미리 알아두는 것이 중요합니다.\n\n테러는 예기치 않게 발생할 수 있는 만큼, 가정에서도 아이와 함께 테러 의심 상황 발생 시 행동요령을 확인해 보시기 바랍니다.\n\n테러 의심 상황 발생 시 이렇게 행동하세요!\n\n▪️ 수상한 물건이나 의심스러운 상황을 발견하면 가까이 가지 않기\n\n▪️ 위험한 상황에서는 신속하게 안전한 장소로 대피하기\n\n▪️ 경찰 등 관계 기관의 안내에 따라 침착하게 행동하기\n\n▪️ 테러 의심 상황을 발견하면 112에 신고하기\n\n▪️ 어린이집의 비상대응 안내와 안전 조치에 협조하기\n\n가정에서도 함께 첨부된 대테러 비상대응 행동요령 카드뉴스를 살펴보시며 안전에 대비해 주시기 바랍니다. 우리 아이들의 안전을 위해 학부모님의 관심과 협조 부탁드립니다💙","imageUrls":["https://up-kids-kage.kakao.com/dn/AYkHW/dJMcaatL2fn/0wJuJUf4Cw7GKhiXfXP9c0/img_l.jpg"]},{"id":"yoona-1792996390983-album","category":"album","title":"활동 사진첩","date":"최신","author":"푸른솔어린이집 교사","content":"정윤아의 원생활 및 활동 사진 모음입니다.","imageUrls":["https://up-kids-kage.kakao.com/dn/WfNTH/dJMcag8o0tj/iTS12C0QkEb29AZfvllKvk/img_l.jpg","https://up-kids-kage.kakao.com/dn/fohZJ/dJMcagUTOrd/xwY6YF64qTIaWKMv0kNITk/img_l.jpg","https://up-kids-kage.kakao.com/dn/i9A2s/dJMcaaAlEC8/kWywcQXSa2iKH1oWpdQbS1/img_l.jpg","https://up-kids-kage.kakao.com/dn/fYLjU/dJMcacY7GXL/3X6NTTL5ftAUfRgW4BkYlk/img_l.jpg","https://up-kids-kage.kakao.com/dn/jd3kH/dJMcabMOMrN/x5nJVHfpPxHCz85tkk6RkK/img_l.jpg","https://up-kids-kage.kakao.com/dn/yvz8N/dJMcahlPw4T/yH0lbHnZWGGNSM2Ax8qPP1/img_l.jpg","https://up-kids-kage.kakao.com/dn/cfqpbK/dJMcafg8zQ6/26XAJVGKBnYBfNaUbyb341/img_l.jpg","https://up-kids-kage.kakao.com/dn/dSvtN/dJMcafVxqUn/Wj2jFggXjIuqHDxJzDEkt0/img_l.jpg","https://up-kids-kage.kakao.com/dn/H9Zkx/dJMcaaGCTB5/M2Pyyu0kRCfU3xJ6Jhbzok/img_l.jpg","https://up-kids-kage.kakao.com/dn/kbm2n/dJMcaf8KKeA/RFZRJKo3lplCv9AVw1u8V0/img_l.jpg","https://up-kids-kage.kakao.com/dn/bR8fbS/dJMcab6oNV6/HZwpZEMLJnD35wCM1NoVGk/img_l.jpg","https://up-kids-kage.kakao.com/dn/3TRv3/dJMcacEa0PN/qN8uBePFD0ZHIT9M73d1kK/img_l.jpg"]}]}];
+
+    // ==============================================================
+    // AUTHENTIC KIDSNOTE NATIVE SVG & IMAGE ICONS (ZERO EMOJIS)
+    // ==============================================================
+    const Icons = {
+      Logo: () => (
+        <div className="flex items-center gap-2">
+          <svg className="w-7 h-7" viewBox="0 0 25 25" fill="none">
+            <g fillRule="evenodd">
+              <g fillRule="nonzero">
+                <path fill="#00A7E1" d="M20.776 18.83L6.746 1.636v11.685L15.05 23.5c.832 1.031 2.152 1.539 3.46 1.33 1.31-.21 2.405-1.104 2.873-2.344.468-1.24.237-2.635-.607-3.657z" transform="translate(-20 -17) translate(-1) translate(21 17) translate(1.5)" />
+                <path fill="#F5333F" d="M20.255.853c-1.58-1.288-3.906-1.051-5.195.53L6.615 11.718V23.4L20.781 6.053c.62-.76.913-1.734.814-2.709-.099-.975-.58-1.871-1.34-2.49z" transform="translate(-20 -17) translate(-1) translate(21 17) translate(1.5)" />
+                <path fill="#FFD900" d="M7.416 21.154c0 .983-.39 1.927-1.085 2.622-.695.696-1.638 1.087-2.622 1.087s-1.927-.39-2.623-1.086C.391 23.08 0 22.137 0 21.154V3.709C0 1.661 1.66 0 3.71 0c.983 0 1.926.39 2.621 1.087.695.695 1.086 1.639 1.085 2.622v17.445z" transform="translate(-20 -17) translate(-1) translate(21 17) translate(1.5)" />
+                <path fill="#00A7E1" d="M4.808 3.502c-.006.6-.494 1.082-1.094 1.08-.6-.003-1.084-.49-1.084-1.09 0-.599.484-1.085 1.084-1.088.291-.002.572.113.777.32.206.206.32.487.317.778z" transform="translate(-20 -17) translate(-1) translate(21 17) translate(1.5)" />
+                <path fill="#F5333F" d="M4.808 21.394c0 .44-.266.838-.673 1.007-.407.168-.876.074-1.187-.238-.311-.312-.404-.78-.235-1.187.17-.407.568-.672 1.008-.67.289 0 .565.114.77.318.203.205.317.482.317.77z" transform="translate(-20 -17) translate(-1) translate(21 17) translate(1.5)" />
+              </g>
+            </g>
+          </svg>
+          <div>
+            <span className="font-black text-lg tracking-tight text-clay-dark block leading-none">
+              kidsnote
+            </span>
+            <span className="text-[10px] text-amber-600 font-extrabold tracking-wide">
+              클레이 키즈 리포트
+            </span>
+          </div>
+        </div>
+      ),
+
+      Report: ({ size = 26 }) => (
+        <svg width={size} height={size} viewBox="0 0 44 44" fill="none">
+          <rect x="3.00098" y="3.00391" width="37.9981" height="37.9981" rx="5.5" fill="#FCF0E0" />
+          <path d="M3.00098 11.8C3.00098 8.71971 3.00098 7.17957 3.60044 6.00305C4.12774 4.96816 4.96914 4.12677 6.00403 3.59946C7.18054 3 8.72069 3 11.801 3H32.1991C35.2794 3 36.8196 3 37.9961 3.59946C39.031 4.12677 39.8724 4.96816 40.3997 6.00305C40.9991 7.17957 40.9991 8.71971 40.9991 11.8V13.5H3.00098V11.8Z" fill="#FA4F38" />
+          <circle cx="12.001" cy="8.25" r="2" fill="#FFD21C" />
+          <circle cx="32.001" cy="8.25" r="2" fill="#FFD21C" />
+          <rect x="9.00098" y="21" width="26" height="3" rx="1.5" fill="black" fillOpacity="0.15" />
+          <rect x="9.00098" y="28.5" width="17" height="3" rx="1.5" fill="black" fillOpacity="0.15" />
+        </svg>
+      ),
+
+      Notice: ({ size = 26 }) => (
+        <svg width={size} height={size} viewBox="0 0 44 44" fill="none">
+          <rect x="3" y="3" width="38" height="38" rx="5.5" fill="#FAB787" />
+          <rect x="7.25" y="7.25" width="29.5" height="29.5" rx="3.5" fill="white" />
+          <path d="M28.0469 16.8555C28.5731 16.3292 29.4269 16.3292 29.9531 16.8555C30.4794 17.3817 30.4794 18.2355 29.9531 18.7617L20.3281 28.3867C19.8019 28.913 18.9481 28.913 18.4219 28.3867L14.0469 24.0117C13.5206 23.4855 13.5206 22.6317 14.0469 22.1055C14.5731 21.5792 15.4269 21.5792 15.9531 22.1055L19.375 25.5273L28.0469 16.8555Z" fill="#429EFA" stroke="#429EFA" strokeWidth="0.945" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M14 3H30V7C30 8.65685 28.6569 10 27 10H17C15.3431 10 14 8.65685 14 7V3Z" fill="#429EFA" />
+        </svg>
+      ),
+
+      Album: ({ size = 26 }) => (
+        <svg width={size} height={size} viewBox="0 0 44 44" fill="none">
+          <rect x="3" y="3" width="38" height="38" rx="5.5" fill="#FFC400" />
+          <rect x="7.25195" y="7.25" width="29.5" height="29.5" rx="3.5" fill="#FFF8D6" />
+          <path d="M17.874 25.8994L14.3935 23.4629C14.3429 18.4239 13.3683 12.2032 15.1953 7.25H30.9326L17.874 25.8994Z" fill="#429EFA" />
+          <path d="M33.252 7.25C35.1848 7.25016 36.752 8.81711 36.752 10.75V21.6592C32.7534 25.3724 26.3201 26.6302 21.3945 28.3672L17.874 25.8984L30.9316 7.25H33.252Z" fill="#FA4F38" />
+          <path d="M35.5576 7.25C35.5181 8.78408 34.9293 10.862 33.2852 13.6807C29.6197 19.9646 23.8193 23.4504 19.3516 26.9355L16.3945 24.8652C18.1403 19.4786 19.4316 12.8412 24.0752 7.25H35.5576Z" fill="#FFC400" />
+          <path d="M14.3936 23.4609L15.1505 23.9909L14.5083 25.7362L13.7301 25.1913L14.3936 23.4609Z" fill="#4C5561" />
+          <path d="M21.4004 28.3672L20.6212 27.8216L19.1755 29.0042L19.9536 29.5491L21.4004 28.3672Z" fill="#4C5561" />
+          <path d="M13.7295 25.1914L19.955 29.5506L17.6826 32.1916C17.2051 32.7465 16.3848 32.8493 15.7851 32.4294L12.4505 30.0945C11.8508 29.6746 11.6668 28.8686 12.025 28.2301L13.7295 25.1914Z" fill="#BD844B" />
+        </svg>
+      ),
+
+      Meal: ({ size = 26 }) => (
+        <svg width={size} height={size} viewBox="0 0 44 44" fill="none">
+          <path d="M2.99902 13.8C2.99902 10.7197 2.99902 9.17957 3.59849 8.00305C4.12579 6.96816 4.96718 6.12677 6.00208 5.59946C7.17859 5 8.71873 5 11.799 5H32.199C35.2793 5 36.8195 5 37.996 5.59946C39.0309 6.12677 39.8723 6.96816 40.3996 8.00305C40.999 9.17957 40.999 10.7197 40.999 13.8V32.2C40.999 35.2803 40.999 36.8204 40.3996 37.9969C39.8723 39.0318 39.0309 39.8732 37.996 40.4005C36.8195 41 35.2793 41 32.199 41H11.799C8.71873 41 7.17859 41 6.00208 40.4005C4.96718 39.8732 4.12579 39.0318 3.59849 37.9969C2.99902 36.8204 2.99902 35.2803 2.99902 32.2V13.8Z" fill="#FA4F38" />
+          <path d="M17.4776 30.6311C14.5237 30.6311 12.4057 28.9962 12.35 26.6553H15.1739C15.2296 27.6585 16.1957 28.3274 17.4962 28.3274C18.8339 28.3274 19.7999 27.5656 19.7814 26.4881C19.7999 25.392 18.8153 24.6117 17.2361 24.6117H15.9914V22.5494H17.2361C18.5552 22.5494 19.4841 21.8249 19.4841 20.7659C19.4841 19.7441 18.7038 19.0381 17.5148 19.0381C16.3259 19.0381 15.4897 19.7255 15.4526 20.803H12.6286C12.7214 18.7918 14.6537 16.9717 17.5148 16.9717C20.3758 16.9717 22.3081 18.5318 22.3081 20.7659C22.3081 22.0664 21.4349 23.0139 20.3197 23.4784C21.6017 23.9986 22.6239 25.0205 22.6239 26.4881C22.6239 28.9033 20.4501 30.6311 17.4776 30.6311ZM27.0863 30.6311C24.1324 30.6311 22.0144 28.9962 21.9587 26.6553H24.7826C24.8383 27.6585 25.8044 28.3274 27.1049 28.3274C28.4426 28.3274 29.4086 27.5656 29.3901 26.4881C29.4086 25.392 28.424 24.6117 26.8448 24.6117H25.6001V22.5494H26.8448C28.1639 22.5494 29.0928 21.8249 29.0928 20.7659C29.0928 19.7441 28.3125 19.0381 27.1235 19.0381C25.9346 19.0381 25.0984 19.7255 25.0613 20.803H22.2373C22.3301 18.7918 24.2624 16.9717 27.1235 16.9717C29.9845 16.9717 31.9168 18.5318 31.9168 20.7659C31.9168 22.0664 31.0436 23.0139 29.9284 23.4784C31.2104 23.9986 32.2326 25.0205 32.2326 26.4881C32.2326 28.9033 30.0588 30.6311 27.0863 30.6311Z" fill="white" />
+        </svg>
+      ),
+
+      Home: ({ size = 20 }) => (
+        <svg width={size} height={size} viewBox="0 0 44 44" fill="currentColor">
+          <path d="M41.6881 16.7093L22.6084 4.21666C22.2388 3.97466 21.761 3.97466 21.3914 4.21666L2.31173 16.7093C2.15499 16.8119 2.06055 16.9866 2.06055 17.174V19.8789C2.06055 20.1857 2.30923 20.4343 2.616 20.4343H5.38363V42.0352H17.0151V32.0655C17.0151 29.3124 19.2468 27.0806 21.9999 27.0806C24.753 27.0806 26.9847 29.3124 26.9847 32.0655V42.0352H38.6159V20.4343H41.3838C41.6906 20.4343 41.9393 20.1857 41.9393 19.8789V17.174C41.9393 16.9866 41.8448 16.8119 41.6881 16.7093Z" />
+        </svg>
+      ),
+
+      CommentBubble: ({ size = 16, className = "text-amber-600" }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+          <path fillRule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 1.328.26 2.598.732 3.76l.084.211.005.014-.001.005a7.06 7.06 0 01-.03.183l-.597 3.587c-.027.16-.057.34-.069.496-.013.17-.017.44.106.727a1.5 1.5 0 00.787.787c.286.123.557.119.727.106.156-.012.336-.042.496-.069l3.587-.598.183-.029h.005l.014.005c.045.016.105.04.21.083A9.973 9.973 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2zM6 12a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm4.5 0a1.5 1.5 0 113 0 1.5 1.5 0 01-3 0zm6-1.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z" clipRule="evenodd" />
+        </svg>
+      ),
+
+      Pencil: ({ size = 14, className = "text-amber-700" }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" className={className}>
+          <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" />
+        </svg>
+      ),
+
+      Bell: ({ size = 20 }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z" />
+        </svg>
+      ),
+
+      LikeStamp: () => (
+        <img
+          src="https://static.kidsnote.net/prod/be/kn/reactions/like/like.png"
+          alt="공감"
+          className="w-5 h-5 object-contain inline-block"
+        />
+      ),
+
+      ChevronRight: ({ size = 16, className = "text-clay-muted" }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      ),
+
+      ChevronLeft: ({ size = 16, className = "text-clay-muted" }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      ),
+
+      Close: ({ size = 18, className = "text-clay-dark" }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className={className}>
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      ),
+
+      DocScan: ({ size = 16 }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+          <polyline points="14 2 14 8 20 8" />
+          <line x1="16" y1="13" x2="8" y2="13" />
+          <line x1="16" y1="17" x2="8" y2="17" />
+          <polyline points="10 9 9 9 8 9" />
+        </svg>
+      ),
+
+      PhotoIcon: ({ size = 16 }) => (
+        <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
+          <circle cx="8.5" cy="8.5" r="1.5" />
+          <polyline points="21 15 16 10 5 21" />
+        </svg>
+      ),
+    };
+
+    function App() {
+      const [currentChild, setCurrentChild] = useState('ayoon');
+      const [currentTab, setCurrentTab] = useState('report');
+      const [selectedDateIdx, setSelectedDateIdx] = useState(0);
+      const [modalImage, setModalImage] = useState(null);
+      const [likes, setLikes] = useState({});
+
+      const activeChildData = useMemo(() => {
+        return rawData.find(d => d.child === currentChild) || rawData[0];
+      }, [currentChild]);
+
+      const reports = useMemo(() => {
+        return (activeChildData?.records || []).filter(r => r.category === 'report');
+      }, [activeChildData]);
+
+      const notices = useMemo(() => {
+        return (activeChildData?.records || []).filter(r => r.category === 'notice');
+      }, [activeChildData]);
+
+      const allGalleryPhotos = useMemo(() => {
+        if (!activeChildData) return [];
+        const set = new Set();
+        for (const r of activeChildData.records) {
+          for (const u of (r.imageUrls || [])) {
+            if (u && !u.includes('undefined')) set.add(u);
+          }
+          for (const c of (r.comments || [])) {
+            for (const cu of (c.imageUrls || [])) {
+              if (cu && !cu.includes('undefined')) set.add(cu);
+            }
+          }
+        }
+        return Array.from(set);
+      }, [activeChildData]);
+
+      const activeReport = reports[selectedDateIdx] || reports[0];
+
+      const toggleLike = (id) => {
+        setLikes(prev => ({
+          ...prev,
+          [id]: {
+            liked: !prev[id]?.liked,
+            count: (prev[id]?.count || 1) + (prev[id]?.liked ? -1 : 1)
+          }
+        }));
+      };
+
+      return (
+        <div className="max-w-[430px] mx-auto min-h-screen bg-clay-bg flex flex-col relative pb-safe shadow-2xl">
+          
+          {/* 1. TOP APP BAR */}
+          <header className="sticky top-0 z-40 bg-clay-bg/95 backdrop-blur-md px-5 py-3.5 flex items-center justify-between border-b border-black/5">
+            <Icons.Logo />
+
+            <div className="flex bg-white/80 p-1.5 rounded-2xl gap-1.5 shadow-[inset_1px_1px_3px_rgba(0,0,0,0.06),_0_2px_6px_rgba(0,0,0,0.02)]">
+              <button
+                onClick={() => { setCurrentChild('ayoon'); setSelectedDateIdx(0); }}
+                className={`px-3.5 py-1.5 text-xs font-black rounded-xl transition-all ${
+                  currentChild === 'ayoon'
+                    ? 'clay-btn-orange'
+                    : 'text-clay-gray hover:text-clay-dark'
+                }`}
+              >
+                정아윤
+              </button>
+              <button
+                onClick={() => { setCurrentChild('yoona'); setSelectedDateIdx(0); }}
+                className={`px-3.5 py-1.5 text-xs font-black rounded-xl transition-all ${
+                  currentChild === 'yoona'
+                    ? 'clay-btn-orange'
+                    : 'text-clay-gray hover:text-clay-dark'
+                }`}
+              >
+                정윤아
+              </button>
+            </div>
+          </header>
+
+          {/* 2. PROFILE & TILES */}
+          <section className="p-4 space-y-3.5">
+            <div className="clay-card p-5 flex items-center justify-between">
+              <div className="flex items-center gap-3.5">
+                <div className="w-[52px] h-[52px] rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-200 p-1 shadow-[inset_2px_2px_4px_rgba(255,255,255,0.8),_0_8px_16px_rgba(255,160,0,0.22)] flex items-center justify-center">
+                  <div className="w-full h-full rounded-xl bg-white flex items-center justify-center font-black text-xl text-amber-600 shadow-inner">
+                    {currentChild === 'ayoon' ? '아' : '윤'}
+                  </div>
+                </div>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-lg font-black text-clay-dark">
+                      {currentChild === 'ayoon' ? '정아윤' : '정윤아'}
+                    </h1>
+                    <span className="text-[11px] font-black text-amber-800 bg-amber-100/90 px-2.5 py-0.5 rounded-full shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8)]">
+                      {currentChild === 'ayoon' ? '5세 (만 4세)' : '3세 (만 2세)'}
+                    </span>
+                  </div>
+                  <p className="text-xs text-clay-gray font-bold mt-1">
+                    {activeChildData?.schoolName}
+                  </p>
+                </div>
+              </div>
+
+              <div className="text-right flex flex-col items-end">
+                <span className="inline-flex items-center gap-1.5 text-[10px] font-black text-emerald-800 bg-emerald-100/90 px-2.5 py-0.5 rounded-full shadow-[inset_1px_1px_2px_rgba(255,255,255,0.8)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                  동기화 완료
+                </span>
+                <p className="text-[10px] text-clay-muted mt-1 font-bold">Kidsnote Live</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div
+                onClick={() => setCurrentTab('report')}
+                className={`clay-tile-peach p-4 cursor-pointer relative overflow-hidden ${
+                  currentTab === 'report' ? 'ring-4 ring-amber-400/30 scale-[1.02]' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2.5">
+                  <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-[inset_1px_1px_3px_rgba(0,0,0,0.06),_0_4px_8px_rgba(255,140,0,0.15)]">
+                    <Icons.Report size={26} />
+                  </div>
+                  <span className="text-xs font-black text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full shadow-inner">
+                    {reports.length}건
+                  </span>
+                </div>
+                <div className="text-sm font-black text-clay-dark">알림장</div>
+                <div className="text-[11px] text-amber-900/70 font-semibold mt-0.5">선생님 소통 및 댓글</div>
+              </div>
+
+              <div
+                onClick={() => setCurrentTab('notice')}
+                className={`clay-tile-blue p-4 cursor-pointer relative overflow-hidden ${
+                  currentTab === 'notice' ? 'ring-4 ring-blue-400/30 scale-[1.02]' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2.5">
+                  <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-[inset_1px_1px_3px_rgba(0,0,0,0.06),_0_4px_8px_rgba(9,132,227,0.15)]">
+                    <Icons.Notice size={26} />
+                  </div>
+                  <span className="text-xs font-black text-blue-800 bg-blue-100 px-2.5 py-0.5 rounded-full shadow-inner">
+                    {notices.length}건
+                  </span>
+                </div>
+                <div className="text-sm font-black text-clay-dark">가정통신문</div>
+                <div className="text-[11px] text-blue-900/70 font-semibold mt-0.5">공지 및 스마트 분석</div>
+              </div>
+
+              <div
+                onClick={() => setCurrentTab('album')}
+                className={`clay-tile-purple p-4 cursor-pointer relative overflow-hidden ${
+                  currentTab === 'album' ? 'ring-4 ring-purple-400/30 scale-[1.02]' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2.5">
+                  <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-[inset_1px_1px_3px_rgba(0,0,0,0.06),_0_4px_8px_rgba(108,92,231,0.15)]">
+                    <Icons.Album size={26} />
+                  </div>
+                  <span className="text-xs font-black text-purple-800 bg-purple-100 px-2.5 py-0.5 rounded-full shadow-inner">
+                    {allGalleryPhotos.length}장
+                  </span>
+                </div>
+                <div className="text-sm font-black text-clay-dark">활동 사진첩</div>
+                <div className="text-[11px] text-purple-900/70 font-semibold mt-0.5">원생활 고화질 사진</div>
+              </div>
+
+              <div
+                onClick={() => setCurrentTab('meal')}
+                className={`clay-tile-mint p-4 cursor-pointer relative overflow-hidden ${
+                  currentTab === 'meal' ? 'ring-4 ring-emerald-400/30 scale-[1.02]' : ''
+                }`}
+              >
+                <div className="flex items-center justify-between mb-2.5">
+                  <div className="w-11 h-11 rounded-2xl bg-white flex items-center justify-center shadow-[inset_1px_1px_3px_rgba(0,0,0,0.06),_0_4px_8px_rgba(0,184,148,0.15)]">
+                    <Icons.Meal size={26} />
+                  </div>
+                  <span className="text-xs font-black text-emerald-800 bg-emerald-100 px-2.5 py-0.5 rounded-full shadow-inner">
+                    식단안내
+                  </span>
+                </div>
+                <div className="text-sm font-black text-clay-dark">영양식단표</div>
+                <div className="text-[11px] text-emerald-900/70 font-semibold mt-0.5">점심 및 영양 간식</div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3. DATE HORIZONTAL SCROLLER */}
+          {currentTab === 'report' && reports.length > 0 && (
+            <div className="px-4 py-1">
+              <div className="flex gap-2.5 overflow-x-auto no-scrollbar py-2">
+                {reports.map((rep, idx) => {
+                  const isSelected = selectedDateIdx === idx;
+                  return (
+                    <button
+                      key={rep.id || idx}
+                      onClick={() => setSelectedDateIdx(idx)}
+                      className={`px-4 py-2 text-xs font-black whitespace-nowrap rounded-2xl transition-all ${
+                        isSelected
+                          ? 'clay-btn-orange shadow-md'
+                          : 'clay-btn text-clay-gray hover:text-clay-dark'
+                      }`}
+                    >
+                      {rep.date}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* 4. MAIN FEED */}
+          <main className="px-4 space-y-4 flex-1">
+            {currentTab === 'report' && (
+              <>
+                {activeReport ? (
+                  <article className="clay-card p-5 space-y-4">
+                    <div className="flex items-center justify-between border-b border-black/5 pb-3.5">
+                      <div className="flex items-center gap-2.5">
+                        <Icons.Report size={24} />
+                        <div>
+                          <span className="text-xs font-extrabold text-amber-700 block leading-tight">
+                            {activeReport.category === 'report' ? '선생님 알림장' : '원소식'}
+                          </span>
+                          <span className="text-xs text-clay-muted font-bold">
+                            {activeReport.date}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-clay-gray bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200/50">
+                        <Icons.Pencil size={13} className="text-amber-700" />
+                        <span>{activeReport.author || '담임선생님'}</span>
+                      </div>
+                    </div>
+
+                    {activeReport.title && (
+                      <h2 className="text-base font-black text-clay-dark leading-snug">
+                        {activeReport.title}
+                      </h2>
+                    )}
+
+                    <div className="clay-inset-well p-4">
+                      <p className="text-[14px] text-clay-dark leading-relaxed font-medium break-keep whitespace-pre-line">
+                        {activeReport.content}
+                      </p>
+                    </div>
+
+                    {activeReport.imageUrls && activeReport.imageUrls.length > 0 && (
+                      <div className="space-y-2 pt-1">
+                        <div className="flex items-center justify-between text-xs font-extrabold text-clay-gray">
+                          <span className="flex items-center gap-1.5">
+                            <Icons.PhotoIcon size={14} />
+                            활동 사진 ({activeReport.imageUrls.length}장)
+                          </span>
+                          <span className="text-[11px] text-clay-muted">클릭 시 확대보기</span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2.5">
+                          {activeReport.imageUrls.map((url, imgIdx) => (
+                            <div
+                              key={imgIdx}
+                              onClick={() => setModalImage(url)}
+                              className="aspect-[4/3] rounded-2xl overflow-hidden bg-clay-inset-well cursor-pointer relative group border border-black/5 shadow-sm active:scale-95 transition-transform"
+                            >
+                              <img
+                                src={url}
+                                alt="알림장 사진"
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                loading="lazy"
+                                onError={(e) => {
+                                  if (e.currentTarget.parentElement) {
+                                    e.currentTarget.parentElement.style.display = 'none';
+                                  }
+                                }}
+                              />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="pt-2 flex items-center justify-between border-t border-black/5">
+                      <button
+                        onClick={() => toggleLike(activeReport.id || selectedDateIdx)}
+                        className="clay-btn px-4 py-2 flex items-center gap-2 text-xs font-black text-clay-dark active:scale-95 transition-transform"
+                      >
+                        <Icons.LikeStamp />
+                        <span>공감해요</span>
+                        <span className="text-amber-600 font-extrabold ml-0.5">
+                          {likes[activeReport.id || selectedDateIdx]?.count || 1}
+                        </span>
+                      </button>
+
+                      <div className="text-xs text-clay-muted font-bold flex items-center gap-1">
+                        <Icons.CommentBubble size={14} className="text-clay-muted" />
+                        <span>댓글 {activeReport.comments?.length || 0}개</span>
+                      </div>
+                    </div>
+
+                    {activeReport.comments && activeReport.comments.length > 0 && (
+                      <div className="space-y-3 pt-2">
+                        <div className="flex items-center gap-1.5 text-xs font-black text-clay-dark">
+                          <Icons.CommentBubble size={15} className="text-amber-600" />
+                          <span>선생님 & 학부모 소통 댓글</span>
+                          <span className="text-amber-600">({activeReport.comments.length})</span>
+                        </div>
+
+                        <div className="space-y-2.5">
+                          {activeReport.comments.map((cmt, cIdx) => {
+                            const isTeacher = cmt.author.includes('교사') || cmt.author.includes('선생');
+                            return (
+                              <div
+                                key={cIdx}
+                                className={`p-3.5 space-y-2 ${
+                                  isTeacher ? 'clay-teacher-bubble' : 'clay-parent-bubble'
+                                }`}
+                              >
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-2">
+                                    <span
+                                      className={`text-[11px] font-black px-2.5 py-0.5 rounded-full ${
+                                        isTeacher
+                                          ? 'bg-amber-200 text-amber-900'
+                                          : 'bg-blue-100 text-blue-900'
+                                      }`}
+                                    >
+                                      {cmt.author}
+                                    </span>
+                                  </div>
+                                  <span className="text-[11px] text-clay-muted font-bold">
+                                    {cmt.date}
+                                  </span>
+                                </div>
+
+                                <p className="text-[13px] text-clay-dark leading-relaxed font-medium break-keep whitespace-pre-line pl-1">
+                                  {cmt.content}
+                                </p>
+
+                                {cmt.imageUrls && cmt.imageUrls.length > 0 && (
+                                  <div className="pt-1.5 space-y-1">
+                                    <div className="text-[11px] font-extrabold text-blue-700 flex items-center gap-1">
+                                      <Icons.PhotoIcon size={12} />
+                                      첨부 사진 ({cmt.imageUrls.length}장)
+                                    </div>
+                                    <div className="grid grid-cols-3 gap-2">
+                                      {cmt.imageUrls.map((cImg, cImgIdx) => (
+                                        <div
+                                          key={cImgIdx}
+                                          onClick={() => setModalImage(cImg)}
+                                          className="aspect-square rounded-xl overflow-hidden bg-clay-inset-well border border-black/5 cursor-pointer shadow-sm active:scale-95 transition-transform"
+                                        >
+                                          <img
+                                            src={cImg}
+                                            alt="댓글 사진"
+                                            className="w-full h-full object-cover"
+                                            loading="lazy"
+                                          />
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+
+                  </article>
+                ) : (
+                  <div className="clay-card p-10 text-center space-y-2">
+                    <Icons.Report size={40} className="mx-auto text-clay-muted" />
+                    <p className="text-sm font-black text-clay-dark">조회된 알림장이 없습니다.</p>
+                  </div>
+                )}
+              </>
+            )}
+
+            {currentTab === 'notice' && (
+              <div className="space-y-3.5">
+                {notices.map((ntc, nIdx) => (
+                  <article key={nIdx} className="clay-card p-5 space-y-3.5">
+                    <div className="flex items-center justify-between border-b border-black/5 pb-3">
+                      <div className="flex items-center gap-2">
+                        <Icons.Notice size={22} />
+                        <span className="text-xs font-black text-blue-700">원 공지안내</span>
+                      </div>
+                      <span className="text-xs text-clay-muted font-bold">{ntc.date}</span>
+                    </div>
+
+                    <h2 className="text-base font-black text-clay-dark leading-snug">
+                      {ntc.title || '가정통신문 안내'}
+                    </h2>
+
+                    <div className="clay-inset-well p-4">
+                      <p className="text-[14px] text-clay-dark leading-relaxed font-medium break-keep whitespace-pre-line">
+                        {ntc.content}
+                      </p>
+                    </div>
+
+                    {ntc.ocrSummary && (
+                      <div className="bg-blue-50/70 border border-blue-200/60 rounded-2xl p-4 space-y-2">
+                        <div className="flex items-center gap-1.5 text-xs font-black text-blue-900">
+                          <Icons.DocScan size={15} />
+                          <span>가정통신문 원문 문서 요약 (OCR)</span>
+                        </div>
+                        <p className="text-xs text-blue-950 leading-relaxed break-keep whitespace-pre-line">
+                          {ntc.ocrSummary}
+                        </p>
+                      </div>
+                    )}
+
+                    {ntc.imageUrls && ntc.imageUrls.filter(u => u && !u.includes('undefined')).length > 0 && (
+                      <div className="grid grid-cols-2 gap-2 pt-1">
+                        {ntc.imageUrls.filter(u => u && !u.includes('undefined')).map((url, imgIdx) => (
+                          <div
+                            key={imgIdx}
+                            onClick={() => setModalImage(url)}
+                            className="aspect-[4/3] rounded-2xl overflow-hidden bg-clay-inset-well cursor-pointer border border-black/5 shadow-sm active:scale-95 transition-transform"
+                          >
+                            <img
+                              src={url}
+                              alt="통신문 사진"
+                              className="w-full h-full object-cover"
+                              loading="lazy"
+                              onError={(e) => {
+                                if (e.currentTarget.parentElement) {
+                                  e.currentTarget.parentElement.style.display = 'none';
+                                }
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </article>
+                ))}
+              </div>
+            )}
+
+            {currentTab === 'album' && (
+              <div className="clay-card p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-black/5 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Icons.Album size={24} />
+                    <span className="text-sm font-black text-clay-dark">원생활 고화질 사진첩</span>
+                  </div>
+                  <span className="text-xs text-purple-700 font-extrabold bg-purple-50 px-3 py-1 rounded-full">
+                    {allGalleryPhotos.length}장
+                  </span>
+                </div>
+
+                {allGalleryPhotos.length === 0 ? (
+                  <div className="text-center py-12 text-clay-gray text-xs font-bold bg-white/50 rounded-2xl p-6">
+                    <div className="w-12 h-12 mx-auto mb-2 opacity-50 flex items-center justify-center">
+                      <Icons.Album size={32} />
+                    </div>
+                    등록된 활동 사진이 없습니다.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 gap-2.5">
+                    {allGalleryPhotos.map((url, i) => (
+                      <div
+                        key={i}
+                        onClick={() => setModalImage(url)}
+                        className="aspect-square rounded-2xl overflow-hidden bg-clay-inset-well cursor-pointer group relative border border-black/5 shadow-sm active:scale-95 transition-transform"
+                      >
+                        <img
+                          src={url}
+                          alt="갤러리 사진"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                          onError={(e) => {
+                            if (e.currentTarget.parentElement) {
+                              e.currentTarget.parentElement.style.display = 'none';
+                            }
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+            {currentTab === 'meal' && (
+              <div className="clay-card p-5 space-y-4">
+                <div className="flex items-center justify-between border-b border-black/5 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Icons.Meal size={24} />
+                    <span className="text-sm font-black text-clay-dark">오늘의 영양식단</span>
+                  </div>
+                  <span className="text-xs text-emerald-700 font-extrabold bg-emerald-50 px-3 py-1 rounded-full">
+                    영양사 검수 완료
+                  </span>
+                </div>
+
+                <div className="clay-inset-well p-5 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-black text-emerald-900 bg-emerald-100/90 px-2.5 py-1 rounded-xl">
+                      점심 식단 (중식)
+                    </span>
+                    <span className="text-xs text-clay-muted font-bold">원흥유치원 / 푸른솔어린이집</span>
+                  </div>
+                  <p className="text-sm font-bold text-clay-dark leading-relaxed">
+                    친환경 기장밥, 쇠고기미역국, 닭다리살데리야끼구이, 청경채나물, 깍두기 (백김치)
+                  </p>
+                  <div className="pt-2 border-t border-black/5 flex items-center justify-between text-xs text-clay-gray font-bold">
+                    <span>오후 간식</span>
+                    <span className="text-clay-dark">우리쌀 찐빵 & 유기농 바나나 우유</span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </main>
+
+          {/* 5. FLOATING BOTTOM DOCK */}
+          <div className="fixed bottom-4 left-0 right-0 max-w-[400px] mx-auto px-4 z-30 pointer-events-none">
+            <nav className="clay-bottom-dock px-3 py-2 flex items-center justify-around pointer-events-auto">
+              <button
+                onClick={() => setCurrentTab('report')}
+                className={`flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all ${
+                  currentTab === 'report' ? 'text-amber-600 font-black' : 'text-clay-gray font-bold'
+                }`}
+              >
+                <Icons.Report size={22} />
+                <span className="text-[11px]">알림장</span>
+              </button>
+
+              <button
+                onClick={() => setCurrentTab('notice')}
+                className={`flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all ${
+                  currentTab === 'notice' ? 'text-blue-600 font-black' : 'text-clay-gray font-bold'
+                }`}
+              >
+                <Icons.Notice size={22} />
+                <span className="text-[11px]">가정통신문</span>
+              </button>
+
+              <button
+                onClick={() => setCurrentTab('album')}
+                className={`flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all ${
+                  currentTab === 'album' ? 'text-purple-600 font-black' : 'text-clay-gray font-bold'
+                }`}
+              >
+                <Icons.Album size={22} />
+                <span className="text-[11px]">사진첩</span>
+              </button>
+
+              <button
+                onClick={() => setCurrentTab('meal')}
+                className={`flex flex-col items-center gap-1 py-1 px-3 rounded-2xl transition-all ${
+                  currentTab === 'meal' ? 'text-emerald-600 font-black' : 'text-clay-gray font-bold'
+                }`}
+              >
+                <Icons.Meal size={22} />
+                <span className="text-[11px]">식단표</span>
+              </button>
+            </nav>
+          </div>
+
+          {/* 6. PHOTO MODAL */}
+          {modalImage && (
+            <div
+              onClick={() => setModalImage(null)}
+              className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4 cursor-zoom-out"
+            >
+              <div className="relative max-w-full max-h-full">
+                <img
+                  src={modalImage}
+                  alt="사진 확대보기"
+                  className="max-h-[88vh] max-w-[94vw] object-contain rounded-3xl shadow-2xl border-2 border-white/20"
+                />
+                <button
+                  onClick={() => setModalImage(null)}
+                  className="absolute top-4 right-4 bg-white/30 hover:bg-white/50 text-white font-black px-4 py-1.5 rounded-full backdrop-blur-md transition-colors text-xs shadow-lg flex items-center gap-1"
+                >
+                  <Icons.Close size={14} className="text-white" />
+                  <span>닫기</span>
+                </button>
+              </div>
+            </div>
+          )}
+
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
