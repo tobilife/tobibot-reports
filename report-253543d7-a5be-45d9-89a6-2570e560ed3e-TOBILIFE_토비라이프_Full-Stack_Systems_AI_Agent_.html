@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOBILIFE (토비라이프) | Full-Stack Systems & AI Agent Engineer</title>
+  <meta name="description" content="TOBILIFE (토비라이프) - 풀스택 시스템 및 자율형 AI 에이전트 엔지니어 포트폴리오. 분산 시스템, LLM 오케스트레이션, 고성능 웹 아키텍처.">
+
+  <!-- Google Fonts: JetBrains Mono & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Tailwind CSS Engine CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: 'var(--color-primary)',
+            accent: 'var(--color-accent)',
+            surface: {
+              DEFAULT: 'var(--color-surface)',
+              hover: 'var(--color-surface-hover)',
+              subtle: 'var(--color-surface-subtle)',
+            },
+            border: 'var(--color-border)',
+            'text-main': 'var(--color-text-main)',
+            'text-muted': 'var(--color-text-muted)',
+          },
+          borderRadius: {
+            card: 'var(--radius-card)',
+          },
+          boxShadow: {
+            soft: '0 1px 3px rgba(0,0,0,0.04), 0 8px 24px -4px rgba(0,0,0,0.06)',
+            elevation: '0 4px 6px -1px rgba(0,0,0,0.35), 0 20px 30px -10px rgba(0,0,0,0.5)',
+            glow: '0 0 24px -4px rgba(255, 92, 0, 0.25)',
+          },
+          animation: {
+            'fade-in': 'fadeInSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+            'pulse-subtle': 'subtlePulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            fadeInSlide: {
+              '0%': { opacity: '0', transform: 'translateY(14px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            subtlePulse: {
+              '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+              '50%': { opacity: '0.4', transform: 'scale(0.92)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      /* Layer 1: Primitive / OKLCH Tokens */
+      --color-primary-oklch: oklch(0.65 0.22 40);
+      --color-accent-oklch: oklch(0.72 0.19 155);
+
+      /* Layer 2: Semantic Tokens (Warm Dark Terminal Luxe) */
+      --color-bg: #0f0e0d;
+      --color-surface: #181716;
+      --color-surface-hover: #201f1d;
+      --color-surface-subtle: #141312;
+      --color-border: rgba(255, 255, 255, 0.08);
+      --color-primary: #ff5c00;
+      --color-accent: #10b981;
+      --color-text-main: #fbfaf7;
+      --color-text-muted: #a8a29e;
+
+      /* Layer 3: Component Tokens */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-card: 16px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --min-touch-target: 44px;
+    }
+
+    /* Base Typography & Defaults */
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      font-family: -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.6;
+      word-break: keep-all;
+    }
+
+    h1, h2, h3, h4, .font-mono-code {
+      font-family: 'JetBrains Mono', monospace;
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Terminal Custom Scrollbar */
+    .terminal-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .terminal-scroll::-webkit-scrollbar-track {
+      background: #141312;
+    }
+    .terminal-scroll::-webkit-scrollbar-thumb {
+      background: #2b2826;
+      border-radius: 3px;
+    }
+    .terminal-scroll::-webkit-scrollbar-thumb:hover {
+      background: #3e3a37;
+    }
+
+    /* Focus Ring Accessibility */
+    button:focus-visible, a:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-[#0f0e0d] text-text-main selection:bg-primary/30 selection:text-white">
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl bg-surface border border-border shadow-elevation text-sm text-text-main opacity-0 pointer-events-none transition-all duration-200 ease-out translate-y-3" role="status" aria-live="polite">
+    <i data-lucide="check" class="w-4 h-4 text-accent"></i>
+    <span id="toast-message">클립보드에 복사되었습니다</span>
+  </div>
+
+  <!-- Top Bar / Navigation -->
+  <header class="sticky top-0 z-40 w-full border-b border-border bg-[#0f0e0d]/85 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <!-- Logo / Identity -->
+      <a href="#hero" class="flex items-center gap-3 group active:scale-[0.96] transition-transform duration-100 ease-out" aria-label="TOBILIFE 홈">
+        <div class="w-9 h-9 rounded-lg bg-surface border border-border flex items-center justify-center text-primary group-hover:border-primary/40 transition-colors duration-150">
+          <i data-lucide="terminal" class="w-5 h-5"></i>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-mono-code font-bold tracking-tight text-text-main text-base group-hover:text-primary transition-colors duration-150">TOBILIFE</span>
+          <span class="text-[11px] font-mono-code text-text-muted">tobilife.dev</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation Links -->
+      <nav class="hidden md:flex items-center gap-1 font-mono-code text-xs text-text-muted">
+        <a href="#terminal" class="px-3 py-2 rounded-md hover:text-text-main hover:bg-surface active:scale-[0.96] transition-colors duration-150 min-h-[44px] flex items-center">
+          <span class="text-primary mr-1.5">01.</span>TERMINAL
+        </a>
+        <a href="#projects" class="px-3 py-2 rounded-md hover:text-text-main hover:bg-surface active:scale-[0.96] transition-colors duration-150 min-h-[44px] flex items-center">
+          <span class="text-primary mr-1.5">02.</span>PROJECTS
+        </a>
+        <a href="#stack" class="px-3 py-2 rounded-md hover:text-text-main hover:bg-surface active:scale-[0.96] transition-colors duration-150 min-h-[44px] flex items-center">
+          <span class="text-primary mr-1.5">03.</span>STACK
+        </a>
+        <a href="#milestones" class="px-3 py-2 rounded-md hover:text-text-main hover:bg-surface active:scale-[0.96] transition-colors duration-150 min-h-[44px] flex items-center">
+          <span class="text-primary mr-1.5">04.</span>EXPERIENCE
+        </a>
+        <a href="#contact" class="px-3 py-2 rounded-md hover:text-text-main hover:bg-surface active:scale-[0.96] transition-colors duration-150 min-h-[44px] flex items-center">
+          <span class="text-primary mr-1.5">05.</span>CONTACT
+        </a>
+      </nav>
+
+      <!-- Right Header Status & Social -->
+      <div class="flex items-center gap-3">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface border border-border text-xs font-mono-code text-text-muted">
+          <span class="w-2 h-2 rounded-full bg-accent animate-pulse-subtle"></span>
+          <span class="text-text-main font-medium">Available for new challenges</span>
+        </div>
+
+        <a href="https://github.com/tobilife" target="_blank" rel="noopener noreferrer" class="w-10 h-10 rounded-lg bg-surface border border-border flex items-center justify-center text-text-muted hover:text-text-main hover:border-primary/40 active:scale-[0.96] transition-colors duration-150" aria-label="TOBILIFE GitHub 프로필">
+          <i data-lucide="github" class="w-5 h-5"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-24">
+
+    <!-- HERO DISPLAY SECTION -->
+    <section id="hero" class="relative pt-6 md:pt-14 pb-8 border-b border-border animate-fade-in" style="animation-delay: 50ms;">
+      <div class="space-y-6 max-w-4xl">
+        <!-- Status Indicator Pill -->
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-xs font-mono-code text-text-muted">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i>
+          <span>SYSTEM RUNTIME: PRODUCTION // ASIA-SEOUL</span>
+        </div>
+
+        <!-- Identity & Role Title -->
+        <div>
+          <div class="flex items-center gap-3 mb-2">
+            <span class="text-sm md:text-base font-mono-code text-primary font-semibold tracking-wide uppercase">Engineering Portfolio</span>
+            <span class="text-border">|</span>
+            <span class="text-xs md:text-sm font-mono-code text-text-muted">v2.4.0</span>
+          </div>
+          <h1 class="font-mono-code font-bold text-text-main tracking-tight leading-[1.1]" style="font-size: clamp(2.5rem, 5.2vw, 4.25rem); letter-spacing: -0.04em;">
+            TOBILIFE <span class="text-primary">(토비라이프)</span>
+          </h1>
+          <p class="font-mono-code text-lg sm:text-xl md:text-2xl text-text-muted mt-3 font-medium">
+            Full-Stack Systems & AI Agent Engineer
+          </p>
+        </div>
+
+        <!-- Bio / Mission Statement -->
+        <p class="text-base sm:text-lg text-text-muted max-w-3xl leading-relaxed">
+          대규모 트래픽을 지탱하는 견고한 분산 백엔드와 반응성 높은 모던 프론트엔드, 자율 실행형 멀티 에이전트(LLM Agents & Workflow) 아키텍처를 설계하고 구축합니다. 구조적 무결성과 엔지니어링 미학을 지향합니다.
+        </p>
+
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap items-center gap-4 pt-2">
+          <a href="#projects" class="min-h-[44px] px-6 py-3 rounded-card bg-primary text-white font-mono-code text-sm font-semibold flex items-center gap-2 shadow-glow hover:bg-primary/90 active:scale-[0.96] transition-transform duration-100 ease-out">
+            <i data-lucide="code-2" class="w-4 h-4"></i>
+            <span>프로젝트 살펴보기</span>
+          </a>
+          <a href="#terminal" class="min-h-[44px] px-6 py-3 rounded-card bg-surface border border-border text-text-main font-mono-code text-sm font-medium flex items-center gap-2 hover:border-primary/40 hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out">
+            <i data-lucide="terminal" class="w-4 h-4 text-text-muted"></i>
+            <span>라이브 터미널 구동</span>
+          </a>
+          <button onclick="copyToClipboard('contact@tobilife.dev', '이메일 주소(contact@tobilife.dev)가 복사되었습니다.')" class="min-h-[44px] px-4 py-3 rounded-card bg-surface border border-border text-text-muted hover:text-text-main hover:border-border/80 active:scale-[0.96] transition-colors duration-150 flex items-center gap-2 font-mono-code text-sm" aria-label="이메일 주소 복사">
+            <i data-lucide="copy" class="w-4 h-4"></i>
+            <span>contact@tobilife.dev</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE DORITERM TERMINAL -->
+    <section id="terminal" class="space-y-4 animate-fade-in" style="animation-delay: 100ms;">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono-code text-primary">
+            <i data-lucide="terminal" class="w-4 h-4"></i>
+            <span>INTERACTIVE WORKSPACE</span>
+          </div>
+          <h2 class="text-2xl font-bold font-mono-code text-text-main mt-1">Doriterm Luxe Console</h2>
+        </div>
+        <span class="text-xs font-mono-code text-text-muted">클릭하여 실시간 환경 덤프를 조회하세요</span>
+      </div>
+
+      <!-- Terminal Window Component -->
+      <div class="rounded-2xl border border-border bg-surface overflow-hidden shadow-elevation">
+        <!-- Terminal Header with Mac Dots & Tabs -->
+        <div class="bg-surface-subtle px-4 py-3 border-b border-border flex flex-wrap items-center justify-between gap-3">
+          <!-- Mac Dots -->
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-full bg-[#ff5f56] inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#ffbd2e] inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-[#27c93f] inline-block"></span>
+            <span class="text-xs font-mono-code text-text-muted ml-2">tobilife@mesh: ~/runtime</span>
+          </div>
+
+          <!-- Terminal Tabs -->
+          <div class="flex items-center gap-1 font-mono-code text-xs overflow-x-auto py-0.5">
+            <button onclick="switchTab('overview')" id="tab-overview" class="terminal-tab px-3 py-1.5 rounded-md bg-surface text-primary border border-border font-medium active:scale-[0.96] transition-colors duration-100 min-h-[36px] flex items-center">
+              01 Overview
+            </button>
+            <button onclick="switchTab('stack')" id="tab-stack" class="terminal-tab px-3 py-1.5 rounded-md text-text-muted hover:text-text-main hover:bg-surface/50 active:scale-[0.96] transition-colors duration-100 min-h-[36px] flex items-center">
+              02 Tech Stack
+            </button>
+            <button onclick="switchTab('arch')" id="tab-arch" class="terminal-tab px-3 py-1.5 rounded-md text-text-muted hover:text-text-main hover:bg-surface/50 active:scale-[0.96] transition-colors duration-100 min-h-[36px] flex items-center">
+              03 Architecture
+            </button>
+            <button onclick="switchTab('demo')" id="tab-demo" class="terminal-tab px-3 py-1.5 rounded-md text-text-muted hover:text-text-main hover:bg-surface/50 active:scale-[0.96] transition-colors duration-100 min-h-[36px] flex items-center">
+              04 Live Demo
+            </button>
+          </div>
+        </div>
+
+        <!-- Terminal Body Output Area -->
+        <div class="p-5 md:p-6 bg-[#0f0e0d] font-mono-code text-sm overflow-x-auto terminal-scroll min-h-[280px]">
+          <div class="flex items-center gap-2 text-text-muted mb-4">
+            <span class="text-accent">tobilife@mesh</span>:<span class="text-[#38bdf8]">~</span>$ 
+            <span id="terminal-cmd" class="text-text-main font-semibold">neofetch --engineer tobilife</span>
+          </div>
+
+          <!-- Dynamic Output Content -->
+          <div id="terminal-output" class="text-text-muted leading-relaxed space-y-3">
+            <!-- Default Content: Overview -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+              <div class="md:col-span-4 text-primary font-bold hidden md:block whitespace-pre text-xs leading-none select-none">
+  ████████╗ ██████╗ ██████╗ 
+  ╚══██╔══╝██╔═══██╗██╔══██╗
+     ██║   ██║   ██║██████╔╝
+     ██║   ██║   ██║██╔══██╗
+     ██║   ╚██████╔╝██████╔╝
+     ╚═╝    ╚═════╝ ╚═════╝ 
+  TOBILIFE // AI & FULL-STACK
+              </div>
+              <div class="md:col-span-8 space-y-1.5 text-xs sm:text-sm">
+                <div><span class="text-text-main font-semibold">IDENTITY:</span> TOBILIFE (토비라이프)</div>
+                <div><span class="text-text-main font-semibold">DOMAIN:</span> Full-Stack Systems, Distributed Pipelines & AI Agents</div>
+                <div><span class="text-text-main font-semibold">SPECIALTY:</span> TypeScript, Python, Bun, Next.js, Docker, MCP Servers</div>
+                <div><span class="text-text-main font-semibold">UPTIME:</span> 8+ Years Engineering Lifecycle</div>
+                <div><span class="text-text-main font-semibold">STATUS:</span> <span class="text-accent font-semibold">● ACTIVE</span> (Accepting senior contracts & high-impact projects)</div>
+                <div class="pt-2 text-text-muted border-t border-border mt-2">
+                  "안정적인 시스템 토대 위에 고신뢰성 자율형 에이전트 인프라를 결합하여 실질적인 비즈니스 가치를 창출합니다."
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Terminal Footer Quick Interactive Command Bar -->
+        <div class="bg-surface-subtle px-4 py-2.5 border-t border-border flex items-center justify-between text-xs font-mono-code text-text-muted">
+          <div class="flex items-center gap-2">
+            <span class="inline-block w-2 h-2 rounded-full bg-accent"></span>
+            <span>SHELL: zsh 5.9 (x86_64-apple-darwin23.0)</span>
+          </div>
+          <button onclick="runCustomEcho()" class="hover:text-primary active:scale-[0.96] transition-colors duration-100 flex items-center gap-1">
+            <i data-lucide="sparkles" class="w-3.5 h-3.5 text-primary"></i>
+            <span>run sys:diagnostics</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENTO GRID SHOWCASE (FLAGSHIP PROJECTS) -->
+    <section id="projects" class="space-y-6 animate-fade-in" style="animation-delay: 150ms;">
+      <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-border pb-4">
+        <div>
+          <div class="flex items-center gap-2 text-xs font-mono-code text-primary">
+            <i data-lucide="layers" class="w-4 h-4"></i>
+            <span>ENGINEERING SHOWCASE</span>
+          </div>
+          <h2 class="text-2xl md:text-3xl font-bold font-mono-code text-text-main mt-1">Flagship Architectures</h2>
+        </div>
+        <p class="text-xs font-mono-code text-text-muted">TOBILIFE가 직접 기획하고 구현한 실전 프로덕션 시스템</p>
+      </div>
+
+      <!-- Bento Layout Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Bento Card 1 (Span 2 cols): Agent Messenger Bridge -->
+        <article class="md:col-span-2 rounded-card bg-surface border border-border p-6 md:p-8 flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out group">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono-code px-2.5 py-1 rounded-md bg-[#0f0e0d] border border-border text-primary font-medium">
+                Autonomous LLM Bridge
+              </span>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/tobilife" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-surface-subtle border border-border text-text-muted hover:text-text-main hover:border-primary/40 active:scale-[0.96] transition-colors duration-100" aria-label="Agent Messenger GitHub">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+                <a href="https://tobilife.dev" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-surface-subtle border border-border text-text-muted hover:text-text-main hover:border-primary/40 active:scale-[0.96] transition-colors duration-100" aria-label="Agent Messenger Live Site">
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl md:text-2xl font-bold font-mono-code text-text-main group-hover:text-primary transition-colors duration-150">
+                Agent-Messenger-Bridge (Mesh Protocol)
+              </h3>
+              <p class="text-text-muted text-sm sm:text-base mt-2 leading-relaxed">
+                서로 다른 LLM 에이전트(Claude, GPT, Gemini, 로컬 vLLM) 간의 실시간 비동기 RPC 통신 및 태스크 핸드오프를 오케스트레이션하는 고성능 브릿지 서버. 영속 메시징 큐와 분산 락을 기반으로 0% 메시지 유실율을 보장합니다.
+              </p>
+            </div>
+
+            <!-- Architecture Metric Highlights -->
+            <div class="grid grid-cols-3 gap-3 py-2">
+              <div class="p-3 rounded-xl bg-surface-subtle border border-border">
+                <div class="text-xs font-mono-code text-text-muted">Throughput</div>
+                <div class="text-base font-bold font-mono-code text-text-main tabular-nums mt-0.5">14,200 req/s</div>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-subtle border border-border">
+                <div class="text-xs font-mono-code text-text-muted">Handshake P99</div>
+                <div class="text-base font-bold font-mono-code text-accent tabular-nums mt-0.5">&lt; 8.4ms</div>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-subtle border border-border">
+                <div class="text-xs font-mono-code text-text-muted">State Sync</div>
+                <div class="text-base font-bold font-mono-code text-primary tabular-nums mt-0.5">ACID Durable</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-border flex flex-wrap items-center justify-between gap-3 mt-4">
+            <div class="flex flex-wrap gap-2 text-xs font-mono-code">
+              <span class="px-2.5 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">TypeScript</span>
+              <span class="px-2.5 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Bun</span>
+              <span class="px-2.5 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Redis Streams</span>
+              <span class="px-2.5 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">MCP Protocol</span>
+            </div>
+            <span class="text-xs font-mono-code text-text-muted">Architected by TOBILIFE</span>
+          </div>
+        </article>
+
+        <!-- Bento Card 2: Hyper-Scale Vector Engine -->
+        <article class="rounded-card bg-surface border border-border p-6 md:p-8 flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out group">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono-code px-2.5 py-1 rounded-md bg-[#0f0e0d] border border-border text-accent font-medium">
+                AI / RAG Infrastructure
+              </span>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/tobilife" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-surface-subtle border border-border text-text-muted hover:text-text-main hover:border-primary/40 active:scale-[0.96] transition-colors duration-100" aria-label="Vector Engine GitHub">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold font-mono-code text-text-main group-hover:text-primary transition-colors duration-150">
+                VectorStream RAG
+              </h3>
+              <p class="text-text-muted text-sm mt-2 leading-relaxed">
+                멀티모달 문서와 엔지니어링 코드베이스를 고속 청킹하여 하이브리드 검색(Dense + Sparse BM25)을 지원하는 임베딩 파이프라인.
+              </p>
+            </div>
+
+            <div class="p-3 rounded-xl bg-surface-subtle border border-border space-y-1 font-mono-code text-xs">
+              <div class="flex justify-between">
+                <span class="text-text-muted">Chunk Accuracy:</span>
+                <span class="text-text-main font-semibold tabular-nums">98.4% MRR</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-text-muted">Latency:</span>
+                <span class="text-accent font-semibold tabular-nums">12ms (k=50)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-border flex flex-wrap gap-2 text-xs font-mono-code mt-4">
+            <span class="px-2 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Python</span>
+            <span class="px-2 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Qdrant</span>
+            <span class="px-2 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">FastAPI</span>
+          </div>
+        </article>
+
+        <!-- Bento Card 3: Cloudflare Edge Orchestrator -->
+        <article class="rounded-card bg-surface border border-border p-6 md:p-8 flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out group">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono-code px-2.5 py-1 rounded-md bg-[#0f0e0d] border border-border text-[#38bdf8] font-medium">
+                Edge Distributed
+              </span>
+              <a href="https://github.com/tobilife" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-surface-subtle border border-border text-text-muted hover:text-text-main hover:border-primary/40 active:scale-[0.96] transition-colors duration-100" aria-label="Edge Mesh GitHub">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </a>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold font-mono-code text-text-main group-hover:text-primary transition-colors duration-150">
+                Edge Mesh Worker
+              </h3>
+              <p class="text-text-muted text-sm mt-2 leading-relaxed">
+                Cloudflare Workers & Durable Objects 기반의 글로벌 WebSocket 세션 싱크 엔진. 엣지 단에서 지연 없는 동시 편집 상태 제어.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-border flex flex-wrap gap-2 text-xs font-mono-code mt-4">
+            <span class="px-2 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Workers</span>
+            <span class="px-2 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Durable Objects</span>
+            <span class="px-2 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Wasm</span>
+          </div>
+        </article>
+
+        <!-- Bento Card 4 (Span 2 cols): Next-Gen Developer Workspace -->
+        <article class="md:col-span-2 rounded-card bg-surface border border-border p-6 md:p-8 flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out group">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-mono-code px-2.5 py-1 rounded-md bg-[#0f0e0d] border border-border text-primary font-medium">
+                Modern Full-Stack Web
+              </span>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com/tobilife" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-surface-subtle border border-border text-text-muted hover:text-text-main hover:border-primary/40 active:scale-[0.96] transition-colors duration-100" aria-label="Dev Workspace GitHub">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+                <a href="https://tobilife.dev" target="_blank" rel="noopener noreferrer" class="p-2 rounded-lg bg-surface-subtle border border-border text-text-muted hover:text-text-main hover:border-primary/40 active:scale-[0.96] transition-colors duration-100" aria-label="Dev Workspace Demo">
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl md:text-2xl font-bold font-mono-code text-text-main group-hover:text-primary transition-colors duration-150">
+                HyperDev Cloud Console & Telemetry
+              </h3>
+              <p class="text-text-muted text-sm sm:text-base mt-2 leading-relaxed">
+                Next.js App Router, Tailwind CSS, TanStack Query를 활용한 엔터프라이즈 모니터링 대시보드. 수천 개 서버 노드의 리소스 소비율 및 실시간 로그 스트림을 프레임 드랍 없이 렌더링합니다.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div class="p-3 rounded-xl bg-surface-subtle border border-border text-xs font-mono-code">
+                <span class="text-text-muted block">First Contentful Paint</span>
+                <span class="text-accent font-bold tabular-nums text-sm">0.42s</span>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-subtle border border-border text-xs font-mono-code">
+                <span class="text-text-muted block">Bundle Weight</span>
+                <span class="text-text-main font-bold tabular-nums text-sm">&lt; 48 KB Gzip</span>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-subtle border border-border text-xs font-mono-code hidden sm:block">
+                <span class="text-text-muted block">Lighthouse Score</span>
+                <span class="text-primary font-bold tabular-nums text-sm">100 / 100</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-border flex flex-wrap items-center justify-between gap-3 mt-4">
+            <div class="flex flex-wrap gap-2 text-xs font-mono-code">
+              <span class="px-2.5 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Next.js 15</span>
+              <span class="px-2.5 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">React 19</span>
+              <span class="px-2.5 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">Tailwind v4</span>
+              <span class="px-2.5 py-1 rounded-md bg-[#0f0e0d] text-text-muted border border-border">WebSockets</span>
+            </div>
+            <span class="text-xs font-mono-code text-text-muted">Deployed via Vercel Edge</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- SKILLS & TECH STACK MATRIX -->
+    <section id="stack" class="space-y-6 animate-fade-in" style="animation-delay: 200ms;">
+      <div class="border-b border-border pb-4">
+        <div class="flex items-center gap-2 text-xs font-mono-code text-primary">
+          <i data-lucide="cpu" class="w-4 h-4"></i>
+          <span>CAPABILITIES & ARSENAL</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold font-mono-code text-text-main mt-1">Core Tech Stack</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Stack Category 1: Frontend & UI -->
+        <div class="p-6 rounded-card bg-surface border border-border space-y-4 hover:border-primary/30 transition-colors duration-150">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-surface-subtle border border-border flex items-center justify-center text-primary">
+              <i data-lucide="globe" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-mono-code font-bold text-text-main text-base">Frontend Craft</h3>
+          </div>
+          <p class="text-xs text-text-muted">Apple HIG 가이드라인을 준수하는 미려하고 반응성 높은 인터페이스</p>
+          <ul class="space-y-2 font-mono-code text-xs text-text-muted">
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">TypeScript / ESNext</span>
+              <span class="text-primary font-semibold">Native</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Next.js / React 19</span>
+              <span class="text-text-muted">App Router</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Tailwind CSS v4</span>
+              <span class="text-accent font-semibold">CSS-First</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">State (Zustand/Query)</span>
+              <span class="text-text-muted">Optimistic UI</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Stack Category 2: Backend & Distributed -->
+        <div class="p-6 rounded-card bg-surface border border-border space-y-4 hover:border-primary/30 transition-colors duration-150">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-surface-subtle border border-border flex items-center justify-center text-accent">
+              <i data-lucide="database" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-mono-code font-bold text-text-main text-base">Backend & Infra</h3>
+          </div>
+          <p class="text-xs text-text-muted">무장애 분산 데이터 파이프라인 및 고처리량 백엔드</p>
+          <ul class="space-y-2 font-mono-code text-xs text-text-muted">
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Node.js / Bun Runtime</span>
+              <span class="text-accent font-semibold">High RPS</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Python / FastAPI</span>
+              <span class="text-text-muted">Async IO</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">PostgreSQL / Prisma</span>
+              <span class="text-text-muted">ACID</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Redis Streams / PubSub</span>
+              <span class="text-text-muted">In-Memory</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Stack Category 3: AI Agents & LLMs -->
+        <div class="p-6 rounded-card bg-surface border border-border space-y-4 hover:border-primary/30 transition-colors duration-150">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-surface-subtle border border-border flex items-center justify-center text-[#ffbd2e]">
+              <i data-lucide="sparkles" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-mono-code font-bold text-text-main text-base">AI Agents & RAG</h3>
+          </div>
+          <p class="text-xs text-text-muted">도구 호출과 오케스트레이션을 갖춘 자율 실행 에이전트</p>
+          <ul class="space-y-2 font-mono-code text-xs text-text-muted">
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">MCP Protocol Servers</span>
+              <span class="text-primary font-semibold">Official SDK</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">LangGraph / AutoAgents</span>
+              <span class="text-text-muted">DAG Routing</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Vector DB (Qdrant/Pinecone)</span>
+              <span class="text-accent font-semibold">Hybrid Search</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Claude / OpenAI / Gemini</span>
+              <span class="text-text-muted">Tool Calling</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Stack Category 4: DevOps & Cloud -->
+        <div class="p-6 rounded-card bg-surface border border-border space-y-4 hover:border-primary/30 transition-colors duration-150">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-lg bg-surface-subtle border border-border flex items-center justify-center text-[#38bdf8]">
+              <i data-lucide="terminal" class="w-5 h-5"></i>
+            </div>
+            <h3 class="font-mono-code font-bold text-text-main text-base">DevOps & Edge</h3>
+          </div>
+          <p class="text-xs text-text-muted">재현 가능한 격리 환경 및 CI/CD 자동화</p>
+          <ul class="space-y-2 font-mono-code text-xs text-text-muted">
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Docker / Containers</span>
+              <span class="text-text-muted">Multi-Stage</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Cloudflare Workers</span>
+              <span class="text-accent font-semibold">Edge Mesh</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">GitHub Actions CI/CD</span>
+              <span class="text-text-muted">Automated</span>
+            </li>
+            <li class="flex items-center justify-between p-2 rounded-lg bg-surface-subtle border border-border">
+              <span class="text-text-main">Linux (Debian/Ubuntu)</span>
+              <span class="text-text-muted">Hardened OS</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- MILESTONES & TIMELINE -->
+    <section id="milestones" class="space-y-6 animate-fade-in" style="animation-delay: 250ms;">
+      <div class="border-b border-border pb-4">
+        <div class="flex items-center gap-2 text-xs font-mono-code text-primary">
+          <i data-lucide="code-2" class="w-4 h-4"></i>
+          <span>CHRONOLOGY & IMPACT</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold font-mono-code text-text-main mt-1">Engineering Milestones</h2>
+      </div>
+
+      <!-- Numbered Progression Timeline -->
+      <div class="space-y-6">
+
+        <!-- Milestone 01 -->
+        <div class="rounded-card bg-surface border border-border p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-primary/30 transition-colors duration-150">
+          <div class="font-mono-code text-3xl md:text-4xl font-extrabold text-primary select-none tabular-nums">
+            01
+          </div>
+          <div class="space-y-2 flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-lg md:text-xl font-bold font-mono-code text-text-main">
+                Lead Autonomous Systems Engineer & Architect
+              </h3>
+              <span class="text-xs font-mono-code px-3 py-1 rounded-md bg-surface-subtle border border-border text-accent font-medium">
+                2024 - PRESENT
+              </span>
+            </div>
+            <p class="text-xs font-mono-code text-text-muted">TOBILIFE Systems Lab // Seoul</p>
+            <p class="text-sm text-text-muted leading-relaxed pt-2">
+              • 자율형 AI 에이전트 간 비동기 메시징 및 협동 프로토콜(Agent Messenger Protocol) 설계 및 상용화<br>
+              • MCP(Model Context Protocol) 기반 커스텀 리소스 서버 12종 개발 및 분산 워크플로우 결합<br>
+              • Bun 기반 경량 RPC 백엔드 아키텍처 도입을 통해 서버 비용 42% 절감 및 평균 처리 지연 8ms 달성
+            </p>
+          </div>
+        </div>
+
+        <!-- Milestone 02 -->
+        <div class="rounded-card bg-surface border border-border p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-primary/30 transition-colors duration-150">
+          <div class="font-mono-code text-3xl md:text-4xl font-extrabold text-text-muted/40 select-none tabular-nums">
+            02
+          </div>
+          <div class="space-y-2 flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-lg md:text-xl font-bold font-mono-code text-text-main">
+                Senior Full-Stack Platform Engineer
+              </h3>
+              <span class="text-xs font-mono-code px-3 py-1 rounded-md bg-surface-subtle border border-border text-text-muted">
+                2021 - 2024
+              </span>
+            </div>
+            <p class="text-xs font-mono-code text-text-muted">Enterprise Cloud Platform Services</p>
+            <p class="text-sm text-text-muted leading-relaxed pt-2">
+              • Next.js 대규모 관제 시스템 프론트엔드 모듈화 리팩토링 및 렌더링 성능 최적화 (FCP 0.4s 달성)<br>
+              • 초당 수만 건의 텔레메트리 로그를 수집·시각화하는 실시간 WebSocket 인프라 구축<br>
+              • 데이터베이스 인덱싱 전략 개선 및 트랜잭션 분리를 통해 대용량 집계 쿼리 실행 시간 80% 단축
+            </p>
+          </div>
+        </div>
+
+        <!-- Milestone 03 -->
+        <div class="rounded-card bg-surface border border-border p-6 md:p-8 flex flex-col md:flex-row gap-6 items-start hover:border-primary/30 transition-colors duration-150">
+          <div class="font-mono-code text-3xl md:text-4xl font-extrabold text-text-muted/40 select-none tabular-nums">
+            03
+          </div>
+          <div class="space-y-2 flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-lg md:text-xl font-bold font-mono-code text-text-main">
+                Full-Stack Systems Developer
+              </h3>
+              <span class="text-xs font-mono-code px-3 py-1 rounded-md bg-surface-subtle border border-border text-text-muted">
+                2018 - 2021
+              </span>
+            </div>
+            <p class="text-xs font-mono-code text-text-muted">Core Software Engineering</p>
+            <p class="text-sm text-text-muted leading-relaxed pt-2">
+              • TypeScript 기반 백엔드 API 시스템 설계 및 Docker/Kubernetes 기반 CI/CD 파이프라인 자동화<br>
+              • 사내 표준 디자인 시스템 및 공통 컴포넌트 라이브러리 제작 배포 (팀 생산성 35% 향상)
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- CONTACT & 1-CLICK COPY CARD -->
+    <section id="contact" class="space-y-6 pb-12 animate-fade-in" style="animation-delay: 300ms;">
+      <div class="rounded-2xl border border-primary/20 bg-surface p-8 md:p-12 shadow-elevation relative overflow-hidden">
+        <!-- Subtle Background Glow -->
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-3xl space-y-6 relative z-10">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#0f0e0d] border border-border text-xs font-mono-code text-primary">
+            <i data-lucide="mail" class="w-3.5 h-3.5"></i>
+            <span>GET IN TOUCH WITH TOBILIFE</span>
+          </div>
+
+          <h2 class="text-3xl md:text-4xl font-bold font-mono-code text-text-main tracking-tight">
+            새로운 프로젝트 또는 기술적 협업을 논의할 준비가 되셨나요?
+          </h2>
+
+          <p class="text-base text-text-muted leading-relaxed">
+            복잡한 백엔드 분산 아키텍처, 초저지연 풀스택 웹 솔루션, 자율형 AI 에이전트 시스템 도입 등 어떤 고난이도 엔지니어링 과제라도 편하게 문의해 주세요. 신속하고 성실하게 답변드립니다.
+          </p>
+
+          <!-- 1-Click Action Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+
+            <!-- Copy Email Button Card -->
+            <button onclick="copyToClipboard('contact@tobilife.dev', 'TOBILIFE 이메일 주소(contact@tobilife.dev)가 복사되었습니다.')" class="p-4 rounded-xl bg-surface-subtle border border-border hover:border-primary/40 text-left active:scale-[0.96] transition-transform duration-100 ease-out flex items-center justify-between group min-h-[64px]" aria-label="이메일 복사하기">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-surface border border-border flex items-center justify-center text-primary group-hover:scale-105 transition-transform duration-100">
+                  <i data-lucide="mail" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-mono-code text-text-muted">DIRECT EMAIL</div>
+                  <div class="text-sm font-mono-code font-bold text-text-main group-hover:text-primary transition-colors duration-150">contact@tobilife.dev</div>
+                </div>
+              </div>
+              <i data-lucide="copy" class="w-4 h-4 text-text-muted group-hover:text-primary transition-colors duration-150"></i>
+            </button>
+
+            <!-- GitHub Profile Link Card -->
+            <a href="https://github.com/tobilife" target="_blank" rel="noopener noreferrer" class="p-4 rounded-xl bg-surface-subtle border border-border hover:border-primary/40 text-left active:scale-[0.96] transition-transform duration-100 ease-out flex items-center justify-between group min-h-[64px]" aria-label="GitHub 방문">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-surface border border-border flex items-center justify-center text-text-main group-hover:scale-105 transition-transform duration-100">
+                  <i data-lucide="github" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-mono-code text-text-muted">OPEN SOURCE</div>
+                  <div class="text-sm font-mono-code font-bold text-text-main group-hover:text-primary transition-colors duration-150">github.com/tobilife</div>
+                </div>
+              </div>
+              <i data-lucide="external-link" class="w-4 h-4 text-text-muted group-hover:text-primary transition-colors duration-150"></i>
+            </a>
+
+          </div>
+
+          <!-- Direct Mail Link Fallback -->
+          <div class="pt-2 flex items-center gap-4 text-xs font-mono-code text-text-muted">
+            <span>Or mailto directly:</span>
+            <a href="mailto:contact@tobilife.dev" class="text-primary underline hover:text-primary/80 transition-colors">
+              contact@tobilife.dev
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-border bg-[#0f0e0d] py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4 font-mono-code text-xs text-text-muted">
+      <div class="flex items-center gap-3">
+        <span class="font-bold text-text-main">TOBILIFE (토비라이프)</span>
+        <span class="text-border">/</span>
+        <span>Built with Tailwind CSS v4 & Lucide</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <span>© 2026 TOBILIFE. All rights reserved.</span>
+        <a href="#hero" class="text-primary hover:underline flex items-center gap-1 active:scale-[0.96] transition-transform duration-100">
+          <span>TOP</span>
+          <i data-lucide="arrow-up" class="w-3.5 h-3.5"></i>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- INTERACTIVE SCRIPTS -->
+  <script>
+    // Initialize Lucide Icons immediately
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+    });
+
+    // Terminal Data Definition
+    const terminalTabsData = {
+      overview: {
+        cmd: "neofetch --engineer tobilife",
+        content: `
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            <div class="md:col-span-4 text-primary font-bold hidden md:block whitespace-pre text-xs leading-none select-none">
+  ████████╗ ██████╗ ██████╗ 
+  ╚══██╔══╝██╔═══██╗██╔══██╗
+     ██║   ██║   ██║██████╔╝
+     ██║   ██║   ██║██╔══██╗
+     ██║   ╚██████╔╝██████╔╝
+     ╚═╝    ╚═════╝ ╚═════╝ 
+  TOBILIFE // AI & FULL-STACK
+            </div>
+            <div class="md:col-span-8 space-y-1.5 text-xs sm:text-sm">
+              <div><span class="text-text-main font-semibold">IDENTITY:</span> TOBILIFE (토비라이프)</div>
+              <div><span class="text-text-main font-semibold">DOMAIN:</span> Full-Stack Systems, Distributed Pipelines & AI Agents</div>
+              <div><span class="text-text-main font-semibold">SPECIALTY:</span> TypeScript, Python, Bun, Next.js, Docker, MCP Servers</div>
+              <div><span class="text-text-main font-semibold">UPTIME:</span> 8+ Years Engineering Lifecycle</div>
+              <div><span class="text-text-main font-semibold">STATUS:</span> <span class="text-accent font-semibold">● ACTIVE</span> (Accepting senior contracts & high-impact projects)</div>
+              <div class="pt-2 text-text-muted border-t border-border mt-2">
+                "안정적인 시스템 토대 위에 고신뢰성 자율형 에이전트 인프라를 결합하여 실질적인 비즈니스 가치를 창출합니다."
+              </div>
+            </div>
+          </div>
+        `
+      },
+      stack: {
+        cmd: "bun pm ls --all-dependencies",
+        content: `
+          <div class="space-y-2 text-xs sm:text-sm">
+            <div class="text-accent font-semibold">├── core-languages:</div>
+            <div class="pl-4 text-text-main">│   ├── typescript@5.6.x (Strict mode, AST parsing)</div>
+            <div class="pl-4 text-text-main">│   ├── python@3.12 (Pydantic v2, FastAPI async)</div>
+            <div class="pl-4 text-text-main">│   └── bun-runtime@1.2.x (High-efficiency server threads)</div>
+            <div class="text-primary font-semibold">├── ai-and-agents:</div>
+            <div class="pl-4 text-text-main">│   ├── @modelcontextprotocol/sdk@latest (Full MCP implementation)</div>
+            <div class="pl-4 text-text-main">│   ├── langchain / langgraph (Cyclic state graphs)</div>
+            <div class="pl-4 text-text-main">│   └── qdrant-client (HNSW Cosine Vector Indexing)</div>
+            <div class="text-[#38bdf8] font-semibold">└── production-infrastructure:</div>
+            <div class="pl-4 text-text-main">    ├── next@15.x / react@19.x (Server Components & Actions)</div>
+            <div class="pl-4 text-text-main">    ├── tailwindcss@4.x / lucide-icons</div>
+            <div class="pl-4 text-text-main">    └── docker / cloudflare-workers / redis-streams</div>
+          </div>
+        `
+      },
+      arch: {
+        cmd: "cat /etc/mesh-network/topology.conf",
+        content: `
+          <div class="space-y-3 text-xs sm:text-sm font-mono-code">
+            <div class="p-3 bg-surface-subtle rounded-lg border border-border">
+              <span class="text-primary font-bold">[INGRESS & ROUTING]</span>
+              <p class="text-text-muted mt-1">Cloudflare Edge Edge-Worker -> Anycast GeoDNS -> SSL/TLS 1.3 Termination -> Reverse Proxy</p>
+            </div>
+            <div class="p-3 bg-surface-subtle rounded-lg border border-border">
+              <span class="text-accent font-bold">[ORCHESTRATION LAYER]</span>
+              <p class="text-text-muted mt-1">Agent-Messenger-Bridge: Sub/Pub Message Bus -> Distributed Lock (Redlock) -> Parallel Worker Pools</p>
+            </div>
+            <div class="p-3 bg-surface-subtle rounded-lg border border-border">
+              <span class="text-[#ffbd2e] font-bold">[PERSISTENCE & RETRIEVAL]</span>
+              <p class="text-text-muted mt-1">PostgreSQL (Relational Storage) + Redis Streams (Real-Time Journaling) + Qdrant (Semantic Search)</p>
+            </div>
+          </div>
+        `
+      },
+      demo: {
+        cmd: "curl -s https://api.tobilife.dev/v1/health | jq .",
+        content: `
+          <div class="space-y-1 text-xs sm:text-sm text-text-main">
+            <div>{</div>
+            <div class="pl-4">"service": <span class="text-primary">"tobilife-core-agent-bridge"</span>,</div>
+            <div class="pl-4">"status": <span class="text-accent">"healthy"</span>,</div>
+            <div class="pl-4">"latency_ms": <span class="text-accent tabular-nums">1.48</span>,</div>
+            <div class="pl-4">"active_agents": [</div>
+            <div class="pl-8 text-text-muted">"claude-3-7-sonnet-agent-worker-01",</div>
+            <div class="pl-8 text-text-muted">"gemini-2-flash-researcher-02",</div>
+            <div class="pl-8 text-text-muted">"local-qwen-coder-node-03"</div>
+            <div class="pl-4">],</div>
+            <div class="pl-4">"cluster_region": <span class="text-text-muted">"ap-northeast-2 (Seoul)"</span>,</div>
+            <div class="pl-4">"mesh_integrity": <span class="text-accent">"100% PASS"</span></div>
+            <div>}</div>
+          </div>
+        `
+      }
+    };
+
+    // Tab Switcher Function
+    function switchTab(tabKey) {
+      const data = terminalTabsData[tabKey];
+      if (!data) return;
+
+      // Update Tab Styles
+      document.querySelectorAll('.terminal-tab').forEach(btn => {
+        btn.classList.remove('bg-surface', 'text-primary', 'border', 'border-border', 'font-medium');
+        btn.classList.add('text-text-muted');
+      });
+
+      const activeBtn = document.getElementById(`tab-${tabKey}`);
+      if (activeBtn) {
+        activeBtn.classList.add('bg-surface', 'text-primary', 'border', 'border-border', 'font-medium');
+        activeBtn.classList.remove('text-text-muted');
+      }
+
+      // Update Command & Content
+      document.getElementById('terminal-cmd').textContent = data.cmd;
+      document.getElementById('terminal-output').innerHTML = data.content;
+      lucide.createIcons();
+    }
+
+    // Diagnostics Quick Trigger
+    function runCustomEcho() {
+      const cmdEl = document.getElementById('terminal-cmd');
+      const outputEl = document.getElementById('terminal-output');
+
+      cmdEl.textContent = "mesh-cli --diagnose --all-systems";
+      outputEl.innerHTML = `
+        <div class="space-y-1.5 text-xs sm:text-sm">
+          <div class="text-accent font-semibold">✔ [KERNEL] Linux 6.8.0-mesh-hardened - Ready</div>
+          <div class="text-accent font-semibold">✔ [BUN RUNTIME] v1.2.4 memory allocator - Stable (14.2MB RSS)</div>
+          <div class="text-accent font-semibold">✔ [MCP PROTOCOL] Active Transports: stdio, sse, streamable-http - 0 errors</div>
+          <div class="text-accent font-semibold">✔ [DB CONNECTIONS] Pool capacity: 80 / 100 - Healthy</div>
+          <div class="text-primary font-bold pt-2">» ALL SYSTEMS NOMINAL: TOBILIFE production cluster operational.</div>
+        </div>
+      `;
+    }
+
+    // 1-Click Clipboard Copy with Animated Toast Notification
+    let toastTimeout = null;
+    function copyToClipboard(text, customMessage) {
+      navigator.clipboard.writeText(text).then(() => {
+        const toast = document.getElementById('toast');
+        const msgEl = document.getElementById('toast-message');
+
+        msgEl.textContent = customMessage || `${text} 복사 완료`;
+
+        toast.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-3');
+        toast.classList.add('opacity-100', 'translate-y-0');
+
+        if (toastTimeout) clearTimeout(toastTimeout);
+
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('opacity-100', 'translate-y-0');
+          toast.classList.add('opacity-0', 'pointer-events-none', 'translate-y-3');
+        }, 3000);
+      }).catch(err => {
+        console.error('Clipboard copy failed:', err);
+      });
+    }
+  </script>
+</body>
+</html>
