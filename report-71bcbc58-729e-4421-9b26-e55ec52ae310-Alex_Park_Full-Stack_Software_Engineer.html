@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alex Park | Full-Stack Software Engineer</title>
+  
+  <!-- Google Fonts: Inter & Fira Code -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <!-- Tailwind CSS Engine -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            primary: 'var(--color-primary)',
+            accent: 'var(--color-accent)',
+            surface: {
+              DEFAULT: 'var(--color-surface)',
+              hover: 'var(--color-surface-hover)',
+            },
+            border: 'var(--color-border)',
+            'text-main': 'var(--color-text-main)',
+            'text-muted': 'var(--color-text-muted)',
+          },
+          borderRadius: {
+            card: 'var(--radius-card)',
+          },
+          boxShadow: {
+            soft: '0 1px 3px rgba(0,0,0,0.2), 0 8px 24px -4px rgba(0,0,0,0.3)',
+            elevation: '0 10px 30px -10px rgba(0,0,0,0.5), 0 0 20px -5px rgba(59,130,246,0.15)',
+          },
+          animation: {
+            'fade-in': 'fadeInSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+          },
+          keyframes: {
+            fadeInSlide: {
+              '0%': { opacity: '0', transform: 'translateY(12px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      /* Layer 1: Primitive / OKLCH Tokens */
+      --color-primary-oklch: oklch(0.62 0.22 260);
+      --color-accent-oklch: oklch(0.72 0.19 155);
+
+      /* Layer 2: Semantic Tokens */
+      --color-bg: #0B0B10;
+      --color-surface: #13141C;
+      --color-surface-hover: #1C1D28;
+      --color-border: #232536;
+      --color-primary: #3B82F6;
+      --color-accent: #10B981;
+      --color-text-main: #F8FAFC;
+      --color-text-muted: #94A3B8;
+
+      /* Layer 3: Component Tokens */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-card: 16px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --min-touch-target: 44px;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      font-family: 'Inter', -apple-system, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, .font-mono {
+      font-family: 'Fira Code', monospace;
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+      line-height: 1.6;
+    }
+
+    .break-keep {
+      word-break: keep-all;
+    }
+
+    /* Terminal window scanline & dot matrix accent */
+    .bg-grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-grid-pattern relative selection:bg-primary/25 selection:text-white pb-24">
+
+  <!-- Sticky Top Navigation Bar (with subtle blur) -->
+  <header class="sticky top-0 z-40 w-full backdrop-blur-md bg-[#0B0B10]/80 border-b border-border/80 transition-colors">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <a href="#hero" class="flex items-center gap-2.5 font-mono text-sm tracking-tight text-text-main hover:text-primary transition-colors">
+        <span class="text-primary font-bold">&gt;_</span>
+        <span class="font-semibold">alex.park()</span>
+      </a>
+
+      <!-- Status Pill & Quick Links -->
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-surface border border-border text-xs text-text-muted">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+          </span>
+          <span class="font-medium text-emerald-400">Available for Opportunities</span>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
+             aria-label="GitHub Repository"
+             class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border bg-surface text-text-muted hover:text-text-main hover:border-primary/50 hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out">
+            <i data-lucide="github" class="w-5 h-5"></i>
+          </a>
+          <button onclick="copyEmail()" 
+                  aria-label="Copy Email to Clipboard"
+                  class="min-h-[44px] px-3.5 flex items-center gap-2 rounded-lg border border-border bg-surface text-text-muted hover:text-text-main hover:border-primary/50 hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out text-xs font-mono">
+            <i data-lucide="mail" class="w-4 h-4 text-primary"></i>
+            <span class="hidden md:inline">Contact</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 space-y-16">
+
+    <!-- Hero & Interactive Terminal Section -->
+    <section id="hero" class="animate-fade-in grid grid-cols-1 lg:grid-cols-12 gap-8 items-center" style="animation-delay: 80ms;">
+      <div class="lg:col-span-7 space-y-6 break-keep">
+        <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface/80 text-xs font-mono text-text-muted">
+          <i data-lucide="terminal" class="w-4 h-4 text-primary"></i>
+          <span>Full-Stack & Systems Architecture</span>
+        </div>
+        
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-text-main leading-tight font-mono">
+          사용자 경험과 확장성을 <br>
+          <span class="text-primary">동시에 설계하는</span> 엔지니어
+        </h1>
+
+        <p class="text-text-muted text-base sm:text-lg leading-relaxed max-w-2xl font-sans">
+          프론트엔드의 매끄러운 인터랙션부터 분산 백엔드 시스템의 데이터 정합성까지 집요하게 탐구합니다. 
+          TypeScript, Go, React, Distributed Systems를 기반으로 신뢰도 높은 소프트웨어를 구현합니다.
+        </p>
+
+        <!-- CTAs -->
+        <div class="flex flex-wrap items-center gap-3 pt-2">
+          <a href="#projects" 
+             class="min-h-[44px] px-5 flex items-center justify-center gap-2 rounded-lg bg-primary text-white font-medium text-sm hover:brightness-110 active:scale-[0.96] transition-transform duration-100 ease-out shadow-lg shadow-primary/20">
+            <i data-lucide="code-2" class="w-4 h-4"></i>
+            프로젝트 둘러보기
+          </a>
+          <button onclick="copyEmail()" 
+                  class="min-h-[44px] px-5 flex items-center justify-center gap-2 rounded-lg bg-surface border border-border text-text-main font-medium text-sm hover:bg-surface-hover hover:border-text-muted/30 active:scale-[0.96] transition-transform duration-100 ease-out">
+            <i data-lucide="copy" class="w-4 h-4 text-text-muted"></i>
+            이메일 복사하기
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Terminal Widget (Delight & High Craft) -->
+      <div class="lg:col-span-5 rounded-2xl border border-border bg-surface p-4 shadow-elevation font-mono text-xs text-text-muted relative">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-border">
+          <div class="flex items-center gap-1.5">
+            <span class="w-3 h-3 rounded-full bg-red-500/80 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-yellow-500/80 inline-block"></span>
+            <span class="w-3 h-3 rounded-full bg-green-500/80 inline-block"></span>
+          </div>
+          <span class="text-[11px] text-text-muted">zsh — 80x24</span>
+        </div>
+        <div class="space-y-2 leading-relaxed">
+          <p><span class="text-accent">visitor@portfolio</span>:<span class="text-primary">~</span>$ whoami</p>
+          <p class="text-text-main pl-2">Alex Park (박준혁) &middot; 5년차 풀스택 소프트웨어 엔지니어</p>
+          
+          <p class="pt-1"><span class="text-accent">visitor@portfolio</span>:<span class="text-primary">~</span>$ cat focus_areas.json</p>
+          <div class="pl-2 text-text-muted space-y-1">
+            <p>"{</p>
+            <p class="pl-4">"frontend": ["Next.js", "React 19", "Tailwind CSS", "Web Vitals"],</p>
+            <p class="pl-4">"backend": ["Go", "Node.js/NestJS", "PostgreSQL", "Redis"],</p>
+            <p class="pl-4">"infra": ["Docker", "Kubernetes", "AWS ECS", "Kafka"]</p>
+            <p>"}"</p>
+          </div>
+
+          <p class="pt-1"><span class="text-accent">visitor@portfolio</span>:<span class="text-primary">~</span>$ echo $PHILOSOPHY</p>
+          <p class="text-emerald-400 pl-2">"Premature optimization is evil, but clean architecture is eternal."</p>
+          <p class="pt-1 flex items-center gap-1">
+            <span class="text-accent">visitor@portfolio</span>:<span class="text-primary">~</span>$ 
+            <span class="inline-block w-2 h-4 bg-primary animate-pulse"></span>
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack Arsenal Badges -->
+    <section class="animate-fade-in space-y-4" style="animation-delay: 160ms;">
+      <div class="flex items-center justify-between border-b border-border pb-3">
+        <h2 class="text-base font-semibold font-mono text-text-main flex items-center gap-2">
+          <i data-lucide="layers" class="w-4 h-4 text-primary"></i>
+          기술 스택 및 도구 (Core Arsenal)
+        </h2>
+        <span class="text-xs text-text-muted font-mono">Production Verified</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Languages -->
+        <div class="p-4 rounded-xl border border-border bg-surface">
+          <div class="text-xs font-mono text-primary font-medium mb-2.5">Languages</div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">TypeScript</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Go</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Python</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">SQL</span>
+          </div>
+        </div>
+
+        <!-- Frontend -->
+        <div class="p-4 rounded-xl border border-border bg-surface">
+          <div class="text-xs font-mono text-primary font-medium mb-2.5">Frontend</div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Next.js 15</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">React 19</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Tailwind CSS</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Zustand</span>
+          </div>
+        </div>
+
+        <!-- Backend & DB -->
+        <div class="p-4 rounded-xl border border-border bg-surface">
+          <div class="text-xs font-mono text-primary font-medium mb-2.5">Backend & DB</div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Gin / Chi</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">PostgreSQL</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Redis</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Prisma / GORM</span>
+          </div>
+        </div>
+
+        <!-- Cloud & DevOps -->
+        <div class="p-4 rounded-xl border border-border bg-surface">
+          <div class="text-xs font-mono text-primary font-medium mb-2.5">Cloud & Infra</div>
+          <div class="flex flex-wrap gap-1.5">
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">AWS</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Docker</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">GitHub Actions</span>
+            <span class="px-2 py-1 rounded bg-surface-hover border border-border text-xs text-text-main font-mono">Terraform</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Bento Grid Project Showcase -->
+    <section id="projects" class="space-y-6 pt-6">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-4">
+        <div>
+          <h2 class="text-xl sm:text-2xl font-bold font-mono text-text-main flex items-center gap-2">
+            <i data-lucide="cpu" class="w-5 h-5 text-primary"></i>
+            프로젝트 아카이브
+          </h2>
+          <p class="text-xs sm:text-sm text-text-muted mt-1">실제 운영 환경과 성능 최적화에 중점을 둔 핵심 프로젝트</p>
+        </div>
+
+        <!-- Category Filter Tabs -->
+        <div class="flex items-center gap-1.5 p-1 bg-surface border border-border rounded-lg self-start sm:self-auto" id="filterContainer">
+          <button onclick="filterProjects('all')" data-category="all" 
+                  class="filter-btn min-h-[36px] px-3 rounded-md text-xs font-medium font-mono bg-primary text-white transition-colors">
+            All
+          </button>
+          <button onclick="filterProjects('web')" data-category="web" 
+                  class="filter-btn min-h-[36px] px-3 rounded-md text-xs font-medium font-mono text-text-muted hover:text-text-main transition-colors">
+            Web
+          </button>
+          <button onclick="filterProjects('backend')" data-category="backend" 
+                  class="filter-btn min-h-[36px] px-3 rounded-md text-xs font-medium font-mono text-text-muted hover:text-text-main transition-colors">
+            Backend
+          </button>
+          <button onclick="filterProjects('ai')" data-category="ai" 
+                  class="filter-btn min-h-[36px] px-3 rounded-md text-xs font-medium font-mono text-text-muted hover:text-text-main transition-colors">
+            AI/Tools
+          </button>
+        </div>
+      </div>
+
+      <!-- Bento Grid Layout -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="projectsGrid">
+        
+        <!-- Large Featured Project Card 1 (Span 2) -->
+        <article data-cat="web" class="project-card md:col-span-2 rounded-2xl border border-border bg-surface p-6 sm:p-8 flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out group">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs font-mono font-medium">
+                Featured Product &middot; SaaS
+              </span>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
+                   aria-label="View Source on GitHub" 
+                   class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border text-text-muted hover:text-text-main hover:border-primary/50 transition-colors">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+                <a href="https://example.com" target="_blank" rel="noopener noreferrer" 
+                   aria-label="Visit Live Demo"
+                   class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border text-text-muted hover:text-primary hover:border-primary/50 transition-colors">
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl sm:text-2xl font-bold font-mono text-text-main group-hover:text-primary transition-colors">
+                PulseMetrics: 실시간 분산 원격측정 대시보드
+              </h3>
+              <p class="text-text-muted text-sm mt-2 break-keep leading-relaxed">
+                초당 15,000건 이상의 API 트래픽 로그를 수집·시각화하는 실시간 APM 솔루션. WebSockets과 Canvas 기반 시계열 차트를 결합해 렌더링 지연시간을 65% 감축했습니다.
+              </p>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3 py-3 border-y border-border/60">
+              <div>
+                <span class="block text-xs font-mono text-text-muted">응답 지연</span>
+                <span class="text-base font-bold font-mono text-text-main tabular-nums">&lt; 45ms</span>
+              </div>
+              <div>
+                <span class="block text-xs font-mono text-text-muted">동시 처리량</span>
+                <span class="text-base font-bold font-mono text-text-main tabular-nums">15K req/s</span>
+              </div>
+              <div>
+                <span class="block text-xs font-mono text-text-muted">가용성</span>
+                <span class="text-base font-bold font-mono text-text-main tabular-nums">99.98%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 pt-4">
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Next.js 15</span>
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Go (Chi)</span>
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">ClickHouse</span>
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Apache Kafka</span>
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Tailwind CSS</span>
+          </div>
+        </article>
+
+        <!-- Project Card 2 (Col 1) -->
+        <article data-cat="backend" class="project-card rounded-2xl border border-border bg-surface p-6 sm:p-8 flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out group">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-full border border-border bg-surface-hover text-accent text-xs font-mono font-medium">
+                Backend System
+              </span>
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
+                 aria-label="View Source on GitHub" 
+                 class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border text-text-muted hover:text-text-main hover:border-primary/50 transition-colors">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </a>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-bold font-mono text-text-main group-hover:text-primary transition-colors">
+                VaultQueue: 분산 선착순 예매 트랜잭션 엔진
+              </h3>
+              <p class="text-text-muted text-xs sm:text-sm mt-2 break-keep leading-relaxed">
+                대규모 동시 요청 환경에서 티켓팅 재고의 오버셀을 0건으로 차단하는 Redis 분산 락 및 Lua 스크립트 기반 고성능 트랜잭션 엔진.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <div class="flex flex-wrap gap-2">
+              <span class="px-2 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Go</span>
+              <span class="px-2 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Redis Sentinel</span>
+              <span class="px-2 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">PostgreSQL</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project Card 3 (Col 1) -->
+        <article data-cat="ai" class="project-card rounded-2xl border border-border bg-surface p-6 sm:p-8 flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out group">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-full border border-purple-500/30 bg-purple-500/10 text-purple-400 text-xs font-mono font-medium">
+                AI / Developer Tool
+              </span>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
+                   aria-label="View Source on GitHub"
+                   class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border text-text-muted hover:text-text-main hover:border-primary/50 transition-colors">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-lg font-bold font-mono text-text-main group-hover:text-primary transition-colors">
+                DocuSense: Local-First RAG 문서 탐색기
+              </h3>
+              <p class="text-text-muted text-xs sm:text-sm mt-2 break-keep leading-relaxed">
+                로컬 벡터 임베딩(Transformers.js)을 활용해 민감한 기술 문서를 외부 전송 없이 오프라인에서 안전하게 시맨틱 검색하는 브라우저 익스텐션.
+              </p>
+            </div>
+          </div>
+
+          <div class="pt-6">
+            <div class="flex flex-wrap gap-2">
+              <span class="px-2 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">TypeScript</span>
+              <span class="px-2 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Wasm / ONNX</span>
+              <span class="px-2 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Vector DB</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Project Card 4 (Span 2) -->
+        <article data-cat="web" class="project-card md:col-span-2 rounded-2xl border border-border bg-surface p-6 sm:p-8 flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out group">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="px-2.5 py-1 rounded-full border border-border bg-surface-hover text-text-muted text-xs font-mono font-medium">
+                Full-Stack Commerce
+              </span>
+              <div class="flex items-center gap-2">
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" 
+                   aria-label="View Source on GitHub"
+                   class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border text-text-muted hover:text-text-main hover:border-primary/50 transition-colors">
+                  <i data-lucide="github" class="w-4 h-4"></i>
+                </a>
+                <a href="https://example.com" target="_blank" rel="noopener noreferrer" 
+                   aria-label="Visit Live Demo"
+                   class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg border border-border text-text-muted hover:text-primary hover:border-primary/50 transition-colors">
+                  <i data-lucide="external-link" class="w-4 h-4"></i>
+                </a>
+              </div>
+            </div>
+
+            <div>
+              <h3 class="text-xl font-bold font-mono text-text-main group-hover:text-primary transition-colors">
+                Nordic Atelier: 헤드리스 이커머스 & 주문 관리 플랫폼
+              </h3>
+              <p class="text-text-muted text-sm mt-2 break-keep leading-relaxed">
+                Next.js 15 App Router와 MedusaJS를 연동한 반응형 헤드리스 쇼핑 플랫폼. ISR(증분 정적 재생성)과 에지 캐싱 전략으로 Lighthouse 성능 점수 99점 달성.
+              </p>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap gap-2 pt-6">
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Next.js 15</span>
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Node.js</span>
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">PostgreSQL</span>
+            <span class="px-2.5 py-1 rounded-md bg-surface-hover border border-border text-xs font-mono text-text-muted">Stripe API</span>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- Career Milestones & Experience -->
+    <section class="space-y-6 pt-6">
+      <div class="border-b border-border pb-4">
+        <h2 class="text-xl sm:text-2xl font-bold font-mono text-text-main flex items-center gap-2">
+          <i data-lucide="sparkles" class="w-5 h-5 text-accent"></i>
+          경력 및 핵심 기여 (Experience)
+        </h2>
+        <p class="text-xs sm:text-sm text-text-muted mt-1">소프트웨어 설계와 비즈니스 임팩트를 연결한 발자취</p>
+      </div>
+
+      <div class="space-y-4">
+        <!-- Milestone 1 -->
+        <div class="rounded-2xl border border-border bg-surface p-6 sm:p-7 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-primary inline-block"></span>
+              <h3 class="text-base sm:text-lg font-bold font-mono text-text-main">Lead Full-Stack Engineer &middot; NovaLabs Inc.</h3>
+            </div>
+            <span class="text-xs font-mono text-text-muted tabular-nums sm:text-right">2023.03 — 현재</span>
+          </div>
+          <p class="text-sm text-text-muted pl-5 break-keep">
+            B2B SaaS 코어 플랫폼의 웹 프론트엔드 및 마이크로서비스 백엔드 리딩. Next.js 기반 모노레포 구축으로 코드 중복 40% 제거, 
+            Kubernetes 클러스터 리소스 오토스케일링을 통한 인프라 비용 28% 절감.
+          </p>
+        </div>
+
+        <!-- Milestone 2 -->
+        <div class="rounded-2xl border border-border bg-surface p-6 sm:p-7 space-y-3">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <div class="flex items-center gap-3">
+              <span class="w-2.5 h-2.5 rounded-full bg-border inline-block"></span>
+              <h3 class="text-base sm:text-lg font-bold font-mono text-text-main">Backend & API Engineer &middot; DataWave</h3>
+            </div>
+            <span class="text-xs font-mono text-text-muted tabular-nums sm:text-right">2021.06 — 2023.02</span>
+          </div>
+          <p class="text-sm text-text-muted pl-5 break-keep">
+            실시간 결제 및 데이터 정산 파이프라인 개발. 비동기 큐 시스템 도입으로 트래픽 피크 타임 타임아웃 오류를 제로화하고 DB 쿼리 플랜 최적화를 통해 p99 응답 시간 180ms 단축.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact & 1-Click Copy Section -->
+    <section class="rounded-3xl border border-border bg-gradient-to-b from-surface to-surface-hover/80 p-8 sm:p-12 text-center space-y-6">
+      <div class="inline-flex items-center justify-center p-3 rounded-2xl bg-primary/10 border border-primary/20 text-primary mb-2">
+        <i data-lucide="mail" class="w-6 h-6"></i>
+      </div>
+      <div class="max-w-xl mx-auto space-y-2 break-keep">
+        <h2 class="text-2xl sm:text-3xl font-bold font-mono text-text-main">새로운 도전을 함께할 팀을 찾고 있습니다</h2>
+        <p class="text-sm sm:text-base text-text-muted leading-relaxed">
+          기술적 깊이와 제품에 대한 책임감을 갖춘 엔지니어링이 필요하시다면 언제든 편하게 연락해 주세요.
+        </p>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+        <button onclick="copyEmail()" 
+                class="min-h-[44px] w-full sm:w-auto px-6 py-3 rounded-xl bg-primary text-white font-medium text-sm flex items-center justify-center gap-2.5 hover:brightness-110 active:scale-[0.96] transition-transform duration-100 ease-out shadow-lg shadow-primary/25 cursor-pointer">
+          <i data-lucide="copy" class="w-4 h-4"></i>
+          <span>alex.park.dev@gmail.com 복사</span>
+        </button>
+
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer"
+           class="min-h-[44px] w-full sm:w-auto px-6 py-3 rounded-xl bg-surface border border-border text-text-main font-medium text-sm flex items-center justify-center gap-2 hover:bg-surface-hover hover:border-primary/50 active:scale-[0.96] transition-transform duration-100 ease-out cursor-pointer">
+          <i data-lucide="github" class="w-4 h-4"></i>
+          <span>GitHub 방문하기</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Clean Footer -->
+  <footer class="max-w-6xl mx-auto px-4 sm:px-6 pt-16 text-center text-xs text-text-muted font-mono">
+    <p>&copy; 2026 Alex Park. Designed with Precision &amp; Apple HIG craft principles.</p>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="toast" 
+       class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-transform duration-300 ease-out flex items-center gap-3 px-4 py-3 rounded-xl bg-surface border border-accent/40 text-text-main shadow-elevation">
+    <div class="w-2 h-2 rounded-full bg-accent"></div>
+    <span class="text-xs font-mono font-medium" id="toastMessage">이메일 주소가 클립보드에 복사되었습니다!</span>
+  </div>
+
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
+
+    // 1-Click Copy Email Function with Toast Feedback
+    function copyEmail() {
+      const email = 'alex.park.dev@gmail.com';
+      navigator.clipboard.writeText(email).then(() => {
+        showToast('✓ ' + email + ' 복사 완료!');
+      }).catch(() => {
+        showToast('이메일: ' + email);
+      });
+    }
+
+    // Toast Presentation
+    let toastTimeout;
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      toastMsg.innerText = msg;
+
+      clearTimeout(toastTimeout);
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 2600);
+    }
+
+    // Category Filter for Projects
+    function filterProjects(category) {
+      // Toggle button styles
+      const buttons = document.querySelectorAll('.filter-btn');
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-category') === category) {
+          btn.className = 'filter-btn min-h-[36px] px-3 rounded-md text-xs font-medium font-mono bg-primary text-white transition-colors';
+        } else {
+          btn.className = 'filter-btn min-h-[36px] px-3 rounded-md text-xs font-medium font-mono text-text-muted hover:text-text-main transition-colors';
+        }
+      });
+
+      // Filter cards
+      const cards = document.querySelectorAll('.project-card');
+      cards.forEach(card => {
+        const cardCat = card.getAttribute('data-cat');
+        if (category === 'all' || cardCat === category) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+  </script>
+</body>
+</html>
