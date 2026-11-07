@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>오브 아틀리에 (Aube Atelier) | 성수 감성 브런치 & 스페셜티 커피</title>
+  
+  <!-- Google Fonts: Playfair Display & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap">
+  
+  <!-- Tailwind CSS Engine -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: 'var(--color-primary)',
+            accent: 'var(--color-accent)',
+            surface: {
+              DEFAULT: 'var(--color-surface)',
+              hover: 'var(--color-surface-hover)',
+            },
+            border: 'var(--color-border)',
+            'text-main': 'var(--color-text-main)',
+            'text-muted': 'var(--color-text-muted)',
+          },
+          borderRadius: {
+            card: 'var(--radius-card)',
+          },
+          boxShadow: {
+            soft: '0 1px 3px rgba(0,0,0,0.04), 0 8px 24px -4px rgba(0,0,0,0.06)',
+            elevation: '0 4px 6px -1px rgba(0,0,0,0.05), 0 20px 30px -10px rgba(0,0,0,0.1)',
+          },
+          animation: {
+            'fade-in': 'fadeInSlide 0.5s cubic-bezier(0.16, 1, 0.3, 1) both',
+          },
+          keyframes: {
+            fadeInSlide: {
+              '0%': { opacity: '0', transform: 'translateY(12px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      /* Layer 1: Primitive / OKLCH Tokens */
+      --color-primary-oklch: oklch(0.40 0.10 50);
+      --color-accent-oklch: oklch(0.70 0.18 65);
+
+      /* Layer 2: Semantic Tokens */
+      --color-bg: #FAF7F2;
+      --color-surface: #FFFFFF;
+      --color-surface-hover: #F5EFE6;
+      --color-border: #EADBCC;
+      --color-primary: #78350F;
+      --color-accent: #D97706;
+      --color-text-main: #292524;
+      --color-text-muted: #78716C;
+
+      /* Layer 3: Component Tokens */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-card: 16px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --min-touch-target: 44px;
+    }
+
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      word-break: keep-all;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, .font-serif-display {
+      font-family: 'Playfair Display', Georgia, serif;
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="min-h-screen selection:bg-accent/20 selection:text-primary">
+
+  <!-- Sticky Top Navigation -->
+  <header class="sticky top-0 z-40 bg-[#FAF7F2]/90 backdrop-blur-md border-b border-border/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-18 py-3.5 flex items-center justify-between">
+      <a href="#hero" class="flex items-center gap-2.5 group">
+        <span class="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-colors duration-200">
+          <i data-lucide="coffee" class="w-5 h-5"></i>
+        </span>
+        <div class="flex flex-col">
+          <span class="font-serif-display text-lg sm:text-xl font-bold tracking-tight text-primary leading-tight">Aube Atelier</span>
+          <span class="text-[10px] uppercase tracking-widest text-text-muted font-medium">Seongsu Brunch & Café</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-text-muted">
+        <a href="#about" class="hover:text-primary transition-colors duration-150">공간 소개</a>
+        <a href="#menu" class="hover:text-primary transition-colors duration-150">시그니처 메뉴</a>
+        <a href="#craft" class="hover:text-primary transition-colors duration-150">아틀리에 철학</a>
+        <a href="#visit" class="hover:text-primary transition-colors duration-150">오시는 길</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="#booking" class="min-h-[44px] px-5 rounded-full bg-primary text-white text-xs sm:text-sm font-semibold flex items-center gap-2 hover:bg-[#602a0b] active:scale-[0.96] transition-transform duration-100 ease-out shadow-soft">
+          <i data-lucide="calendar" class="w-4 h-4 text-accent"></i>
+          <span>테이블 예약</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Hero Section -->
+    <section id="hero" class="relative pt-12 pb-20 md:pt-20 md:pb-28 overflow-hidden">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          
+          <div class="lg:col-span-7 flex flex-col items-start animate-fade-in" style="animation-delay: 50ms;">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-primary/8 border border-primary/20 text-xs font-semibold text-primary mb-6">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-accent"></i>
+              <span>성수동 연무장길 붉은 벽돌 골목 속 아틀리에</span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-text-main tracking-tight leading-[1.18] mb-6">
+              자연광이 깃든 아침,<br>
+              <span class="text-primary italic font-normal">따스한 온기</span>의 브런치
+            </h1>
+
+            <p class="text-base sm:text-lg text-text-muted leading-relaxed max-w-xl mb-8 break-keep">
+              오브 아틀리에는 매일 새벽 직접 굽는 샤워도우, 제철 계절 채소와 스페셜티 로스터리가 함께 빚어내는 성수동의 미식 쉼터입니다. 
+              바쁜 도심에서 한 걸음 물러나 고요한 여유를 음미해 보세요.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+              <a href="#menu" class="min-h-[44px] w-full sm:w-auto px-7 py-3 rounded-card bg-primary text-white font-medium flex items-center justify-center gap-2.5 shadow-soft hover:-translate-y-0.5 hover:shadow-elevation active:scale-[0.96] transition-transform duration-200 ease-out">
+                <i data-lucide="utensils" class="w-4 h-4 text-accent"></i>
+                <span>메뉴 보러가기</span>
+              </a>
+              <a href="#visit" class="min-h-[44px] w-full sm:w-auto px-6 py-3 rounded-card bg-surface border border-border text-text-main font-medium flex items-center justify-center gap-2 hover:bg-surface-hover active:scale-[0.96] transition-transform duration-200 ease-out">
+                <i data-lucide="map-pin" class="w-4 h-4 text-primary"></i>
+                <span>위치 & 영업시간</span>
+              </a>
+            </div>
+
+            <div class="mt-10 pt-8 border-t border-border/80 w-full grid grid-cols-3 gap-4 text-left">
+              <div>
+                <span class="block text-xs uppercase tracking-wider text-text-muted">영업 시간</span>
+                <span class="text-sm sm:text-base font-semibold text-text-main tabular-nums mt-0.5 block">10:00 - 20:00</span>
+                <span class="text-[11px] text-accent font-medium mt-0.5 block">Last Order 19:00</span>
+              </div>
+              <div>
+                <span class="block text-xs uppercase tracking-wider text-text-muted">베이커리 타임</span>
+                <span class="text-sm sm:text-base font-semibold text-text-main tabular-nums mt-0.5 block">10:00 / 14:00</span>
+                <span class="text-[11px] text-text-muted mt-0.5 block">당일생산 · 당일소진</span>
+              </div>
+              <div>
+                <span class="block text-xs uppercase tracking-wider text-text-muted">공간 구성</span>
+                <span class="text-sm sm:text-base font-semibold text-text-main mt-0.5 block">테라스 & 온실</span>
+                <span class="text-[11px] text-text-muted mt-0.5 block">반려동물 동반 가능</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 relative animate-fade-in" style="animation-delay: 150ms;">
+            <div class="relative mx-auto max-w-md lg:max-w-none">
+              <!-- Concentric Card Layout -->
+              <div class="rounded-3xl bg-surface p-3.5 border border-border shadow-elevation">
+                <div class="relative overflow-hidden rounded-2xl aspect-[4/5] bg-surface-hover">
+                  <img 
+                    src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=1200&q=80" 
+                    alt="오브 아틀리에 성수 브런치 테이블 전경" 
+                    class="w-full h-full object-cover"
+                    loading="eager"
+                  >
+                  <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+                  
+                  <div class="absolute bottom-5 left-5 right-5 text-white">
+                    <span class="inline-block px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-md text-[11px] font-medium tracking-wider mb-2 border border-white/20">
+                      TODAY'S SPECIAL
+                    </span>
+                    <h3 class="text-xl font-bold font-serif-display leading-snug">성수 무화과 리코타 사워도우</h3>
+                    <p class="text-xs text-stone-200 mt-1 line-clamp-2">당일 아침 구워낸 천연 발효 사워도우와 수제 리코타 치즈, 제철 꿀의 조화</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Floating Micro Badge -->
+              <div class="absolute -bottom-5 -left-4 sm:-left-6 bg-surface p-3.5 rounded-2xl border border-border shadow-elevation flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-accent/15 text-accent flex items-center justify-center">
+                  <i data-lucide="croissant" class="w-5 h-5"></i>
+                </div>
+                <div>
+                  <p class="text-xs text-text-muted font-medium">Bake Fresh Daily</p>
+                  <p class="text-sm font-bold text-text-main">100% 프랑스 AOP 버터</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Space Story / Philosophy -->
+    <section id="about" class="py-16 bg-surface border-y border-border/80">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="max-w-2xl mx-auto text-center mb-12">
+          <span class="text-xs font-bold uppercase tracking-widest text-accent mb-2 block">Atmosphere & Craft</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-primary mb-4 font-serif-display">과거의 피혁 공방에서,<br>미식의 아틀리에로</h2>
+          <p class="text-text-muted text-sm sm:text-base">
+            1980년대 구두 가죽을 재단하던 성수동의 오래된 붉은 벽돌과 노출 콘크리트 위에, 따뜻한 우드 텍스처와 야생화의 생기를 더했습니다.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+          <div class="rounded-card bg-[#FAF7F2] p-7 border border-border flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-5">
+                <i data-lucide="croissant" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-text-main mb-2">천연 발효 베이커리</h3>
+              <p class="text-sm text-text-muted leading-relaxed">
+                인공 첨가물 없이 48시간 저온 숙성한 르뱅(Levain)을 사용하여 소화가 편안하고 크러스트가 바삭한 사워도우를 굽습니다.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-border/60 text-xs font-semibold text-primary flex items-center gap-1.5">
+              <span>매일 오전 10시 오븐 가동</span>
+            </div>
+          </div>
+
+          <div class="rounded-card bg-[#FAF7F2] p-7 border border-border flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-accent/15 text-accent flex items-center justify-center mb-5">
+                <i data-lucide="coffee" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-text-main mb-2">스페셜티 싱글 오리진</h3>
+              <p class="text-sm text-text-muted leading-relaxed">
+                에티오피아 예가체프의 산뜻한 플로럴 노트와 콜롬비아의 은은한 캐러멜 여운. 브런치 페어링에 최적화된 로스팅 프로파일을 제공합니다.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-border/60 text-xs font-semibold text-accent flex items-center gap-1.5">
+              <span>자체 큐레이션 원두 라인업</span>
+            </div>
+          </div>
+
+          <div class="rounded-card bg-[#FAF7F2] p-7 border border-border flex flex-col justify-between hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out">
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center mb-5">
+                <i data-lucide="heart" class="w-6 h-6"></i>
+              </div>
+              <h3 class="text-lg font-bold text-text-main mb-2">유기농 파머스 마켓 식재료</h3>
+              <p class="text-sm text-text-muted leading-relaxed">
+                양평 로컬 농가에서 직송받은 무농약 와일드 루꼴라와 방사 유정란, 제철 무화과와 바질을 아낌없이 플레이트에 담아냅니다.
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-border/60 text-xs font-semibold text-primary flex items-center gap-1.5">
+              <span>농장 직송 지속가능 미식</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Signature Menu Showcase -->
+    <section id="menu" class="py-16 md:py-24">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-widest text-accent mb-2 block">Curated Dining</span>
+            <h2 class="text-3xl sm:text-4xl font-bold text-primary font-serif-display">계절의 풍미를 담은 메뉴</h2>
+          </div>
+          <p class="text-sm text-text-muted max-w-sm">
+            모든 브런치 메뉴는 주문 즉시 오픈 키친에서 조리되며, 비건 및 글루텐 프리 옵션이 준비되어 있습니다.
+          </p>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 scrollbar-none" role="tablist" aria-label="메뉴 카테고리">
+          <button 
+            type="button" 
+            onclick="switchCategory('all')" 
+            id="tab-all"
+            class="filter-tab min-h-[44px] px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 ease-out cursor-pointer active:scale-[0.96] bg-primary text-white shadow-soft"
+          >
+            전체 보기
+          </button>
+          <button 
+            type="button" 
+            onclick="switchCategory('signature')" 
+            id="tab-signature"
+            class="filter-tab min-h-[44px] px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 ease-out cursor-pointer active:scale-[0.96] bg-surface text-text-muted border border-border hover:bg-surface-hover"
+          >
+            시그니처 브런치
+          </button>
+          <button 
+            type="button" 
+            onclick="switchCategory('coffee')" 
+            id="tab-coffee"
+            class="filter-tab min-h-[44px] px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 ease-out cursor-pointer active:scale-[0.96] bg-surface text-text-muted border border-border hover:bg-surface-hover"
+          >
+            스페셜티 커피
+          </button>
+          <button 
+            type="button" 
+            onclick="switchCategory('bakery')" 
+            id="tab-bakery"
+            class="filter-tab min-h-[44px] px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 ease-out cursor-pointer active:scale-[0.96] bg-surface text-text-muted border border-border hover:bg-surface-hover"
+          >
+            베이커리 & 디저트
+          </button>
+          <button 
+            type="button" 
+            onclick="switchCategory('beverage')" 
+            id="tab-beverage"
+            class="filter-tab min-h-[44px] px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 ease-out cursor-pointer active:scale-[0.96] bg-surface text-text-muted border border-border hover:bg-surface-hover"
+          >
+            내추럴 드링크
+          </button>
+        </div>
+
+        <!-- Menu Grid -->
+        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          
+          <!-- Item 1: Signature -->
+          <article data-category="signature" class="menu-card rounded-card bg-surface p-5 border border-border shadow-soft hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out flex flex-col justify-between">
+            <div>
+              <div class="relative overflow-hidden rounded-xl aspect-[16/11] bg-surface-hover mb-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=800&q=80" 
+                  alt="오브 아보카도 에그 베네딕트" 
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                >
+                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-primary text-white text-[10px] font-bold tracking-wide">BEST SELLER</span>
+              </div>
+              <div class="flex items-start justify-between gap-2 mb-1.5">
+                <h3 class="text-base sm:text-lg font-bold text-text-main">오브 아보카도 베네딕트</h3>
+                <span class="text-base font-bold text-primary tabular-nums shrink-0">19,500원</span>
+              </div>
+              <p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+                직접 구운 브리오슈에 훈제 연어, 유기농 수란, 수제 차이브 홀란다이즈 소스를 듬뿍 얹은 대표 브런치
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+              <span>양평 방사란 · 노르웨이 생연어</span>
+              <span class="text-accent font-semibold">셰프 추천</span>
+            </div>
+          </article>
+
+          <!-- Item 2: Signature -->
+          <article data-category="signature" class="menu-card rounded-card bg-surface p-5 border border-border shadow-soft hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out flex flex-col justify-between">
+            <div>
+              <div class="relative overflow-hidden rounded-xl aspect-[16/11] bg-surface-hover mb-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1540420773420-3366772f4999?auto=format&fit=crop&w=800&q=80" 
+                  alt="부라타 치즈 제철 과일 샐러드" 
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                >
+                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-accent text-white text-[10px] font-bold tracking-wide">SEASONAL</span>
+              </div>
+              <div class="flex items-start justify-between gap-2 mb-1.5">
+                <h3 class="text-base sm:text-lg font-bold text-text-main">제철 생무화과 부라타 볼</h3>
+                <span class="text-base font-bold text-primary tabular-nums shrink-0">18,000원</span>
+              </div>
+              <p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+                신선한 이탈리안 통 부라타 치즈와 영암 생무화과, 와일드 루꼴라, 12년산 발사믹 리덕션 드레싱
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+              <span>통 부라타 125g · 무화과 직송</span>
+              <span class="text-primary font-semibold">글루텐 프리</span>
+            </div>
+          </article>
+
+          <!-- Item 3: Coffee -->
+          <article data-category="coffee" class="menu-card rounded-card bg-surface p-5 border border-border shadow-soft hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out flex flex-col justify-between">
+            <div>
+              <div class="relative overflow-hidden rounded-xl aspect-[16/11] bg-surface-hover mb-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=800&q=80" 
+                  alt="성수 포레스트 아인슈페너" 
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                >
+                <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full bg-primary text-white text-[10px] font-bold tracking-wide">SIGNATURE DRINK</span>
+              </div>
+              <div class="flex items-start justify-between gap-2 mb-1.5">
+                <h3 class="text-base sm:text-lg font-bold text-text-main">성수 포레스트 아인슈페너</h3>
+                <span class="text-base font-bold text-primary tabular-nums shrink-0">7,000원</span>
+              </div>
+              <p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+                진한 콜드브루 베이스에 말차 크림과 발로나 다크 코코아 파우더를 레이어드한 오브 아틀리에의 시그니처
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+              <span>제주 유기농 말차 · 동물성 생크림</span>
+              <span class="text-accent font-semibold">Only Iced</span>
+            </div>
+          </article>
+
+          <!-- Item 4: Bakery -->
+          <article data-category="bakery" class="menu-card rounded-card bg-surface p-5 border border-border shadow-soft hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out flex flex-col justify-between">
+            <div>
+              <div class="relative overflow-hidden rounded-xl aspect-[16/11] bg-surface-hover mb-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1555507036-ab1f4038808a?auto=format&fit=crop&w=800&q=80" 
+                  alt="프랑스 AOP 클래식 크루아상" 
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                >
+              </div>
+              <div class="flex items-start justify-between gap-2 mb-1.5">
+                <h3 class="text-base sm:text-lg font-bold text-text-main">클래식 사워도우 & AOP 버터</h3>
+                <span class="text-base font-bold text-primary tabular-nums shrink-0">8,500원</span>
+              </div>
+              <p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+                48시간 천연 발효 사워도우 슬라이스와 이즈니 가염버터, 직접 만든 얼그레이 밀크 스프레드 세트
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+              <span>매일 오전 10시 생산</span>
+              <span class="text-text-muted">포장 가능</span>
+            </div>
+          </article>
+
+          <!-- Item 5: Coffee -->
+          <article data-category="coffee" class="menu-card rounded-card bg-surface p-5 border border-border shadow-soft hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out flex flex-col justify-between">
+            <div>
+              <div class="relative overflow-hidden rounded-xl aspect-[16/11] bg-surface-hover mb-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=800&q=80" 
+                  alt="핸드드립 스페셜티 브루잉" 
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                >
+              </div>
+              <div class="flex items-start justify-between gap-2 mb-1.5">
+                <h3 class="text-base sm:text-lg font-bold text-text-main">에티오피아 게이샤 필터커피</h3>
+                <span class="text-base font-bold text-primary tabular-nums shrink-0">8,000원</span>
+              </div>
+              <p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+                재스민 꽃향기와 베르가못, 은은한 살구의 산미가 입안 가득 맑고 투명하게 퍼지는 싱글 오리진
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+              <span>Washed · Light Roast</span>
+              <span class="text-primary font-semibold">바리스타 셀렉션</span>
+            </div>
+          </article>
+
+          <!-- Item 6: Beverage -->
+          <article data-category="beverage" class="menu-card rounded-card bg-surface p-5 border border-border shadow-soft hover:-translate-y-1 hover:shadow-elevation transition-transform duration-200 ease-out flex flex-col justify-between">
+            <div>
+              <div class="relative overflow-hidden rounded-xl aspect-[16/11] bg-surface-hover mb-4">
+                <img 
+                  src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?auto=format&fit=crop&w=800&q=80" 
+                  alt="바질 토마토 에이드" 
+                  class="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                  loading="lazy"
+                >
+              </div>
+              <div class="flex items-start justify-between gap-2 mb-1.5">
+                <h3 class="text-base sm:text-lg font-bold text-text-main">수제 마리네이드 토마토 바질 에이드</h3>
+                <span class="text-base font-bold text-primary tabular-nums shrink-0">7,500원</span>
+              </div>
+              <p class="text-xs sm:text-sm text-text-muted leading-relaxed">
+                껍질을 정성스럽게 벗겨 유기농 케인슈가에 마리네이드한 방울토마토와 신선한 생바질 탄산수
+              </p>
+            </div>
+            <div class="mt-4 pt-3 border-t border-border/60 flex items-center justify-between text-[11px] text-text-muted">
+              <span>Non-Coffee · 유기농 수제청</span>
+              <span class="text-accent font-semibold">청량감</span>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Chef & Barista Craft Note -->
+    <section id="craft" class="py-16 bg-[#F3ECE0] border-y border-border">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-5">
+            <div class="rounded-3xl bg-surface p-3 border border-border shadow-soft">
+              <div class="rounded-2xl overflow-hidden aspect-[4/3] bg-surface-hover">
+                <img 
+                  src="https://images.unsplash.com/photo-1507138086030-616c3b6dd768?auto=format&fit=crop&w=1000&q=80" 
+                  alt="원두를 로스팅하고 테이스팅하는 바리스타" 
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                >
+              </div>
+            </div>
+          </div>
+          <div class="lg:col-span-7">
+            <span class="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">Our Craft Standard</span>
+            <h2 class="text-2xl sm:text-3xl font-bold text-primary font-serif-display mb-4">
+              "한 접시의 요리는 온전한 휴식이 되어야 합니다"
+            </h2>
+            <p class="text-text-main text-sm sm:text-base leading-relaxed mb-6 break-keep">
+              오브 아틀리에는 서두르는 패스트푸드 문화를 지양합니다. 계란 하나를 삶는 온도, 사워도우를 굽는 복사열, 커피 원두의 그라인딩 미세도까지 
+              세심하게 조율합니다. 고객 한 분 한 분이 머무는 시간이 성수동 골목에서의 가장 따뜻한 기억으로 남을 수 있도록 정성을 다합니다.
+            </p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div class="p-3.5 rounded-xl bg-surface/80 border border-border">
+                <div class="flex items-center gap-2 font-bold text-text-main mb-1">
+                  <i data-lucide="utensils" class="w-4 h-4 text-accent"></i>
+                  <span>Zero Pre-Made (선조리 불가)</span>
+                </div>
+                <p class="text-text-muted">모든 달걀 요리와 샐러드는 주문서가 주방에 전달된 직후 만들어집니다.</p>
+              </div>
+              <div class="p-3.5 rounded-xl bg-surface/80 border border-border">
+                <div class="flex items-center gap-2 font-bold text-text-main mb-1">
+                  <i data-lucide="coffee" class="w-4 h-4 text-primary"></i>
+                  <span>온수 린싱 & 컵 예열</span>
+                </div>
+                <p class="text-text-muted">커피의 섬세한 아로마가 식지 않도록 도자기 잔을 65도로 항상 예열합니다.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Visit Information & Location Guide -->
+    <section id="visit" class="py-16 md:py-24">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6">
+        <div class="text-center max-w-xl mx-auto mb-12">
+          <span class="text-xs font-bold uppercase tracking-widest text-accent mb-2 block">Visiting Guide</span>
+          <h2 class="text-3xl sm:text-4xl font-bold text-primary font-serif-display mb-3">오시는 길 & 매장 안내</h2>
+          <p class="text-sm text-text-muted">성수역 3번 출구에서 연무장길 도보 7분 거리, 붉은 벽돌 온실 정원을 찾아주세요.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Information Card -->
+          <div class="lg:col-span-5 flex flex-col gap-5">
+            <div class="rounded-card bg-surface p-6 sm:p-7 border border-border shadow-soft">
+              <h3 class="text-lg font-bold text-primary mb-5 flex items-center gap-2">
+                <i data-lucide="clock" class="w-5 h-5 text-accent"></i>
+                <span>영업 일정 & 안내</span>
+              </h3>
+
+              <dl class="space-y-4 text-sm">
+                <div class="flex justify-between items-center pb-3 border-b border-border/70">
+                  <dt class="text-text-muted">월요일 ~ 일요일</dt>
+                  <dd class="font-bold text-text-main tabular-nums">10:00 - 20:00</dd>
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b border-border/70">
+                  <dt class="text-text-muted">브런치 라스트 오더</dt>
+                  <dd class="font-semibold text-primary tabular-nums">18:30</dd>
+                </div>
+                <div class="flex justify-between items-center pb-3 border-b border-border/70">
+                  <dt class="text-text-muted">정기 휴무</dt>
+                  <dd class="font-semibold text-accent">매월 첫째 주 화요일</dd>
+                </div>
+                <div class="flex justify-between items-center">
+                  <dt class="text-text-muted">반려동물 동반</dt>
+                  <dd class="font-medium text-text-main">야외 테라스석 동반 가능 (리드줄 필수)</dd>
+                </div>
+              </dl>
+            </div>
+
+            <!-- Address & 1-Click Copy Box -->
+            <div class="rounded-card bg-surface p-6 sm:p-7 border border-border shadow-soft">
+              <div class="flex items-center gap-2 mb-3">
+                <i data-lucide="map-pin" class="w-5 h-5 text-primary"></i>
+                <h3 class="text-lg font-bold text-text-main">매장 주소</h3>
+              </div>
+
+              <p id="full-address" class="text-sm font-medium text-text-main mb-1">
+                서울특별시 성동구 연무장길 42-1 (성수동2가)
+              </p>
+              <p class="text-xs text-text-muted mb-5">
+                지하철 2호선 성수역 3번 출구에서 직진 후 카페거리 골목 진입 (도보 7분)
+              </p>
+
+              <div class="flex flex-col sm:flex-row gap-2.5">
+                <button 
+                  type="button" 
+                  onclick="copyAddress()" 
+                  id="copy-btn"
+                  class="min-h-[44px] flex-1 px-4 py-2.5 rounded-xl bg-[#FAF7F2] border border-border text-xs sm:text-sm font-semibold text-primary flex items-center justify-center gap-2 hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out cursor-pointer"
+                >
+                  <i data-lucide="copy" class="w-4 h-4 text-accent"></i>
+                  <span id="copy-btn-text">주소 복사하기</span>
+                </button>
+
+                <a 
+                  href="tel:02-468-1205" 
+                  class="min-h-[44px] px-4 py-2.5 rounded-xl bg-surface border border-border text-xs sm:text-sm font-semibold text-text-main flex items-center justify-center gap-2 hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out"
+                >
+                  <i data-lucide="phone" class="w-4 h-4 text-primary"></i>
+                  <span>02-468-1205</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- Parking Note -->
+            <div class="p-4 rounded-xl bg-accent/10 border border-accent/20 flex items-start gap-3 text-xs text-text-main">
+              <i data-lucide="sparkles" class="w-4 h-4 text-accent shrink-0 mt-0.5"></i>
+              <p class="leading-relaxed">
+                매장 전용 주차 공간이 협소하므로 인근 <strong>성수 공영주차장</strong>(도보 4분) 또는 <strong>대성 유료주차장</strong> 이용을 권장해 드립니다.
+              </p>
+            </div>
+          </div>
+
+          <!-- Map & Visual Guide -->
+          <div class="lg:col-span-7">
+            <div class="rounded-card bg-surface p-3.5 border border-border shadow-elevation">
+              <!-- Visual Mock Map / Exterior Photo Area -->
+              <div class="relative overflow-hidden rounded-xl aspect-[16/10] bg-surface-hover">
+                <img 
+                  src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80" 
+                  alt="오브 아틀리에 매장 외관 및 테라스 전경" 
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                >
+                <div class="absolute inset-0 bg-stone-900/20"></div>
+
+                <!-- Floating Map Pin Label -->
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/95 px-4 py-3 rounded-2xl shadow-elevation border border-border flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center">
+                    <i data-lucide="map-pin" class="w-4 h-4 text-accent"></i>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-text-main">Aube Atelier</p>
+                    <p class="text-[11px] text-text-muted">붉은 벽돌 건물 1층 & 안뜰 정원</p>
+                  </div>
+                </div>
+
+                <div class="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-lg text-[11px] text-white">
+                  성수 연무장길 중심가 위치
+                </div>
+              </div>
+
+              <!-- Transit Directions Grid -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3 pt-2">
+                <div class="p-3 rounded-lg bg-[#FAF7F2] border border-border/80 text-xs">
+                  <span class="font-bold text-text-main block mb-0.5">지하철 이용 시</span>
+                  <span class="text-text-muted">2호선 성수역 3번 출구 도보 380m (성수 카페거리 방면)</span>
+                </div>
+                <div class="p-3 rounded-lg bg-[#FAF7F2] border border-border/80 text-xs">
+                  <span class="font-bold text-text-main block mb-0.5">버스 이용 시</span>
+                  <span class="text-text-muted">성수역 하차 (지선 2014, 2224 / 간선 146)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Reservation CTA Section -->
+    <section id="booking" class="py-16 bg-primary text-white relative overflow-hidden">
+      <div class="max-w-4xl mx-auto px-4 sm:px-6 text-center relative z-10">
+        <span class="inline-block px-3 py-1 rounded-full bg-white/10 text-accent text-xs font-semibold tracking-wider uppercase mb-3 border border-white/10">
+          Reservations & Private Dining
+        </span>
+        <h2 class="text-3xl sm:text-4xl font-bold font-serif-display mb-4">
+          오브 아틀리에에서 만나는 특별한 브런치 모임
+        </h2>
+        <p class="text-stone-300 text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed break-keep">
+          주말 워크인 고객을 위한 좌석 외에도 평일 브런치 미팅, 소규모 대관 및 테라스 지정석 사전 예약을 지원합니다. 
+          따뜻한 식탁을 미리 준비해 두겠습니다.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4">
+          <button 
+            type="button" 
+            onclick="openBookingModal()"
+            class="min-h-[44px] px-8 py-3.5 rounded-card bg-accent text-white font-bold text-sm flex items-center gap-2 hover:bg-[#b45309] active:scale-[0.96] transition-transform duration-100 ease-out shadow-elevation cursor-pointer"
+          >
+            <i data-lucide="calendar" class="w-4 h-4"></i>
+            <span>네이버 예약 신청하기</span>
+          </button>
+          <a 
+            href="tel:02-468-1205" 
+            class="min-h-[44px] px-7 py-3.5 rounded-card bg-white/10 border border-white/20 text-white font-medium text-sm flex items-center gap-2 hover:bg-white/20 active:scale-[0.96] transition-transform duration-100 ease-out"
+          >
+            <i data-lucide="phone" class="w-4 h-4"></i>
+            <span>전화 문의 (02-468-1205)</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-surface border-t border-border py-12 text-xs text-text-muted">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-border/60">
+        <div>
+          <span class="font-serif-display text-lg font-bold text-primary block">Aube Atelier</span>
+          <span class="text-[11px] text-text-muted">성수 감성 브런치 & 스페셜티 커피 아틀리에</span>
+        </div>
+        <div class="flex flex-wrap gap-5 text-text-main font-medium">
+          <a href="#about" class="hover:text-primary transition-colors duration-150">브랜드 스토리</a>
+          <a href="#menu" class="hover:text-primary transition-colors duration-150">메뉴</a>
+          <a href="#visit" class="hover:text-primary transition-colors duration-150">영업 안내</a>
+          <a href="#booking" class="hover:text-primary transition-colors duration-150">테이블 예약</a>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <p class="leading-relaxed">
+          상호명: 오브 아틀리에 (Aube Atelier) | 대표자: 정하은 | 사업자등록번호: 215-18-94102<br>
+          주소: 서울특별시 성동구 연무장길 42-1 | 대표번호: 02-468-1205
+        </p>
+        <p class="text-[11px] tabular-nums">
+          &copy; 2026 Aube Atelier. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification for Address Copy -->
+  <div 
+    id="toast" 
+    class="fixed bottom-6 right-6 z-50 transform translate-y-16 opacity-0 transition-all duration-300 pointer-events-none"
+    role="status" 
+    aria-live="polite"
+  >
+    <div class="bg-primary text-white px-5 py-3 rounded-xl shadow-elevation flex items-center gap-2.5 text-xs font-semibold border border-white/20">
+      <i data-lucide="sparkles" class="w-4 h-4 text-accent"></i>
+      <span id="toast-message">매장 주소가 클립보드에 복사되었습니다.</span>
+    </div>
+  </div>
+
+  <!-- Interactive Scripts -->
+  <script>
+    // 1. Menu Filtering Logic
+    function switchCategory(category) {
+      const cards = document.querySelectorAll('.menu-card');
+      const tabs = document.querySelectorAll('.filter-tab');
+
+      // Update Tab Styles
+      tabs.forEach(tab => {
+        tab.classList.remove('bg-primary', 'text-white', 'shadow-soft');
+        tab.classList.add('bg-surface', 'text-text-muted', 'border', 'border-border');
+      });
+
+      const activeTab = document.getElementById(`tab-${category}`);
+      if (activeTab) {
+        activeTab.classList.remove('bg-surface', 'text-text-muted', 'border', 'border-border');
+        activeTab.classList.add('bg-primary', 'text-white', 'shadow-soft');
+      }
+
+      // Filter Cards with smooth opacity
+      cards.forEach(card => {
+        const itemCategory = card.getAttribute('data-category');
+        if (category === 'all' || itemCategory === category) {
+          card.classList.remove('hidden');
+          card.classList.add('animate-fade-in');
+        } else {
+          card.classList.add('hidden');
+          card.classList.remove('animate-fade-in');
+        }
+      });
+    }
+
+    // 2. 1-Click Address Clipboard Copy
+    async function copyAddress() {
+      const addressText = "서울특별시 성동구 연무장길 42-1";
+      const copyBtnText = document.getElementById('copy-btn-text');
+      
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(addressText);
+        } else {
+          const textarea = document.createElement("textarea");
+          textarea.value = addressText;
+          textarea.style.position = "fixed";
+          textarea.style.left = "-999999px";
+          document.body.appendChild(textarea);
+          textarea.focus();
+          textarea.select();
+          document.execCommand('copy');
+          textarea.remove();
+        }
+        
+        showToast("매장 주소가 복사되었습니다. 네이버지도에 붙여넣어 보세요!");
+        if (copyBtnText) copyBtnText.innerText = "복사 완료!";
+        setTimeout(() => {
+          if (copyBtnText) copyBtnText.innerText = "주소 복사하기";
+        }, 2200);
+
+      } catch (err) {
+        showToast("주소 복사에 실패했습니다. 직접 복사해주세요.");
+      }
+    }
+
+    // 3. Toast Display Helper
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      if (!toast || !toastMessage) return;
+
+      toastMessage.innerText = message;
+      toast.classList.remove('translate-y-16', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-16', 'opacity-0');
+      }, 2500);
+    }
+
+    // 4. Booking Prompt
+    function openBookingModal() {
+      showToast("네이버 예약 시스템 연동 대기 중입니다. (전화 예약 02-468-1205)");
+    }
+
+    // 5. Initialize Lucide Icons on DOM ready
+    document.addEventListener("DOMContentLoaded", function () {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
