@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="ko" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Ladder Flow - 스마트 사다리타기 | TOBILIFE</title>
+  
+  <!-- Pretendard Korean Standard Font -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Tailwind CSS Engine -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: 'var(--color-primary)',
+            accent: 'var(--color-accent)',
+            surface: {
+              DEFAULT: 'var(--color-surface)',
+              hover: 'var(--color-surface-hover)',
+            },
+            border: 'var(--color-border)',
+            'text-main': 'var(--color-text-main)',
+            'text-muted': 'var(--color-text-muted)',
+          },
+          borderRadius: {
+            card: 'var(--radius-card)',
+          },
+          boxShadow: {
+            soft: '0 1px 3px rgba(0,0,0,0.04), 0 8px 24px -4px rgba(0,0,0,0.06)',
+            elevation: '0 4px 6px -1px rgba(0,0,0,0.05), 0 20px 30px -10px rgba(0,0,0,0.1)',
+          },
+          animation: {
+            'fade-in': 'fadeInSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) both',
+          },
+          keyframes: {
+            fadeInSlide: {
+              '0%': { opacity: '0', transform: 'translateY(12px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      /* Layer 1: OKLCH Primitives */
+      --color-primary-oklch: oklch(0.25 0.04 265);
+      --color-accent-oklch: oklch(0.58 0.22 255);
+
+      /* Layer 2: Semantic Tokens */
+      --color-bg: #F8FAFC;
+      --color-surface: #FFFFFF;
+      --color-surface-hover: #F1F5F9;
+      --color-border: #E2E8F0;
+      --color-primary: #0F172A;
+      --color-accent: #2563EB;
+      --color-text-main: #0F172A;
+      --color-text-muted: #64748B;
+
+      /* Layer 3: Component Tokens */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-card: 16px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --min-touch-target: 44px;
+    }
+
+    .dark {
+      --color-bg: #090D16;
+      --color-surface: #131B2E;
+      --color-surface-hover: #1E293B;
+      --color-border: #243049;
+      --color-primary: #F8FAFC;
+      --color-accent: #3B82F6;
+      --color-text-main: #F1F5F9;
+      --color-text-muted: #94A3B8;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: 'Pretendard', 'Inter', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      word-break: keep-all;
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, h4 {
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+    }
+
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, ::before, ::after {
+        animation-delay: -1ms !important;
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        background-attachment: initial !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+      }
+    }
+
+    /* Custom scrollbar for game board */
+    .ladder-board-container::-webkit-scrollbar {
+      height: 8px;
+    }
+    .ladder-board-container::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .ladder-board-container::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .dark .ladder-board-container::-webkit-scrollbar-thumb {
+      background: #334155;
+    }
+  </style>
+</head>
+<body class="min-h-full flex flex-col transition-colors duration-200">
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 pointer-events-none transition-transform duration-300 ease-out flex items-center gap-3 bg-primary text-surface px-5 py-3.5 rounded-xl shadow-elevation">
+    <i data-lucide="check" class="w-5 h-5 text-accent"></i>
+    <span id="toast-message" class="text-sm font-medium">결과가 클립보드에 복사되었습니다.</span>
+  </div>
+
+  <!-- Sticky Header / Nav -->
+  <header class="sticky top-0 z-40 w-full border-b border-border bg-surface/90 backdrop-blur-md">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center font-bold text-lg">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <a href="/" class="text-lg font-bold tracking-tight text-text-main flex items-center gap-1.5">
+            LadderFlow
+            <span class="text-xs px-2 py-0.5 rounded-full bg-accent/10 text-accent font-semibold">Pro</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="theme-toggle" type="button" aria-label="테마 전환" class="min-h-[44px] min-w-[44px] p-2.5 rounded-xl border border-border bg-surface text-text-main hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out flex items-center justify-center">
+          <i data-lucide="moon" class="w-5 h-5 hidden dark:block"></i>
+          <i data-lucide="sun" class="w-5 h-5 block dark:hidden"></i>
+        </button>
+
+        <a href="https://github.com" target="_blank" rel="noopener noreferrer" aria-label="GitHub Repository" class="min-h-[44px] min-w-[44px] p-2.5 rounded-xl border border-border bg-surface text-text-main hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out flex items-center justify-center">
+          <svg class="w-5 h-5 fill-current inline-block" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Layout -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 md:py-12">
+    
+    <!-- Hero / Headline -->
+    <div class="text-center max-w-2xl mx-auto mb-10 animate-fade-in">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-semibold mb-4">
+        <i data-lucide="sparkles" class="w-3.5 h-3.5"></i>
+        공정하고 투명한 즉시 결정 도구
+      </div>
+      <h1 class="text-3xl sm:text-4xl font-extrabold tracking-tight text-text-main mb-3">
+        직관적이고 정밀한 모던 사다리타기
+      </h1>
+      <p class="text-text-muted text-base sm:text-lg leading-relaxed">
+        점심 쏘기, 팀 역할 분담, 벌칙 정하기까지 클릭 한 번으로 공정하게 추첨하고 결과를 공유하세요.
+      </p>
+    </div>
+
+    <!-- Preset Presets Filter Bar -->
+    <div class="flex items-center justify-center gap-2 flex-wrap mb-8 animate-fade-in" style="animation-delay: 60ms;">
+      <span class="text-xs font-semibold text-text-muted mr-1 flex items-center gap-1">
+        <i data-lucide="star" class="w-3.5 h-3.5"></i> 빠른 템플릿:
+      </span>
+      <button type="button" onclick="applyPreset('lunch')" class="preset-btn min-h-[44px] px-4 py-2 text-xs font-medium rounded-xl border border-border bg-surface text-text-main hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out">
+        점심 쏘기 (커피/밥/면제)
+      </button>
+      <button type="button" onclick="applyPreset('cleaning')" class="preset-btn min-h-[44px] px-4 py-2 text-xs font-medium rounded-xl border border-border bg-surface text-text-main hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out">
+        청소 당번 분담
+      </button>
+      <button type="button" onclick="applyPreset('penalty')" class="preset-btn min-h-[44px] px-4 py-2 text-xs font-medium rounded-xl border border-border bg-surface text-text-main hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out">
+        회식 벌칙 뽑기
+      </button>
+    </div>
+
+    <!-- Core Interaction Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left Config Card (lg: 4 cols) -->
+      <section class="lg:col-span-4 bg-surface border border-border rounded-2xl p-6 shadow-soft hover:shadow-elevation transition-transform duration-200 ease-out animate-fade-in" style="animation-delay: 100ms;">
+        <div class="flex items-center justify-between pb-4 border-b border-border mb-5">
+          <div class="flex items-center gap-2">
+            <i data-lucide="settings" class="w-5 h-5 text-accent"></i>
+            <h2 class="font-bold text-lg text-text-main">설정 및 인원 관리</h2>
+          </div>
+          <span id="player-count-badge" class="px-2.5 py-1 text-xs font-semibold rounded-lg bg-accent/10 text-accent tabular-nums">4명</span>
+        </div>
+
+        <!-- Player Count Stepper -->
+        <div class="mb-6">
+          <label class="block text-xs font-bold uppercase tracking-wider text-text-muted mb-2">참가 인원 설정</label>
+          <div class="flex items-center justify-between border border-border rounded-xl p-1 bg-surface-hover">
+            <button type="button" onclick="changeCount(-1)" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-surface text-text-main hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out" aria-label="인원 줄이기">
+              <i data-lucide="minus" class="w-4 h-4"></i>
+            </button>
+            <div class="text-center font-bold text-base tabular-nums">
+              <span id="player-count-display">4</span>명
+            </div>
+            <button type="button" onclick="changeCount(1)" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg bg-surface text-text-main hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out" aria-label="인원 늘리기">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <p class="text-[11px] text-text-muted mt-1.5 flex items-center gap-1">
+            <i data-lucide="info" class="w-3.5 h-3.5"></i> 최소 2명에서 최대 10명까지 지원합니다.
+          </p>
+        </div>
+
+        <!-- Participants & Outcomes Dynamic Inputs -->
+        <div class="space-y-4 mb-6">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-bold uppercase tracking-wider text-text-muted">참가자 이름</label>
+              <button type="button" onclick="shuffleParticipants()" class="text-xs text-accent hover:underline flex items-center gap-1 min-h-[44px] py-1">
+                <i data-lucide="shuffle" class="w-3 h-3"></i> 순서 섞기
+              </button>
+            </div>
+            <div id="participants-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <label class="text-xs font-bold uppercase tracking-wider text-text-muted">도착 결과</label>
+              <button type="button" onclick="shuffleOutcomes()" class="text-xs text-accent hover:underline flex items-center gap-1 min-h-[44px] py-1">
+                <i data-lucide="shuffle" class="w-3 h-3"></i> 결과 섞기
+              </button>
+            </div>
+            <div id="outcomes-container" class="space-y-2 max-h-48 overflow-y-auto pr-1">
+              <!-- Dynamically populated -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Generation & Action Buttons -->
+        <div class="space-y-2 pt-2">
+          <button type="button" id="build-btn" onclick="generateLadder()" class="w-full min-h-[44px] px-5 py-3 rounded-xl bg-accent text-white font-semibold text-sm hover:opacity-95 active:scale-[0.96] transition-transform duration-100 ease-out shadow-soft flex items-center justify-center gap-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            사다리 새로 만들기
+          </button>
+          
+          <button type="button" id="reveal-all-btn" onclick="revealAllPaths()" class="w-full min-h-[44px] px-5 py-3 rounded-xl border border-border bg-surface text-text-main font-semibold text-sm hover:bg-surface-hover active:scale-[0.96] transition-transform duration-100 ease-out flex items-center justify-center gap-2">
+            <i data-lucide="eye" class="w-4 h-4"></i>
+            전체 결과 한 번에 보기
+          </button>
+        </div>
+      </section>
+
+      <!-- Right Ladder Board & Results Card (lg: 8 cols) -->
+      <section class="lg:col-span-8 flex flex-col gap-6 animate-fade-in" style="animation-delay: 150ms;">
+        
+        <!-- Game Stage Card -->
+        <div class="bg-surface border border-border rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-border mb-4">
+            <div>
+              <h2 class="font-bold text-lg text-text-main flex items-center gap-2">
+                <i data-lucide="git-merge" class="w-5 h-5 text-accent"></i>
+                실시간 사다리 인터랙션
+              </h2>
+              <p class="text-xs text-text-muted mt-0.5">상단 참가자 버튼을 누르면 사다리를 타고 내려가는 애니메이션이 실행됩니다.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span id="status-indicator" class="text-xs px-2.5 py-1 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1.5">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                준비 완료
+              </span>
+            </div>
+          </div>
+
+          <!-- Top Participant Selector Buttons -->
+          <div id="ladder-top-anchors" class="ladder-board-container overflow-x-auto pb-2 mb-2 flex items-center justify-between gap-4 px-2">
+            <!-- Dynamically populated -->
+          </div>
+
+          <!-- SVG Canvas Container -->
+          <div class="ladder-board-container overflow-x-auto bg-surface-hover/60 border border-border/80 rounded-xl p-4 flex justify-center">
+            <svg id="ladder-svg" class="w-full min-w-[500px] h-[340px]" xmlns="http://www.w3.org/2000/svg">
+              <!-- Ladder Lines & Runners Rendered Here -->
+            </svg>
+          </div>
+
+          <!-- Bottom Outcome Anchors -->
+          <div id="ladder-bottom-anchors" class="ladder-board-container overflow-x-auto pt-4 flex items-center justify-between gap-4 px-2">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Result Summary & Share Card -->
+        <div class="bg-surface border border-border rounded-2xl p-6 shadow-soft">
+          <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-border mb-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="clipboard-list" class="w-5 h-5 text-accent"></i>
+              <h3 class="font-bold text-base text-text-main">최종 매칭 결과표</h3>
+            </div>
+            <div class="flex items-center gap-2 w-full sm:w-auto">
+              <button type="button" onclick="copyResultsToClipboard()" class="min-h-[44px] flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-primary text-surface font-semibold text-xs hover:opacity-95 active:scale-[0.96] transition-transform duration-100 ease-out flex items-center justify-center gap-1.5">
+                <i data-lucide="copy" class="w-4 h-4"></i>
+                결과 텍스트 복사
+              </button>
+            </div>
+          </div>
+
+          <!-- Dynamic Result Table/List -->
+          <div id="results-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            <!-- Rendered matched pairs -->
+          </div>
+        </div>
+
+      </section>
+
+    </div>
+
+    <!-- Product Feature & HIG Principles Cards -->
+    <section class="mt-16 pt-12 border-t border-border grid grid-cols-1 md:grid-cols-3 gap-6 animate-fade-in" style="animation-delay: 200ms;">
+      <div class="bg-surface border border-border rounded-2xl p-6 shadow-soft">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-4">
+          <i data-lucide="shield-check" class="w-5 h-5"></i>
+        </div>
+        <h4 class="font-bold text-base text-text-main mb-1.5">100% 공정한 무작위성</h4>
+        <p class="text-xs text-text-muted leading-relaxed">
+          클라이언트 측에서 암호학적 의사난수 알고리즘을 활용해 사다리 가로줄을 실시간 생성하므로 조작이 원천 차단됩니다.
+        </p>
+      </div>
+
+      <div class="bg-surface border border-border rounded-2xl p-6 shadow-soft">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-4">
+          <i data-lucide="smartphone" class="w-5 h-5"></i>
+        </div>
+        <h4 class="font-bold text-base text-text-main mb-1.5">모바일 친화적 터치 인터페이스</h4>
+        <p class="text-xs text-text-muted leading-relaxed">
+          Apple HIG 표준 44px 이상 터치 규격을 준수하여 모바일 화면에서도 오작동 없이 경쾌한 탭 경험을 제공합니다.
+        </p>
+      </div>
+
+      <div class="bg-surface border border-border rounded-2xl p-6 shadow-soft">
+        <div class="w-10 h-10 rounded-xl bg-accent/10 text-accent flex items-center justify-center mb-4">
+          <i data-lucide="share-2" class="w-5 h-5"></i>
+        </div>
+        <h4 class="font-bold text-base text-text-main mb-1.5">원클릭 메신저 공유</h4>
+        <p class="text-xs text-text-muted leading-relaxed">
+          추첨 완료 후 정돈된 형식의 결과 텍스트를 바로 클립보드에 복사하여 슬랙, 카카오톡, 잔디 등에 공유할 수 있습니다.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Universal Footer -->
+  <footer class="mt-auto border-t border-border bg-surface py-8">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-muted">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-text-main">LadderFlow Pro</span>
+        <span>•</span>
+        <span>Crafted by <a href="https://tobilife.dev" target="_blank" rel="noopener noreferrer" class="font-semibold text-accent hover:underline">TOBILIFE</a></span>
+      </div>
+      <div>
+        <span>Universal Apple HIG Standards & Modern Tailwind Engine</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Script -->
+  <script>
+    // State management
+    const state = {
+      count: 4,
+      participants: ['민수', '지은', '준호', '서연'],
+      outcomes: ['커피 쏘기', '디저트', '안전 (면제)', '점심 쏘기'],
+      bridges: [], // Array of horizontal steps
+      routes: [], // Computed pathways per player
+      activePlayer: null,
+      isAnimating: false,
+      colorPalette: [
+        '#2563EB', '#059669', '#D97706', '#DC2626', 
+        '#7C3AED', '#DB2777', '#0891B2', '#4F46E5', 
+        '#CA8A04', '#16A34A'
+      ]
+    };
+
+    // Preset configurations
+    const PRESETS = {
+      lunch: {
+        participants: ['팀장님', '김과장', '이대리', '박사원'],
+        outcomes: ['전체 쏘기', '커피 쏘기', '면제', '면제']
+      },
+      cleaning: {
+        participants: ['민수', '지아', '태훈', '예진', '성민'],
+        outcomes: ['분리수거', '회의실 청소', '바닥 청소', '휴식 (면제)', '휴식 (면제)']
+      },
+      penalty: {
+        participants: ['철수', '영희', '민호', '수지'],
+        outcomes: ['노래 한 곡', '당첨 없음', '소원 들어주기', '당첨 없음']
+      }
+    };
+
+    // Dark Mode Toggle Logic
+    const themeToggleBtn = document.getElementById('theme-toggle');
+    function initTheme() {
+      if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    }
+    initTheme();
+
+    themeToggleBtn.addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      renderLadder(); // re-render colors for dark/light contrast
+    });
+
+    // Preset loader
+    function applyPreset(key) {
+      const preset = PRESETS[key];
+      if (!preset) return;
+      state.count = preset.participants.length;
+      state.participants = [...preset.participants];
+      state.outcomes = [...preset.outcomes];
+      updateCountDisplay();
+      renderInputs();
+      generateLadder();
+      showToast(`'${key === 'lunch' ? '점심 쏘기' : key === 'cleaning' ? '청소 당번' : '벌칙 뽑기'}' 템플릿이 적용되었습니다.`);
+    }
+
+    // Adjust Player Count
+    function changeCount(delta) {
+      const newCount = state.count + delta;
+      if (newCount < 2 || newCount > 10) return;
+      
+      if (delta > 0) {
+        state.participants.push(`참가자 ${newCount}`);
+        state.outcomes.push(`결과 ${newCount}`);
+      } else {
+        state.participants.pop();
+        state.outcomes.pop();
+      }
+
+      state.count = newCount;
+      updateCountDisplay();
+      renderInputs();
+      generateLadder();
+    }
+
+    function updateCountDisplay() {
+      document.getElementById('player-count-display').textContent = state.count;
+      document.getElementById('player-count-badge').textContent = `${state.count}명`;
+    }
+
+    // Input List Rendering
+    function renderInputs() {
+      const pContainer = document.getElementById('participants-container');
+      const oContainer = document.getElementById('outcomes-container');
+
+      pContainer.innerHTML = '';
+      oContainer.innerHTML = '';
+
+      for (let i = 0; i < state.count; i++) {
+        // Participant input
+        const pDiv = document.createElement('div');
+        pDiv.className = 'flex items-center gap-2';
+        pDiv.innerHTML = `
+          <span class="w-6 text-xs font-bold tabular-nums text-text-muted">${i + 1}</span>
+          <input type="text" value="${escapeHtml(state.participants[i] || `참가자 ${i + 1}`)}" 
+            onchange="state.participants[${i}] = this.value; updateBoardLabels();"
+            class="flex-1 min-h-[44px] px-3 text-xs rounded-xl border border-border bg-surface text-text-main focus:outline-none focus:ring-2 focus:ring-accent/50" />
+        `;
+        pContainer.appendChild(pDiv);
+
+        // Outcome input
+        const oDiv = document.createElement('div');
+        oDiv.className = 'flex items-center gap-2';
+        oDiv.innerHTML = `
+          <span class="w-6 text-xs font-bold tabular-nums text-text-muted">${String.fromCharCode(65 + i)}</span>
+          <input type="text" value="${escapeHtml(state.outcomes[i] || `결과 ${i + 1}`)}" 
+            onchange="state.outcomes[${i}] = this.value; updateBoardLabels();"
+            class="flex-1 min-h-[44px] px-3 text-xs rounded-xl border border-border bg-surface text-text-main focus:outline-none focus:ring-2 focus:ring-accent/50" />
+        `;
+        oContainer.appendChild(oDiv);
+      }
+    }
+
+    function shuffleParticipants() {
+      for (let i = state.participants.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [state.participants[i], state.participants[j]] = [state.participants[j], state.participants[i]];
+      }
+      renderInputs();
+      generateLadder();
+      showToast("참가자 순서가 무작위로 섞였습니다.");
+    }
+
+    function shuffleOutcomes() {
+      for (let i = state.outcomes.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [state.outcomes[i], state.outcomes[j]] = [state.outcomes[j], state.outcomes[i]];
+      }
+      renderInputs();
+      generateLadder();
+      showToast("도착 결과 순서가 무작위로 섞였습니다.");
+    }
+
+    // Core Ladder Generation Algorithm
+    function generateLadder() {
+      state.isAnimating = false;
+      state.activePlayer = null;
+      document.getElementById('status-indicator').innerHTML = `
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        준비 완료
+      `;
+
+      // Heights configuration
+      const levels = 7; // number of bridge vertical layers
+      state.bridges = [];
+
+      for (let lv = 1; lv <= levels; lv++) {
+        let col = 0;
+        while (col < state.count - 1) {
+          // 45% probability of bridge placement
+          if (Math.random() < 0.5) {
+            state.bridges.push({ level: lv, col: col });
+            col += 2; // prevent contiguous side-by-side horizontal bridges at the same level
+          } else {
+            col += 1;
+          }
+        }
+      }
+
+      // Compute path for every player
+      computeRoutes(levels);
+      renderAnchors();
+      renderLadder();
+      renderResultsList(false);
+      lucide.createIcons();
+    }
+
+    function computeRoutes(levels) {
+      state.routes = [];
+
+      for (let p = 0; p < state.count; p++) {
+        let currentCol = p;
+        const waypoints = []; // [{x, y}] normalized positions
+
+        waypoints.push({ col: currentCol, level: 0 });
+
+        for (let lv = 1; lv <= levels; lv++) {
+          // check if bridge exists on right (col == currentCol)
+          const rightBridge = state.bridges.find(b => b.level === lv && b.col === currentCol);
+          // check if bridge exists on left (col == currentCol - 1)
+          const leftBridge = state.bridges.find(b => b.level === lv && b.col === currentCol - 1);
+
+          if (rightBridge) {
+            waypoints.push({ col: currentCol, level: lv });
+            currentCol += 1;
+            waypoints.push({ col: currentCol, level: lv });
+          } else if (leftBridge) {
+            waypoints.push({ col: currentCol, level: lv });
+            currentCol -= 1;
+            waypoints.push({ col: currentCol, level: lv });
+          } else {
+            waypoints.push({ col: currentCol, level: lv });
+          }
+        }
+
+        waypoints.push({ col: currentCol, level: levels + 1 });
+        state.routes.push({
+          playerIndex: p,
+          finalCol: currentCol,
+          waypoints: waypoints
+        });
+      }
+    }
+
+    // Top / Bottom Anchors Rendering
+    function renderAnchors() {
+      const topContainer = document.getElementById('ladder-top-anchors');
+      const bottomContainer = document.getElementById('ladder-bottom-anchors');
+
+      topContainer.innerHTML = '';
+      bottomContainer.innerHTML = '';
+
+      for (let i = 0; i < state.count; i++) {
+        // Top participant button
+        const topBtn = document.createElement('button');
+        topBtn.type = 'button';
+        topBtn.id = `top-anchor-${i}`;
+        topBtn.className = `flex-1 min-w-[70px] min-h-[44px] px-2 py-2 rounded-xl border border-border bg-surface text-text-main text-xs font-semibold hover:border-accent hover:text-accent active:scale-[0.96] transition-transform duration-100 ease-out flex flex-col items-center justify-center gap-0.5 shadow-soft`;
+        topBtn.onclick = () => runLadderForPlayer(i);
+        topBtn.innerHTML = `
+          <span class="text-[10px] text-text-muted font-normal">#${i + 1}</span>
+          <span class="truncate max-w-[75px]">${escapeHtml(state.participants[i])}</span>
+        `;
+        topContainer.appendChild(topBtn);
+
+        // Bottom outcome box
+        const btmDiv = document.createElement('div');
+        btmDiv.id = `bottom-anchor-${i}`;
+        btmDiv.className = `flex-1 min-w-[70px] min-h-[44px] px-2 py-2 rounded-xl border border-border bg-surface-hover/80 text-text-main text-xs font-semibold text-center flex flex-col items-center justify-center gap-0.5`;
+        btmDiv.innerHTML = `
+          <span class="text-[10px] text-text-muted font-normal">${String.fromCharCode(65 + i)}</span>
+          <span class="truncate max-w-[75px]">${escapeHtml(state.outcomes[i])}</span>
+        `;
+        bottomContainer.appendChild(btmDiv);
+      }
+    }
+
+    function updateBoardLabels() {
+      for (let i = 0; i < state.count; i++) {
+        const top = document.querySelector(`#top-anchor-${i} span:last-child`);
+        if (top) top.textContent = state.participants[i];
+        const btm = document.querySelector(`#bottom-anchor-${i} span:last-child`);
+        if (btm) btm.textContent = state.outcomes[i];
+      }
+      renderResultsList(false);
+    }
+
+    // SVG Rendering
+    function renderLadder() {
+      const svg = document.getElementById('ladder-svg');
+      svg.innerHTML = '';
+
+      const width = svg.clientWidth || 550;
+      const height = svg.clientHeight || 340;
+      const marginX = 40;
+      const marginY = 20;
+
+      const colGap = (width - marginX * 2) / (state.count - 1);
+      const levelGap = (height - marginY * 2) / (7 + 1); // 7 levels + top/bottom
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const strokeColor = isDark ? '#334155' : '#CBD5E1';
+
+      // 1. Vertical columns
+      for (let col = 0; col < state.count; col++) {
+        const x = marginX + col * colGap;
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x);
+        line.setAttribute('y1', marginY);
+        line.setAttribute('x2', x);
+        line.setAttribute('y2', height - marginY);
+        line.setAttribute('stroke', strokeColor);
+        line.setAttribute('stroke-width', '4');
+        line.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(line);
+      }
+
+      // 2. Horizontal Bridges
+      state.bridges.forEach(bridge => {
+        const x1 = marginX + bridge.col * colGap;
+        const x2 = marginX + (bridge.col + 1) * colGap;
+        const y = marginY + bridge.level * levelGap;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', x1);
+        line.setAttribute('y1', y);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y);
+        line.setAttribute('stroke', strokeColor);
+        line.setAttribute('stroke-width', '3');
+        line.setAttribute('stroke-linecap', 'round');
+        svg.appendChild(line);
+      });
+
+      // 3. Highlighted Player Path (if any)
+      if (state.activePlayer !== null) {
+        drawActivePath(state.activePlayer, marginX, marginY, colGap, levelGap, svg);
+      }
+    }
+
+    function drawActivePath(playerIdx, marginX, marginY, colGap, levelGap, svg) {
+      const route = state.routes[playerIdx];
+      if (!route) return;
+
+      const color = state.colorPalette[playerIdx % state.colorPalette.length];
+      let pathD = '';
+
+      route.waypoints.forEach((pt, index) => {
+        const x = marginX + pt.col * colGap;
+        const y = marginY + pt.level * levelGap;
+        if (index === 0) {
+          pathD += `M ${x} ${y}`;
+        } else {
+          pathD += ` L ${x} ${y}`;
+        }
+      });
+
+      const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      pathElem.setAttribute('d', pathD);
+      pathElem.setAttribute('fill', 'none');
+      pathElem.setAttribute('stroke', color);
+      pathElem.setAttribute('stroke-width', '5');
+      pathElem.setAttribute('stroke-linecap', 'round');
+      pathElem.setAttribute('stroke-linejoin', 'round');
+
+      // Animated drawing effect
+      const totalLen = 1400; // approximation
+      pathElem.setAttribute('stroke-dasharray', totalLen);
+      pathElem.setAttribute('stroke-dashoffset', totalLen);
+
+      const anim = document.createElementNS('http://www.w3.org/2000/svg', 'animate');
+      anim.setAttribute('attributeName', 'stroke-dashoffset');
+      anim.setAttribute('from', totalLen);
+      anim.setAttribute('to', '0');
+      anim.setAttribute('dur', '0.9s');
+      anim.setAttribute('fill', 'freeze');
+      anim.setAttribute('calcMode', 'spline');
+      anim.setAttribute('keySplines', '0.25 0.1 0.25 1');
+      anim.setAttribute('keyTimes', '0; 1');
+      pathElem.appendChild(anim);
+
+      svg.appendChild(pathElem);
+    }
+
+    // Animate individual run
+    function runLadderForPlayer(playerIdx) {
+      if (state.isAnimating) return;
+      state.isAnimating = true;
+      state.activePlayer = playerIdx;
+
+      // Update button styling
+      for (let i = 0; i < state.count; i++) {
+        const btn = document.getElementById(`top-anchor-${i}`);
+        if (i === playerIdx) {
+          btn.classList.add('ring-2', 'ring-accent', 'border-transparent', 'bg-accent/10');
+        } else {
+          btn.classList.remove('ring-2', 'ring-accent', 'border-transparent', 'bg-accent/10');
+        }
+      }
+
+      // Reset bottom highlight
+      for (let i = 0; i < state.count; i++) {
+        const btm = document.getElementById(`bottom-anchor-${i}`);
+        btm.classList.remove('ring-2', 'ring-accent', 'bg-accent/20');
+      }
+
+      const status = document.getElementById('status-indicator');
+      status.innerHTML = `
+        <span class="w-1.5 h-1.5 rounded-full bg-accent animate-ping"></span>
+        <span class="text-accent font-semibold">${state.participants[playerIdx]} 결과 추첨 중...</span>
+      `;
+
+      renderLadder();
+
+      setTimeout(() => {
+        const route = state.routes[playerIdx];
+        const destIdx = route.finalCol;
+        const btm = document.getElementById(`bottom-anchor-${destIdx}`);
+        btm.classList.add('ring-2', 'ring-accent', 'bg-accent/20');
+
+        status.innerHTML = `
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span class="text-text-main font-semibold">${state.participants[playerIdx]} → ${state.outcomes[destIdx]}</span>
+        `;
+
+        highlightResultItem(playerIdx);
+        state.isAnimating = false;
+      }, 950);
+    }
+
+    // Reveal All
+    function revealAllPaths() {
+      state.activePlayer = null;
+      renderLadder();
+
+      const svg = document.getElementById('ladder-svg');
+      const width = svg.clientWidth || 550;
+      const height = svg.clientHeight || 340;
+      const marginX = 40;
+      const marginY = 20;
+      const colGap = (width - marginX * 2) / (state.count - 1);
+      const levelGap = (height - marginY * 2) / 8;
+
+      state.routes.forEach(route => {
+        const color = state.colorPalette[route.playerIndex % state.colorPalette.length];
+        let pathD = '';
+        route.waypoints.forEach((pt, index) => {
+          const x = marginX + pt.col * colGap;
+          const y = marginY + pt.level * levelGap;
+          if (index === 0) pathD += `M ${x} ${y}`;
+          else pathD += ` L ${x} ${y}`;
+        });
+
+        const pathElem = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        pathElem.setAttribute('d', pathD);
+        pathElem.setAttribute('fill', 'none');
+        pathElem.setAttribute('stroke', color);
+        pathElem.setAttribute('stroke-width', '3');
+        pathElem.setAttribute('stroke-linecap', 'round');
+        pathElem.setAttribute('stroke-linejoin', 'round');
+        pathElem.setAttribute('opacity', '0.7');
+        svg.appendChild(pathElem);
+      });
+
+      renderResultsList(true);
+      showToast("모든 결과 경로가 한눈에 표시되었습니다.");
+    }
+
+    // Results List Rendering
+    function renderResultsList(revealed = true) {
+      const container = document.getElementById('results-list');
+      container.innerHTML = '';
+
+      for (let p = 0; p < state.count; p++) {
+        const route = state.routes[p];
+        const destIdx = route ? route.finalCol : p;
+        const color = state.colorPalette[p % state.colorPalette.length];
+
+        const card = document.createElement('div');
+        card.id = `result-item-${p}`;
+        card.className = `p-3 rounded-xl border border-border bg-surface flex items-center justify-between transition-colors duration-150`;
+        card.innerHTML = `
+          <div class="flex items-center gap-2.5">
+            <span class="w-3 h-3 rounded-full" style="background-color: ${color}"></span>
+            <span class="text-xs font-bold text-text-main">${escapeHtml(state.participants[p])}</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-xs">
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-text-muted"></i>
+            <span class="font-semibold text-accent">${escapeHtml(state.outcomes[destIdx])}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      }
+      lucide.createIcons();
+    }
+
+    function highlightResultItem(playerIdx) {
+      for (let i = 0; i < state.count; i++) {
+        const item = document.getElementById(`result-item-${i}`);
+        if (i === playerIdx) {
+          item.classList.add('border-accent', 'bg-accent/5', 'shadow-soft');
+        } else {
+          item.classList.remove('border-accent', 'bg-accent/5', 'shadow-soft');
+        }
+      }
+    }
+
+    // Clipboard Copy
+    function copyResultsToClipboard() {
+      let text = `[LadderFlow 사다리타기 결과]\n`;
+      text += `일시: ${new Date().toLocaleDateString('ko-KR')} ${new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })}\n`;
+      text += `-------------------------\n`;
+
+      state.routes.forEach(route => {
+        const pName = state.participants[route.playerIndex];
+        const oName = state.outcomes[route.finalCol];
+        text += `• ${pName} ➔ ${oName}\n`;
+      });
+      text += `-------------------------\n`;
+      text += `결과 확인: TOBILIFE LadderFlow Pro`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("사다리타기 결과가 클립보드에 복사되었습니다.");
+      }).catch(() => {
+        showToast("클립보드 접근 권한을 확인해주세요.");
+      });
+    }
+
+    // Toast UI
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-message');
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 2600);
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Window resize handler for SVG responsiveness
+    window.addEventListener('resize', () => {
+      renderLadder();
+    });
+
+    // Initial Bootstrap
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCountDisplay();
+      renderInputs();
+      generateLadder();
+    });
+  </script>
+</body>
+</html>
