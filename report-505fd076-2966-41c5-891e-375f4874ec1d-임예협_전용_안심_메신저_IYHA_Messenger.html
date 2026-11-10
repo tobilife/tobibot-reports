@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="ko" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>임예협 전용 안심 메신저 | IYHA Messenger</title>
+
+  <!-- Google Fonts & Pretendard CDN -->
+  <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+
+  <!-- Tailwind CSS Engine -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Tailwind Config -->
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            primary: 'var(--color-primary)',
+            accent: 'var(--color-accent)',
+            surface: {
+              DEFAULT: 'var(--color-surface)',
+              hover: 'var(--color-surface-hover)',
+              muted: 'var(--color-surface-muted)',
+            },
+            border: 'var(--color-border)',
+            'text-main': 'var(--color-text-main)',
+            'text-muted': 'var(--color-text-muted)',
+          },
+          borderRadius: {
+            card: 'var(--radius-card)',
+          },
+          boxShadow: {
+            soft: '0 1px 3px rgba(0,0,0,0.04), 0 8px 24px -4px rgba(0,0,0,0.06)',
+            elevation: '0 4px 6px -1px rgba(0,0,0,0.05), 0 20px 30px -10px rgba(0,0,0,0.1)',
+          },
+          animation: {
+            'fade-in': 'fadeInSlide 0.4s cubic-bezier(0.16, 1, 0.3, 1) both',
+          },
+          keyframes: {
+            fadeInSlide: {
+              '0%': { opacity: '0', transform: 'translateY(8px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Design Token Styles -->
+  <style>
+    :root {
+      /* Semantic Tokens (Apple HIG Clean Solid Palettes) */
+      --color-bg: #F8FAFC;
+      --color-surface: #FFFFFF;
+      --color-surface-hover: #F1F5F9;
+      --color-surface-muted: #F8FAFC;
+      --color-border: #E2E8F0;
+      --color-primary: #0F172A;
+      --color-accent: #2563EB;
+      --color-text-main: #0F172A;
+      --color-text-muted: #64748B;
+
+      /* Component Tokens */
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-card: 16px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --min-touch-target: 44px;
+    }
+
+    * {
+      word-break: keep-all;
+    }
+
+    body {
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+      background-color: var(--color-bg);
+      color: var(--color-text-main);
+      -webkit-font-smoothing: antialiased;
+      word-break: keep-all;
+    }
+
+    h1, h2, h3, h4 {
+      text-wrap: balance;
+    }
+
+    p {
+      text-wrap: pretty;
+      line-height: 1.6;
+    }
+
+    /* Interactive state defaults */
+    button, a, input, textarea {
+      transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
+    }
+
+    /* Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body class="h-full flex flex-col bg-slate-50 text-slate-900 antialiased overflow-hidden">
+
+  <!-- Top Navigation Bar -->
+  <header class="h-16 border-b border-border bg-white flex items-center justify-between px-4 sm:px-6 z-30 shrink-0">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm">
+        <i data-lucide="shield-check" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="font-bold text-base sm:text-lg tracking-tight text-text-main">임예협 안심 메신저</span>
+          <span class="px-2 py-0.5 text-xs font-semibold bg-blue-50 text-blue-700 rounded-full border border-blue-200">공식 인증</span>
+        </div>
+        <p class="text-xs text-text-muted hidden sm:block">임차인·예비입주자 총연합회 상시 소통 & 전자 총회 허브</p>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-2 sm:gap-3">
+      <!-- Resident Verification Badge -->
+      <div class="hidden md:flex items-center gap-2 px-3 min-h-[44px] bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-800 text-xs font-medium">
+        <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+        <span>104동 1204호 (소유·인증완료)</span>
+      </div>
+
+      <!-- Quick Action / Notification -->
+      <button type="button" onclick="showNoticeModal()" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg hover:bg-surface-hover text-text-muted hover:text-text-main transition-colors active:scale-[0.96]" title="공지사항">
+        <i data-lucide="bell" class="w-5 h-5"></i>
+      </button>
+
+      <!-- Protocol Copy Button -->
+      <button type="button" onclick="copyInviteLink()" class="min-h-[44px] px-3.5 flex items-center gap-2 rounded-lg bg-slate-900 text-white text-xs sm:text-sm font-semibold hover:bg-slate-800 transition-colors active:scale-[0.96]">
+        <i data-lucide="share-2" class="w-4 h-4"></i>
+        <span class="hidden sm:inline">입주민 초대링크 복사</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Messenger Layout -->
+  <div class="flex-1 flex overflow-hidden">
+
+    <!-- Left Sidebar: Channels & Committees -->
+    <aside class="w-80 border-r border-border bg-white flex flex-col shrink-0 hidden md:flex">
+      <!-- Search & Filters -->
+      <div class="p-3 border-b border-border">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-text-muted"></i>
+          <input 
+            type="text" 
+            id="channelSearch"
+            oninput="filterChannels(this.value)"
+            placeholder="채널, 동별 모임, 안건 검색..." 
+            class="w-full pl-9 pr-3 min-h-[44px] text-xs bg-slate-100 rounded-lg border-none focus:ring-2 focus:ring-accent text-text-main placeholder-text-muted outline-none transition-all"
+          />
+        </div>
+
+        <!-- Filter Chips -->
+        <div class="flex items-center gap-1.5 mt-2.5 overflow-x-auto pb-0.5">
+          <button type="button" onclick="switchCategory('all')" id="btn-cat-all" class="category-chip px-3 py-2 text-xs font-medium rounded-full bg-slate-900 text-white transition-colors min-h-[44px] shrink-0 active:scale-[0.96]">전체</button>
+          <button type="button" onclick="switchCategory('official')" id="btn-cat-official" class="category-chip px-3 py-2 text-xs font-medium rounded-full bg-slate-100 text-text-muted hover:bg-slate-200 transition-colors min-h-[44px] shrink-0 active:scale-[0.96]">공식 안건</button>
+          <button type="button" onclick="switchCategory('building')" id="btn-cat-building" class="category-chip px-3 py-2 text-xs font-medium rounded-full bg-slate-100 text-text-muted hover:bg-slate-200 transition-colors min-h-[44px] shrink-0 active:scale-[0.96]">동별 소통</button>
+          <button type="button" onclick="switchCategory('qa')" id="btn-cat-qa" class="category-chip px-3 py-2 text-xs font-medium rounded-full bg-slate-100 text-text-muted hover:bg-slate-200 transition-colors min-h-[44px] shrink-0 active:scale-[0.96]">하자·시공</button>
+        </div>
+      </div>
+
+      <!-- Channel List -->
+      <div class="flex-1 overflow-y-auto divide-y divide-slate-100" id="channelListContainer">
+        <!-- Official Notice Channel -->
+        <button type="button" onclick="selectChannel('notice')" id="chan-notice" class="w-full text-left channel-item min-h-[44px] p-3.5 hover:bg-surface-hover cursor-pointer transition-colors active:scale-[0.98] bg-blue-50/60 border-l-4 border-blue-600 block">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-blue-600/10 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">
+                <i data-lucide="megaphone" class="w-4 h-4"></i>
+              </span>
+              <div>
+                <p class="text-sm font-bold text-text-main flex items-center gap-1.5">
+                  [공지] 임예협 공식 의결방
+                  <i data-lucide="lock" class="w-3.5 h-3.5 text-text-muted"></i>
+                </p>
+                <p class="text-xs text-text-muted truncate mt-0.5 max-w-[170px]">사전점검 체크리스트 최종안 의결...</p>
+              </div>
+            </div>
+            <span class="text-[11px] font-medium text-blue-600 tabular-nums">오후 2:10</span>
+          </div>
+          <div class="flex items-center justify-between mt-2 pl-9">
+            <span class="text-[11px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-semibold">전자투표 진행중</span>
+            <span class="w-5 h-5 rounded-full bg-blue-600 text-white text-[11px] font-bold flex items-center justify-center tabular-nums">3</span>
+          </div>
+        </button>
+
+        <!-- Defect Inspection Channel -->
+        <button type="button" onclick="selectChannel('defect')" id="chan-defect" class="w-full text-left channel-item min-h-[44px] p-3.5 hover:bg-surface-hover cursor-pointer transition-colors active:scale-[0.98] block">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-emerald-600/10 text-emerald-600 flex items-center justify-center font-bold text-xs shrink-0">
+                <i data-lucide="clipboard-check" class="w-4 h-4"></i>
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-text-main">공용부 하자·도색 감리반</p>
+                <p class="text-xs text-text-muted truncate mt-0.5 max-w-[170px]">지하주차장 누수 부위 2차 감리...</p>
+              </div>
+            </div>
+            <span class="text-[11px] text-text-muted tabular-nums">오후 1:45</span>
+          </div>
+          <div class="flex items-center justify-between mt-2 pl-9">
+            <span class="text-[11px] px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-medium">실시간 감리</span>
+            <span class="w-5 h-5 rounded-full bg-slate-200 text-slate-700 text-[11px] font-bold flex items-center justify-center tabular-nums">1</span>
+          </div>
+        </button>
+
+        <!-- Building 104 Channel -->
+        <button type="button" onclick="selectChannel('dong104')" id="chan-dong104" class="w-full text-left channel-item min-h-[44px] p-3.5 hover:bg-surface-hover cursor-pointer transition-colors active:scale-[0.98] block">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-amber-600/10 text-amber-600 flex items-center justify-center font-bold text-xs shrink-0">
+                <i data-lucide="building" class="w-4 h-4"></i>
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-text-main">104동 입주예정자 단톡</p>
+                <p class="text-xs text-text-muted truncate mt-0.5 max-w-[170px]">시스템에어컨 공동구매 견적서...</p>
+              </div>
+            </div>
+            <span class="text-[11px] text-text-muted tabular-nums">오전 11:20</span>
+          </div>
+          <div class="flex items-center justify-between mt-2 pl-9">
+            <span class="text-[11px] px-1.5 py-0.5 rounded bg-slate-100 text-text-muted font-medium">동대표 선출</span>
+          </div>
+        </button>
+
+        <!-- Law & Construction FAQ -->
+        <button type="button" onclick="selectChannel('legal')" id="chan-legal" class="w-full text-left channel-item min-h-[44px] p-3.5 hover:bg-surface-hover cursor-pointer transition-colors active:scale-[0.98] block">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex items-center gap-2">
+              <span class="w-7 h-7 rounded-lg bg-purple-600/10 text-purple-600 flex items-center justify-center font-bold text-xs shrink-0">
+                <i data-lucide="scale" class="w-4 h-4"></i>
+              </span>
+              <div>
+                <p class="text-sm font-semibold text-text-main">법률자문 & 시공사 협약</p>
+                <p class="text-xs text-text-muted truncate mt-0.5 max-w-[170px]">지체보상금 규정 법무법인 회신...</p>
+              </div>
+            </div>
+            <span class="text-[11px] text-text-muted tabular-nums">어제</span>
+          </div>
+          <div class="flex items-center justify-between mt-2 pl-9">
+            <span class="text-[11px] px-1.5 py-0.5 rounded bg-purple-50 text-purple-700 font-medium">자문보고서</span>
+          </div>
+        </button>
+      </div>
+
+      <!-- Quick Assembly Info Card -->
+      <div class="p-3 bg-slate-50 border-t border-border">
+        <div class="rounded-xl border border-slate-200 bg-white p-3 shadow-soft">
+          <div class="flex items-center justify-between text-xs font-semibold text-text-main mb-1.5">
+            <span class="flex items-center gap-1.5">
+              <i data-lucide="calendar" class="w-3.5 h-3.5 text-accent"></i>
+              제3차 정기 입주민 총회
+            </span>
+            <span class="text-accent font-bold tabular-nums">D-5</span>
+          </div>
+          <p class="text-[11px] text-text-muted leading-relaxed">2026. 11. 15 (일) 14:00 온라인 전자투표 및 오프라인 참관</p>
+          <button type="button" onclick="openVoteModal()" class="w-full mt-2.5 min-h-[44px] py-2 px-3 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-colors active:scale-[0.96]">
+            <span>위임장 및 안건 열람</span>
+            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center: Main Chat Feed -->
+    <main class="flex-1 flex flex-col bg-slate-50 overflow-hidden relative">
+
+      <!-- Channel Context Banner -->
+      <div class="h-14 border-b border-border bg-white px-4 flex items-center justify-between shrink-0">
+        <div class="flex items-center gap-2 sm:gap-3">
+          <button type="button" onclick="toggleMobileSidebar()" class="md:hidden min-h-[44px] min-w-[44px] flex items-center justify-center text-text-muted hover:text-text-main active:scale-[0.96]">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+          </button>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-sm sm:text-base font-bold text-text-main" id="activeChannelTitle">[공지] 임예협 공식 의결방</h1>
+              <span class="px-2 py-0.5 text-[11px] font-medium bg-emerald-50 text-emerald-700 rounded-full border border-emerald-200 hidden sm:inline-flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                실명 인증 입주민 전용
+              </span>
+            </div>
+            <p class="text-[11px] text-text-muted hidden sm:block" id="activeChannelDesc">운영위원 공지 및 총회 안건 상정, 전자투표가 진행되는 채널입니다.</p>
+          </div>
+        </div>
+
+        <!-- Channel Actions -->
+        <div class="flex items-center gap-1.5 sm:gap-2">
+          <button type="button" onclick="openSearchModal()" class="min-h-[44px] px-2.5 sm:px-3 text-xs font-medium text-text-muted hover:text-text-main hover:bg-surface-hover rounded-lg flex items-center gap-1.5 transition-colors active:scale-[0.96]">
+            <i data-lucide="search" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">대화 검색</span>
+          </button>
+          <button type="button" onclick="togglePinDrawer()" class="min-h-[44px] px-2.5 sm:px-3 text-xs font-semibold bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-lg flex items-center gap-1.5 transition-colors active:scale-[0.96]">
+            <i data-lucide="pin" class="w-4 h-4 text-accent"></i>
+            <span class="hidden sm:inline">중요 고정안건</span>
+            <span class="w-4 h-4 rounded-full bg-accent text-white text-[10px] flex items-center justify-center tabular-nums">2</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Messages Scroll Area -->
+      <div class="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4" id="chatFeed">
+
+        <!-- Timeline Divider -->
+        <div class="flex items-center justify-center my-2">
+          <div class="bg-slate-200 text-slate-600 text-[11px] font-medium px-3 py-1 rounded-full tabular-nums">
+            2026년 11월 10일 화요일
+          </div>
+        </div>
+
+        <!-- Official Executive Announcement Message -->
+        <div class="flex items-start gap-3 max-w-3xl animate-fade-in">
+          <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+            임
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-text-main">임예협 총괄대표 (101동)</span>
+              <span class="text-[10px] px-1.5 py-0.5 bg-blue-100 text-blue-700 font-semibold rounded">운영진</span>
+              <span class="text-[11px] text-text-muted tabular-nums">오전 10:15</span>
+            </div>
+
+            <!-- Content Card -->
+            <div class="bg-white rounded-card p-4 sm:p-5 border border-border shadow-soft space-y-3">
+              <div class="flex items-center gap-2 text-blue-700 text-xs font-bold">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>[긴급안건 제24호] 사전방문 일정 및 합동점검단 운영 확정</span>
+              </div>
+              <p class="text-xs sm:text-sm text-text-main leading-relaxed">
+                입주예정자 여러분 안녕하십니까. 시공사 협의단과의 4차 마라톤 회의 결과, 입주 전 사전방문 일정이 다음 주 토요일(11월 21일)부터 3일간 진행되는 것으로 최종 날인되었습니다.
+              </p>
+
+              <!-- Interactive Vote / Feedback Mini Card -->
+              <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                    <i data-lucide="check-square" class="w-4 h-4 text-blue-600"></i>
+                    사전점검 합동점검단 동참 찬반 투표
+                  </span>
+                  <span class="text-blue-600 font-semibold tabular-nums">참여율 84% (412/490세대)</span>
+                </div>
+
+                <div class="space-y-1.5">
+                  <div class="flex items-center justify-between text-xs text-text-muted">
+                    <span>찬성 (합동점검 추진)</span>
+                    <span class="font-bold tabular-nums text-text-main">389표 (94.4%)</span>
+                  </div>
+                  <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                    <div class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: 94.4%"></div>
+                  </div>
+                </div>
+
+                <div class="flex gap-2 pt-1">
+                  <button type="button" onclick="handleVote('yes')" class="flex-1 min-h-[44px] py-1.5 px-3 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors active:scale-[0.96]">
+                    <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M7 10v12"/>
+                      <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>
+                    </svg>
+                    <span>찬성 투표완료</span>
+                  </button>
+                  <button type="button" onclick="copyVoteReport()" class="min-h-[44px] px-3.5 rounded-lg border border-border bg-white hover:bg-slate-100 text-xs font-medium text-slate-700 flex items-center justify-center gap-1.5 transition-colors active:scale-[0.96]" title="투표 현황 복사">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    <span>현황 복사</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Attachments -->
+              <div class="flex flex-wrap gap-2 pt-1">
+                <button type="button" onclick="openPreviewDoc('사전방문_공식_일정표_시공사날인본.pdf')" class="min-h-[44px] inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-medium text-slate-700 transition-colors active:scale-[0.98]">
+                  <i data-lucide="file-text" class="w-4 h-4 text-red-500"></i>
+                  <span>사전방문_공식_일정표_시공사날인본.pdf (1.4MB)</span>
+                  <i data-lucide="download" class="w-3.5 h-3.5 text-text-muted ml-1"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Reactions / Inline SVGs -->
+            <div class="flex items-center gap-1.5 mt-2">
+              <button type="button" onclick="addReaction(this, '추천')" class="min-h-[44px] px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-text-muted hover:border-blue-400 hover:text-blue-600 flex items-center gap-1.5 transition-all active:scale-[0.96]">
+                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 10v12"/>
+                  <path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/>
+                </svg>
+                <span class="font-semibold tabular-nums">142</span>
+              </button>
+              <button type="button" onclick="addReaction(this, '응원')" class="min-h-[44px] px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-text-muted hover:border-blue-400 hover:text-blue-600 flex items-center gap-1.5 transition-all active:scale-[0.96]">
+                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.3-4.3a1 1 0 0 0 0-1.4l-2-2"/>
+                  <path d="m14 14 2.5 2.5a1 1 0 0 0 1.4 0l2.8-2.8a1 1 0 0 0 0-1.4l-3.5-3.5"/>
+                  <path d="M7 10.5 8.5 12a1 1 0 0 0 1.4 0l1.4-1.4"/>
+                  <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/>
+                  <path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v6"/>
+                  <path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/>
+                </svg>
+                <span class="font-semibold tabular-nums">89</span>
+              </button>
+              <button type="button" onclick="addReaction(this, '감사')" class="min-h-[44px] px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs text-text-muted hover:border-blue-400 hover:text-blue-600 flex items-center gap-1.5 transition-all active:scale-[0.96]">
+                <svg class="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+                </svg>
+                <span class="font-semibold tabular-nums">54</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resident Question & Verification Message -->
+        <div class="flex items-start gap-3 max-w-3xl animate-fade-in" style="animation-delay: 80ms;">
+          <div class="w-9 h-9 rounded-xl bg-slate-700 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+            김
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-text-main">김지훈 (105동 801호)</span>
+              <span class="text-[10px] px-1.5 py-0.5 bg-slate-100 text-slate-700 font-medium rounded">세대원 인증</span>
+              <span class="text-[11px] text-text-muted tabular-nums">오전 11:02</span>
+            </div>
+
+            <div class="bg-white rounded-card p-3.5 sm:p-4 border border-border shadow-soft">
+              <p class="text-xs sm:text-sm text-text-main leading-relaxed">
+                대표님 노고에 감사드립니다. 혹시 사전점검 당일에 외부 전문 하자대행업체 동행도 공식 허용이 된 건가요? 시공사 현장소장이 외부 인원 출입을 제한한다는 소문이 있어서 확인 부탁드립니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Legal Advisor / Tech Committee Reply -->
+        <div class="flex items-start gap-3 max-w-3xl animate-fade-in" style="animation-delay: 160ms;">
+          <div class="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+            법
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-bold text-text-main">임예협 법률자문단장</span>
+              <span class="text-[10px] px-1.5 py-0.5 bg-purple-100 text-purple-700 font-semibold rounded">전문위원</span>
+              <span class="text-[11px] text-text-muted tabular-nums">오전 11:24</span>
+            </div>
+
+            <div class="bg-white rounded-card p-3.5 sm:p-4 border border-border shadow-soft space-y-2">
+              <p class="text-xs sm:text-sm text-text-main leading-relaxed">
+                네, 주택법 시행령 및 국토교통부 지침에 의거하여 입주예정자의 위임을 받은 전문 진단업체의 동행은 법적으로 완전히 보장됩니다. 시공사 본사 공문 번호 <strong class="text-purple-700 font-semibold">[건설-2026-8812]</strong>로 사전 인입 완료되었으므로 걱정하지 않으셔도 됩니다.
+              </p>
+              <div class="text-[11px] text-text-muted bg-slate-50 p-2 rounded-lg border border-slate-100">
+                관련 법조항: 공동주택관리법 제37조 및 동법 시행령 제38조
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Resident Message (Right Aligned) -->
+        <div class="flex items-start gap-3 max-w-3xl ml-auto flex-row-reverse animate-fade-in" style="animation-delay: 240ms;">
+          <div class="w-9 h-9 rounded-xl bg-accent text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+            나
+          </div>
+          <div class="flex-1 text-right">
+            <div class="flex items-center gap-2 mb-1 justify-end">
+              <span class="text-[11px] text-text-muted tabular-nums">오후 2:05</span>
+              <span class="text-[10px] px-1.5 py-0.5 bg-blue-100 text-blue-700 font-semibold rounded">본인 (104동 1204호)</span>
+              <span class="text-xs font-bold text-text-main">입주예정자</span>
+            </div>
+
+            <div class="bg-blue-600 text-white rounded-card p-3.5 sm:p-4 text-left shadow-soft inline-block max-w-lg">
+              <p class="text-xs sm:text-sm leading-relaxed">
+                명쾌한 답변 감사드립니다! 이번 주 일요일 정기총회에서 시스템에어컨 감리 안건도 같이 통과되기를 응원합니다.
+              </p>
+            </div>
+            <div class="text-[11px] text-emerald-600 font-medium mt-1">읽음 128</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Action Floating Tray -->
+      <div class="px-4 py-2 bg-slate-100 border-t border-border flex items-center justify-between text-xs text-text-muted">
+        <div class="flex items-center gap-2">
+          <span class="flex items-center gap-1 text-slate-700 font-medium">
+            <i data-lucide="zap" class="w-3.5 h-3.5 text-amber-500"></i>
+            빠른 양식:
+          </span>
+          <button type="button" onclick="insertTemplate('[하자접수] 동호수: 104동 1204호 / 위치: / 내용: ')" class="min-h-[44px] px-2 hover:text-blue-600 hover:underline active:scale-[0.96] flex items-center">하자접수</button>
+          <span class="text-slate-300">|</span>
+          <button type="button" onclick="insertTemplate('[의견제출] 안건번호: / 세부의견: ')" class="min-h-[44px] px-2 hover:text-blue-600 hover:underline active:scale-[0.96] flex items-center">의견제출</button>
+          <span class="text-slate-300">|</span>
+          <button type="button" onclick="insertTemplate('[공구문의] 품목: / 문의사항: ')" class="min-h-[44px] px-2 hover:text-blue-600 hover:underline active:scale-[0.96] flex items-center">공구문의</button>
+        </div>
+        <div class="hidden sm:flex items-center gap-1 text-[11px]">
+          <i data-lucide="info" class="w-3 h-3"></i>
+          <span>모든 글은 동호수 실명제로 안전하게 기록됩니다.</span>
+        </div>
+      </div>
+
+      <!-- Message Input Form -->
+      <div class="p-3 sm:p-4 bg-white border-t border-border shrink-0">
+        <form onsubmit="handleSendMessage(event)" class="flex items-end gap-2 bg-slate-50 border border-border rounded-2xl p-2 focus-within:ring-2 focus-within:ring-accent focus-within:border-accent transition-all">
+          <!-- File / Photo Attachment Button -->
+          <div class="flex items-center gap-1">
+            <button type="button" onclick="triggerFileUpload()" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-text-muted hover:text-text-main hover:bg-slate-200 transition-colors active:scale-[0.96]" title="사진 및 증빙서류 첨부">
+              <i data-lucide="paperclip" class="w-5 h-5"></i>
+            </button>
+            <button type="button" onclick="insertPollTemplate()" class="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-text-muted hover:text-text-main hover:bg-slate-200 transition-colors active:scale-[0.96]" title="간이 입주민 투표 상정">
+              <i data-lucide="bar-chart-2" class="w-5 h-5"></i>
+            </button>
+          </div>
+
+          <!-- Input Textarea -->
+          <div class="flex-1 min-w-0 py-1">
+            <textarea 
+              id="messageInput"
+              rows="1"
+              onkeydown="handleKeydown(event)"
+              placeholder="104동 1204호 인증 입주민으로 메시지 입력 (Shift+Enter 줄바꿈)..." 
+              class="w-full bg-transparent border-none text-xs sm:text-sm text-text-main placeholder-text-muted outline-none resize-none max-h-32"
+            ></textarea>
+          </div>
+
+          <!-- Send Button -->
+          <button type="submit" class="min-h-[44px] min-w-[44px] px-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl flex items-center justify-center shadow-sm font-semibold text-xs sm:text-sm transition-colors active:scale-[0.96]">
+            <i data-lucide="send" class="w-4 h-4"></i>
+            <span class="sr-only">전송</span>
+          </button>
+        </form>
+      </div>
+
+    </main>
+
+    <!-- Right Drawer: Committee Agenda & Realtime Status -->
+    <aside id="pinnedDrawer" class="w-72 border-l border-border bg-white flex flex-col shrink-0 hidden lg:flex">
+      <div class="p-4 border-b border-border flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <i data-lucide="bookmark" class="w-4 h-4 text-blue-600"></i>
+          <h2 class="text-sm font-bold text-text-main">임예협 공식 의결안내</h2>
+        </div>
+        <span class="px-2 py-0.5 rounded text-[11px] bg-blue-50 text-blue-700 font-semibold">2026 정기</span>
+      </div>
+
+      <div class="flex-1 overflow-y-auto p-4 space-y-4">
+        <!-- Status summary card -->
+        <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5 space-y-2">
+          <span class="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+            <i data-lucide="users" class="w-4 h-4 text-accent"></i>
+            입주예정자 연합 가입현황
+          </span>
+          <div class="flex items-baseline justify-between pt-1">
+            <span class="text-2xl font-bold text-slate-900 tabular-nums">824 <span class="text-xs font-normal text-slate-500">/ 950세대</span></span>
+            <span class="text-xs font-semibold text-emerald-600 tabular-nums">인증률 86.7%</span>
+          </div>
+          <div class="w-full bg-slate-200 h-1.5 rounded-full overflow-hidden">
+            <div class="bg-emerald-500 h-full rounded-full" style="width: 86.7%"></div>
+          </div>
+          <p class="text-[11px] text-text-muted">법적 주민대표단체 정식 승인 요건(80%) 초과 달성</p>
+        </div>
+
+        <!-- Pinned Agenda Items -->
+        <div class="space-y-2.5">
+          <h3 class="text-xs font-semibold text-text-muted tracking-wider uppercase">고정 의결 안건</h3>
+
+          <!-- Agenda Card 1 -->
+          <div class="border border-border rounded-xl p-3 hover:border-slate-300 transition-colors">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-red-50 text-red-700 font-semibold">의결 마감 D-2</span>
+              <span class="text-[11px] text-text-muted">안건 제23호</span>
+            </div>
+            <p class="text-xs font-bold text-text-main mb-1">단지 내 조경수 고급화 및 석가산 특화 시공 합의건</p>
+            <p class="text-[11px] text-text-muted line-clamp-2">시공사 추가부담금 없이 기존 설계변경을 통한 프리미엄 수종 교체 합의서 검토 건.</p>
+            <button type="button" onclick="openVoteModal()" class="mt-2 min-h-[44px] w-full text-left text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 active:scale-[0.98]">
+              <span>전자 서명 및 서면결의 바로가기</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+
+          <!-- Agenda Card 2 -->
+          <div class="border border-border rounded-xl p-3 hover:border-slate-300 transition-colors">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold">상시 접수</span>
+              <span class="text-[11px] text-text-muted">감리단 접수</span>
+            </div>
+            <p class="text-xs font-bold text-text-main mb-1">지하주차장 유도등 및 층간소음 방지재 시공 실사</p>
+            <p class="text-[11px] text-text-muted line-clamp-2">입주민 기술자문위원단 12인 현장 직접 입회 감리 사진 및 성적서 공유.</p>
+            <button type="button" onclick="openPreviewDoc('감리실사_성적서_공유본.pdf')" class="mt-2 min-h-[44px] w-full text-left text-xs text-blue-600 font-medium hover:underline flex items-center gap-1 active:scale-[0.98]">
+              <span>시험성적서 열람 (PDF)</span>
+              <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Direct Contact Info -->
+        <div class="p-3 bg-blue-50 rounded-xl border border-blue-100 text-xs text-slate-700 space-y-1.5">
+          <div class="font-bold text-blue-900 flex items-center gap-1.5">
+            <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+            임예협 비상대책 사무국
+          </div>
+          <p class="text-[11px] text-slate-600">평일 10:00 ~ 18:00 (사무국장 직통)</p>
+          <div class="font-semibold text-slate-900 text-xs tabular-nums">02-555-1204 / iyha@apartment.or.kr</div>
+        </div>
+
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast" class="fixed bottom-6 right-6 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-elevation flex items-center gap-3 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400"></i>
+    <span id="toastMsg" class="text-xs sm:text-sm font-medium">안내 메시지가 표시됩니다.</span>
+  </div>
+
+  <!-- Modal: 전자투표 및 안건 열람 Modal -->
+  <div id="voteModal" class="fixed inset-0 z-50 bg-slate-950/40 hidden items-center justify-center p-4">
+    <div class="bg-white rounded-2xl max-w-lg w-full border border-border shadow-elevation overflow-hidden animate-fade-in">
+      <div class="p-5 border-b border-border flex items-center justify-between bg-slate-50">
+        <div class="flex items-center gap-2">
+          <i data-lucide="vote" class="w-5 h-5 text-blue-600"></i>
+          <h3 class="font-bold text-base text-text-main">전자 서명 & 임시총회 위임장</h3>
+        </div>
+        <button type="button" onclick="closeVoteModal()" class="min-h-[44px] min-w-[44px] rounded-lg hover:bg-slate-200 flex items-center justify-center text-text-muted hover:text-text-main transition-colors active:scale-[0.96]">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="p-5 space-y-4 text-xs sm:text-sm text-text-main">
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3 text-blue-800 space-y-1">
+          <p class="font-bold">입주예정자 본인 인증 확인</p>
+          <p class="text-xs text-blue-700">성명: <strong>홍길동</strong> / 동호수: <strong>104동 1204호</strong> (분양계약서 승인완료)</p>
+        </div>
+
+        <div class="space-y-2">
+          <label class="font-bold block text-xs text-text-main">상정 안건 1 : 입주예정자 대표회의 정관 제정 승인의 건</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="selectVoteOption(this, 'opt1')" class="vote-opt-btn min-h-[44px] border-2 border-blue-600 bg-blue-50 text-blue-800 font-semibold p-2.5 rounded-xl text-center active:scale-[0.98] transition-all">
+              찬성 (동의)
+            </button>
+            <button type="button" onclick="selectVoteOption(this, 'opt1')" class="vote-opt-btn min-h-[44px] border border-border text-text-muted hover:bg-slate-100 font-semibold p-2.5 rounded-xl text-center active:scale-[0.98] transition-all">
+              반대
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="font-bold block text-xs text-text-main">상정 안건 2 : 감리용역 및 전문 하자진단업체 선정 위임의 건</label>
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="selectVoteOption(this, 'opt2')" class="vote-opt-btn min-h-[44px] border-2 border-blue-600 bg-blue-50 text-blue-800 font-semibold p-2.5 rounded-xl text-center active:scale-[0.98] transition-all">
+              찬성 (동의)
+            </button>
+            <button type="button" onclick="selectVoteOption(this, 'opt2')" class="vote-opt-btn min-h-[44px] border border-border text-text-muted hover:bg-slate-100 font-semibold p-2.5 rounded-xl text-center active:scale-[0.98] transition-all">
+              반대
+            </button>
+          </div>
+        </div>
+
+        <div class="border-t border-border pt-3">
+          <label for="signAgree" class="min-h-[44px] flex items-center gap-2 select-none cursor-pointer">
+            <input type="checkbox" id="signAgree" class="rounded border-slate-300 text-blue-600 focus:ring-blue-500 w-4 h-4 shrink-0">
+            <span class="text-xs text-text-muted">
+              본 전자표결은 집합건물의 소유 및 관리에 관한 법률 제38조에 의거하여 서면 결의와 동일한 법적 효력을 가짐을 확인합니다.
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <div class="p-4 bg-slate-50 border-t border-border flex gap-2 justify-end">
+        <button type="button" onclick="closeVoteModal()" class="min-h-[44px] px-4 rounded-xl border border-border hover:bg-slate-200 text-xs font-semibold text-text-muted transition-colors active:scale-[0.96]">
+          취소
+        </button>
+        <button type="button" onclick="submitVote()" class="min-h-[44px] px-5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-sm transition-colors active:scale-[0.96]">
+          전자서명 제출하기
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Sidebar Drawer Overlay -->
+  <div id="mobileDrawerBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-950/40 z-40 hidden md:hidden"></div>
+
+  <!-- Interactive JavaScript Engine -->
+  <script>
+    // Initialize Lucide Icons on DOM Load
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+    });
+
+    // Toast Feedback Utility
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = message;
+      toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+      
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    // 1-Click Clipboard Action
+    function copyInviteLink() {
+      const inviteUrl = "https://iyha-messenger.org/join/apt-code-1049";
+      navigator.clipboard.writeText(inviteUrl).then(() => {
+        showToast("임예협 입주민 전용 암호화 초대링크가 복사되었습니다.");
+      }).catch(() => {
+        showToast("복사 권한을 확인해주세요.");
+      });
+    }
+
+    function copyVoteReport() {
+      const text = "[임예협 긴급안건 24호 투표현황]\n- 사전점검 합동점검단 추진 찬반\n- 참여율: 84% (412/490세대)\n- 찬성: 389표 (94.4%)\n* 공식 전자투표 인증완료";
+      navigator.clipboard.writeText(text).then(() => {
+        showToast("투표 현황 브리핑 텍스트가 클립보드에 복사되었습니다.");
+      });
+    }
+
+    // Channel Selection & Visual State
+    const channelData = {
+      notice: {
+        title: "[공지] 임예협 공식 의결방",
+        desc: "운영위원 공지 및 총회 안건 상정, 전자투표가 진행되는 채널입니다."
+      },
+      defect: {
+        title: "[감리] 공용부 하자·도색 감리반",
+        desc: "지하주차장 누수, 엘리베이터 단차, 외벽 도색 현장 실시간 감리 채널입니다."
+      },
+      dong104: {
+        title: "[소통] 104동 입주예정자 단톡",
+        desc: "104동 입주민 간 라인별 소통, 시스템에어컨/줄눈 공동구매 논의방입니다."
+      },
+      legal: {
+        title: "[법률] 법률자문 & 시공사 협약",
+        desc: "지체상금, 옵션 계약 위반, 취득세 감면 관련 전문 법무법인 공식 질의응답실입니다."
+      }
+    };
+
+    function selectChannel(key) {
+      const data = channelData[key];
+      if (!data) return;
+
+      document.getElementById('activeChannelTitle').textContent = data.title;
+      document.getElementById('activeChannelDesc').textContent = data.desc;
+
+      // Update active highlight on left items
+      document.querySelectorAll('.channel-item').forEach(el => {
+        el.classList.remove('bg-blue-50/60', 'border-l-4', 'border-blue-600');
+      });
+      const activeEl = document.getElementById(`chan-${key}`);
+      if (activeEl) {
+        activeEl.classList.add('bg-blue-50/60', 'border-l-4', 'border-blue-600');
+      }
+
+      showToast(`'${data.title}' 채널로 전환되었습니다.`);
+      lucide.createIcons();
+    }
+
+    // Category Filtering
+    function switchCategory(cat) {
+      document.querySelectorAll('.category-chip').forEach(btn => {
+        btn.classList.remove('bg-slate-900', 'text-white');
+        btn.classList.add('bg-slate-100', 'text-text-muted');
+      });
+      const activeBtn = document.getElementById(`btn-cat-${cat}`);
+      if (activeBtn) {
+        activeBtn.classList.remove('bg-slate-100', 'text-text-muted');
+        activeBtn.classList.add('bg-slate-900', 'text-white');
+      }
+
+      showToast(`카테고리 '${cat === 'all' ? '전체' : cat}' 필터가 적용되었습니다.`);
+    }
+
+    function filterChannels(keyword) {
+      const items = document.querySelectorAll('.channel-item');
+      items.forEach(item => {
+        const text = item.innerText.toLowerCase();
+        if (text.includes(keyword.toLowerCase())) {
+          item.style.display = 'block';
+        } else {
+          item.style.display = 'none';
+        }
+      });
+    }
+
+    // Message Submission Handler
+    function handleSendMessage(e) {
+      e.preventDefault();
+      const input = document.getElementById('messageInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const chatFeed = document.getElementById('chatFeed');
+      const timeStr = "오후 " + new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+      // Compose sanitized user message block
+      const userMsgDiv = document.createElement('div');
+      userMsgDiv.className = "flex items-start gap-3 max-w-3xl ml-auto flex-row-reverse animate-fade-in";
+      userMsgDiv.innerHTML = `
+        <div class="w-9 h-9 rounded-xl bg-accent text-white flex items-center justify-center font-bold text-xs shrink-0 shadow-sm">
+          나
+        </div>
+        <div class="flex-1 text-right">
+          <div class="flex items-center gap-2 mb-1 justify-end">
+            <span class="text-[11px] text-text-muted tabular-nums">${timeStr}</span>
+            <span class="text-[10px] px-1.5 py-0.5 bg-blue-100 text-blue-700 font-semibold rounded">본인 (104동 1204호)</span>
+            <span class="text-xs font-bold text-text-main">입주예정자</span>
+          </div>
+          <div class="bg-blue-600 text-white rounded-card p-3.5 sm:p-4 text-left shadow-soft inline-block max-w-lg">
+            <p class="text-xs sm:text-sm leading-relaxed">${escapeHtml(text)}</p>
+          </div>
+          <div class="text-[11px] text-slate-400 font-medium mt-1">방금 전송됨 (암호화 서명 완료)</div>
+        </div>
+      `;
+
+      chatFeed.appendChild(userMsgDiv);
+      input.value = '';
+      chatFeed.scrollTop = chatFeed.scrollHeight;
+      lucide.createIcons();
+    }
+
+    function handleKeydown(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        handleSendMessage(e);
+      }
+    }
+
+    function escapeHtml(string) {
+      return String(string).replace(/[&<>"'`=\/]/g, function (s) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;',
+          '/': '&#x2F;',
+          '`': '&#x60;',
+          '=': '&#x3D;'
+        }[s];
+      });
+    }
+
+    // Quick Templates
+    function insertTemplate(template) {
+      const input = document.getElementById('messageInput');
+      input.value = template;
+      input.focus();
+    }
+
+    function triggerFileUpload() {
+      showToast("분양계약서 및 하자 사진 업로드 다이얼로그를 엽니다.");
+    }
+
+    function insertPollTemplate() {
+      insertTemplate("[입주민 즉석투표] 제목: / 1번항목: / 2번항목: ");
+    }
+
+    // Reaction handler with labeled reaction badges
+    function addReaction(btn, label) {
+      const countSpan = btn.querySelector('.tabular-nums');
+      if (countSpan) {
+        let count = parseInt(countSpan.textContent, 10);
+        countSpan.textContent = count + 1;
+      }
+      btn.classList.add('bg-blue-50', 'border-blue-400', 'text-blue-600');
+      showToast(`${label} 공감을 남겼습니다.`);
+    }
+
+    // Modals
+    function openVoteModal() {
+      const modal = document.getElementById('voteModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeVoteModal() {
+      const modal = document.getElementById('voteModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function selectVoteOption(btn, group) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.vote-opt-btn').forEach(b => {
+        b.className = "vote-opt-btn min-h-[44px] border border-border text-text-muted hover:bg-slate-100 font-semibold p-2.5 rounded-xl text-center active:scale-[0.98] transition-all";
+      });
+      btn.className = "vote-opt-btn min-h-[44px] border-2 border-blue-600 bg-blue-50 text-blue-800 font-semibold p-2.5 rounded-xl text-center active:scale-[0.98] transition-all";
+    }
+
+    function submitVote() {
+      const agree = document.getElementById('signAgree').checked;
+      if (!agree) {
+        alert("법적 서면 결의 효력 동의 체크박스에 체크해 주셔야 서명이 유효합니다.");
+        return;
+      }
+      closeVoteModal();
+      showToast("동호수 전자서명 투표가 성공적으로 블록체인 원장에 기록되었습니다.");
+    }
+
+    function openPreviewDoc(docName) {
+      showToast(`'${docName}' 문서를 암호화 뷰어로 불러옵니다.`);
+    }
+
+    function openSearchModal() {
+      showToast("채널 내 메시지 및 첨부파일 상세 검색 기능이 활성화되었습니다.");
+    }
+
+    function togglePinDrawer() {
+      const drawer = document.getElementById('pinnedDrawer');
+      drawer.classList.toggle('hidden');
+    }
+
+    function showNoticeModal() {
+      showToast("새로운 공지사항 2건: 사전점검 일정 확정 / 총회 소집 통지");
+    }
+
+    function toggleMobileSidebar() {
+      const aside = document.querySelector('aside');
+      const backdrop = document.getElementById('mobileDrawerBackdrop');
+      aside.classList.toggle('hidden');
+      backdrop.classList.toggle('hidden');
+    }
+  </script>
+</body>
+</html>
