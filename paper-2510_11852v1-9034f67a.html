@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Evaluating Open-Source Vision-Language Models for Multimodal Sarcasm Detection | 토비 학술 리포트</title>
+  <style>
+    :root {
+      --color-bg: #f8fafc;
+      --color-surface: #ffffff;
+      --color-border: #e2e8f0;
+      --color-text: #0f172a;
+      --color-subtext: #475569;
+      --color-primary: #4338ca;
+      --color-primary-light: #e0e7ff;
+      --color-accent: #0284c7;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+      --font-sans: -apple-system, BlinkMacSystemFont, "Pretendard Variable", Pretendard, "Segoe UI", Roboto, sans-serif;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-family: var(--font-sans);
+      line-height: 1.65;
+      padding: 20px 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container {
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    header {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .badge {
+      display: inline-block;
+      font-size: 12px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 9999px;
+    }
+    .badge-primary { background: var(--color-primary-light); color: var(--color-primary); }
+    .badge-accent { background: #e0f2fe; color: #0369a1; }
+    h1 {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      line-height: 1.35;
+      margin-bottom: 10px;
+    }
+    .authors-meta {
+      font-size: 14px;
+      color: var(--color-subtext);
+      margin-bottom: 4px;
+    }
+    .author-details { font-size: 13px; color: var(--color-subtext); margin: 8px 0 12px; overflow-wrap: anywhere; }
+    .author-details summary { cursor: pointer; color: var(--color-primary); font-weight: 700; }
+    .author-details p { margin-top: 8px; }
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .card-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .summary-card {
+      background: #faf5ff;
+      border-color: #e9d5ff;
+    }
+    .summary-card .card-title { color: #6b21a8; }
+    .summary-list {
+      padding-left: 20px;
+      font-size: 15px;
+      color: #3b0764;
+    }
+    .summary-list li {
+      margin-bottom: 8px;
+    }
+    .content-p {
+      font-size: 14.5px;
+      color: var(--color-text);
+      white-space: pre-line;
+    }
+    .warning-box {
+      background: #fffbeb;
+      border-left: 4px solid #f59e0b;
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      color: #92400e;
+    }
+    footer {
+      text-align: center;
+      padding: 24px 0;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge-row">
+        <span class="badge badge-primary">🎓 논문 초록 기반 조사</span>
+        <span class="badge badge-accent">arXiv: 2510.11852v1</span>
+        <span class="badge" style="background:#f1f5f9; color:#475569;">cs.LG</span>
+      </div>
+      <h1>Evaluating Open-Source Vision-Language Models for Multimodal Sarcasm Detection</h1>
+      <p class="authors-meta"><strong>저자:</strong> Saroj Basnet, Shafkat Farabi, Tharindu Ranasinghe 외 2명</p>
+      <details class="author-details"><summary>전체 저자 5명 보기</summary><p>Saroj Basnet, Shafkat Farabi, Tharindu Ranasinghe, Diptesh Kanoji, Marcos Zampieri</p></details>
+      <p class="authors-meta"><strong>발행:</strong> 2025년</p>
+      <p class="authors-meta"><strong>원문 링크:</strong> <a href="https://arxiv.org/abs/2510.11852v1" target="_blank" rel="noopener noreferrer" style="color:var(--color-primary);">https://arxiv.org/abs/2510.11852v1</a></p>
+      <p class="authors-meta">확인 범위: arXiv 초록 · 조회일 2026-11-10 · 원문 전체/실험표 미검증</p>
+    </header>
+
+    <section class="card summary-card">
+      <h2 class="card-title">📜 초록 원문 발췌 (번역 전)</h2>
+      <ul class="summary-list">
+        <li>Recent advances in open-source vision-language models (VLMs) offer new opportunities for understanding complex and subjective multimodal phenomena such as sarcasm.</li><li>In this work, we evaluate seven state-of-the-art VLMs - BLIP2, InstructBLIP, OpenFlamingo, LLaVA, PaliGemma, Gemma3, and Qwen-VL - on their ability to detect multimodal sarcasm using zero-, one-, and few-shot prompting.</li><li>Furthermore, we evaluate the models&#39; capabilities in generating explanations to sarcastic instances.</li>
+      </ul>
+    </section>
+
+    <section class="card"><h2 class="card-title">🔎 주제 검색에서 확인한 초록</h2><p class="authors-meta">검색 결과 중 첫 1편만 분석했으며, 나머지 논문의 본문·실험표는 확인하지 않았습니다.</p><ul class="summary-list"><li><a href="https://arxiv.org/abs/2510.11852v1" rel="noopener noreferrer">Evaluating Open-Source Vision-Language Models for Multimodal Sarcasm Detection</a> · 2025-10-13</li><li><a href="https://arxiv.org/abs/2409.15657v4" rel="noopener noreferrer">M$^2$PT: Multimodal Prompt Tuning for Zero-shot Instruction Learning</a> · 2024-09-24</li><li><a href="https://arxiv.org/abs/2307.11572v1" rel="noopener noreferrer">Prompt-Based Zero- and Few-Shot Node Classification: A Multimodal Approach</a> · 2023-07-21</li></ul></section>
+
+    <section class="card">
+      <h2 class="card-title">🔍 초록 원문 (Abstract)</h2>
+      <p class="content-p">Recent advances in open-source vision-language models (VLMs) offer new opportunities for understanding complex and subjective multimodal phenomena such as sarcasm. In this work, we evaluate seven state-of-the-art VLMs - BLIP2, InstructBLIP, OpenFlamingo, LLaVA, PaliGemma, Gemma3, and Qwen-VL - on their ability to detect multimodal sarcasm using zero-, one-, and few-shot prompting. Furthermore, we evaluate the models&#39; capabilities in generating explanations to sarcastic instances. We evaluate the capabilities of VLMs on three benchmark sarcasm datasets (Muse, MMSD2.0, and SarcNet). Our primary objectives are twofold: (1) to quantify each model&#39;s performance in detecting sarcastic image-caption pairs, and (2) to assess their ability to generate human-quality explanations that highlight the visual-textual incongruities driving sarcasm. Our results indicate that, while current models achieve moderate success in binary sarcasm detection, they are still not able to generate high-quality explanations without task-specific finetuning.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">🔬 제안 방법론 및 핵심 아키텍처 (Methodology)</h2>
+      <p class="content-p">초록만 수집했어. 상세 방법론은 원문 전체에서 확인해야 해.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">📊 주요 실험 성과 및 벤치마크 (Evaluation)</h2>
+      <p class="content-p">벤치마크 수치·실험표는 원문 전체에서 검증하지 못했어.</p>
+    </section>
+
+    <section class="card">
+      <h2 class="card-title">⚠️ 한계점 및 후속 연구 과제 (Discussion & Future Work)</h2>
+      <div class="warning-box">
+        <p>초록만으로 논문의 한계와 후속 과제를 확정하지 않았어.</p>
+      </div>
+    </section>
+
+    <footer>
+      <p>Academic Report curated by Tobinyang Deep Research AI 🐾</p>
+      <p>© 2026 Tobinyang Reports. All rights reserved.</p>
+    </footer>
+  </div>
+</body>
+</html>
